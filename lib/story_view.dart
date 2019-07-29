@@ -190,8 +190,8 @@ class StoryItem {
 }
 
 /// Widget to display stories just like Whatsapp and Instagram. Can also be used
-/// inline/inside lists just like Google News app. Comes with gestures
-/// to pause, forward and go to previous page.
+/// inline/inside [ListView] or [Column] just like Google News app. Comes with
+/// gestures to pause, forward and go to previous page.
 class StoryView extends StatefulWidget {
   /// The pages to displayed.
   final List<StoryItem> storyItems;
@@ -363,6 +363,9 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
           beginPlay();
         }
       }
+    } else {
+      // this is the last page, progress animation should continue.
+      unpause();
     }
   }
 
