@@ -1,3 +1,7 @@
+## [0.9.2] - 29 July 2019.
+
+Fix issue #1: onTap pause error for last page 
+
 ## [0.9.1] - 22 June 2019.
 
 Pub library health complain on description length. Fixed.
