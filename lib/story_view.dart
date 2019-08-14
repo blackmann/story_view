@@ -1,6 +1,6 @@
+import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
-import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -31,9 +31,12 @@ class StoryItem {
   /// The page content
   final Widget view;
 
+  final Map<String, dynamic> metadata;
+
   StoryItem(
     this.view, {
     this.duration = const Duration(seconds: 3),
+    this.metadata,
     this.shown = false,
   }) : assert(duration != null, "[duration] should not be null");
 
@@ -52,6 +55,7 @@ class StoryItem {
     double fontSize = 18,
     bool roundedTop = false,
     bool roundedBottom = false,
+    Map<String, dynamic> metadata,
   }) {
     double contrast = ContrastHelper.contrast([
       backgroundColor.red,
@@ -88,7 +92,8 @@ class StoryItem {
           ),
           //color: backgroundColor,
         ),
-        shown: shown);
+        shown: shown,
+        metadata: metadata);
   }
 
   /// Shorthand for a full-page image content.
@@ -98,6 +103,7 @@ class StoryItem {
     ImageProvider image, {
     BoxFit imageFit = BoxFit.fitWidth,
     String caption,
+    Map<String, dynamic> metadata,
     bool shown = false,
   }) {
     assert(imageFit != null, "[imageFit] should not be null");
@@ -126,8 +132,7 @@ class StoryItem {
                       horizontal: 24,
                       vertical: 8,
                     ),
-                    color:
-                        caption != null ? Colors.black54 : Colors.transparent,
+                    color: caption != null ? Colors.black54 : Colors.transparent,
                     child: caption != null
                         ? Text(
                             caption,
@@ -144,7 +149,8 @@ class StoryItem {
             ],
           ),
         ),
-        shown: shown);
+        shown: shown,
+        metadata: metadata);
   }
 
   /// Shorthand for creating inline image page.
@@ -154,38 +160,39 @@ class StoryItem {
     bool shown = false,
     bool roundedTop = true,
     bool roundedBottom = false,
+    Map<String, dynamic> metadata,
   }) {
     return StoryItem(
-      Container(
-        decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(roundedTop ? 8 : 0),
-              bottom: Radius.circular(roundedBottom ? 8 : 0),
+        Container(
+          decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(roundedTop ? 8 : 0),
+                bottom: Radius.circular(roundedBottom ? 8 : 0),
+              ),
+              image: DecorationImage(
+                image: image,
+                fit: BoxFit.cover,
+              )),
+          child: Container(
+            margin: EdgeInsets.only(
+              bottom: 16,
             ),
-            image: DecorationImage(
-              image: image,
-              fit: BoxFit.cover,
-            )),
-        child: Container(
-          margin: EdgeInsets.only(
-            bottom: 16,
-          ),
-          padding: EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 8,
-          ),
-          child: Align(
-            alignment: Alignment.bottomLeft,
-            child: Container(
-              child: caption == null ? SizedBox() : caption,
-              width: double.infinity,
+            padding: EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: 8,
+            ),
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Container(
+                child: caption == null ? SizedBox() : caption,
+                width: double.infinity,
+              ),
             ),
           ),
         ),
-      ),
-      shown: shown,
-    );
+        shown: shown,
+        metadata: metadata);
   }
 }
 
@@ -243,8 +250,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   Animation<double> currentAnimation;
   Timer debouncer;
 
-  StoryItem get lastShowing =>
-      widget.storyItems.firstWhere((it) => !it.shown, orElse: () => null);
+  StoryItem get lastShowing => widget.storyItems.firstWhere((it) => !it.shown, orElse: () => null);
 
   @override
   void initState() {
@@ -290,8 +296,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       widget.onStoryShow(storyItem);
     }
 
-    animationController =
-        AnimationController(duration: storyItem.duration, vsync: this);
+    animationController = AnimationController(duration: storyItem.duration, vsync: this);
 
     animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -377,9 +382,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     this.animationController?.forward();
   }
 
-  Widget get currentView => widget.storyItems
-      .firstWhere((it) => !it.shown, orElse: () => widget.storyItems.last)
-      .view;
+  Widget get currentView =>
+      widget.storyItems.firstWhere((it) => !it.shown, orElse: () => widget.storyItems.last).view;
 
   @override
   Widget build(BuildContext context) {
@@ -401,14 +405,10 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   vertical: 8,
                 ),
                 child: PageBar(
-                  widget.storyItems
-                      .map((it) => PageData(it.duration, it.shown))
-                      .toList(),
+                  widget.storyItems.map((it) => PageData(it.duration, it.shown)).toList(),
                   this.currentAnimation,
                   key: UniqueKey(),
-                  indicatorHeight: widget.inline
-                      ? IndicatorHeight.small
-                      : IndicatorHeight.large,
+                  indicatorHeight: widget.inline ? IndicatorHeight.small : IndicatorHeight.large,
                 ),
               ),
             ),
@@ -418,9 +418,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
             heightFactor: 1,
             child: RawGestureDetector(
               gestures: <Type, GestureRecognizerFactory>{
-                TapGestureRecognizer:
-                    GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
-                        () => TapGestureRecognizer(), (instance) {
+                TapGestureRecognizer: GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
+                    () => TapGestureRecognizer(), (instance) {
                   instance
                     ..onTapDown = (details) {
                       pause();
@@ -507,8 +506,7 @@ class PageBarState extends State<PageBar> {
   }
 
   bool isPlaying(PageData page) {
-    return widget.pages.firstWhere((it) => !it.shown, orElse: () => null) ==
-        page;
+    return widget.pages.firstWhere((it) => !it.shown, orElse: () => null) == page;
   }
 
   @override
@@ -517,12 +515,10 @@ class PageBarState extends State<PageBar> {
       children: widget.pages.map((it) {
         return Expanded(
           child: Container(
-            padding: EdgeInsets.only(
-                right: widget.pages.last == it ? 0 : this.spacing),
+            padding: EdgeInsets.only(right: widget.pages.last == it ? 0 : this.spacing),
             child: StoryProgressIndicator(
               isPlaying(it) ? widget.animation.value : it.shown ? 1 : 0,
-              indicatorHeight:
-                  widget.indicatorHeight == IndicatorHeight.large ? 5 : 3,
+              indicatorHeight: widget.indicatorHeight == IndicatorHeight.large ? 5 : 3,
             ),
           ),
         );
@@ -573,8 +569,7 @@ class IndicatorOval extends CustomPainter {
     final paint = Paint()..color = this.color;
     canvas.drawRRect(
         RRect.fromRectAndRadius(
-            Rect.fromLTWH(0, 0, size.width * this.widthFactor, size.height),
-            Radius.circular(3)),
+            Rect.fromLTWH(0, 0, size.width * this.widthFactor, size.height), Radius.circular(3)),
         paint);
   }
 
@@ -589,16 +584,13 @@ class ContrastHelper {
   static double luminance(int r, int g, int b) {
     final a = [r, g, b].map((it) {
       double value = it.toDouble() / 255.0;
-      return value <= 0.03928
-          ? value / 12.92
-          : pow((value + 0.055) / 1.055, 2.4);
+      return value <= 0.03928 ? value / 12.92 : pow((value + 0.055) / 1.055, 2.4);
     }).toList();
 
     return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
   }
 
   static double contrast(rgb1, rgb2) {
-    return luminance(rgb2[0], rgb2[1], rgb2[2]) /
-        luminance(rgb1[0], rgb1[1], rgb1[2]);
+    return luminance(rgb2[0], rgb2[1], rgb2[2]) / luminance(rgb1[0], rgb1[1], rgb1[2]);
   }
 }
