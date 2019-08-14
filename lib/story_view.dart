@@ -144,7 +144,7 @@ class StoryItem {
             ],
           ),
         ),
-        shown: false);
+        shown: shown);
   }
 
   /// Shorthand for creating inline image page.
