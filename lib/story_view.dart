@@ -149,7 +149,7 @@ class StoryItem {
             ],
           ),
         ),
-        shown: false,
+        shown: shown,
         metadata: metadata);
   }
 
