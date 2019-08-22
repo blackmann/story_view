@@ -30,6 +30,7 @@ class StoryItem {
 
   /// The page content
   final Widget view;
+  final Widget bottomActionBar;
 
   final Map<String, dynamic> metadata;
 
@@ -37,6 +38,7 @@ class StoryItem {
     this.view, {
     this.duration = const Duration(seconds: 3),
     this.metadata,
+    this.bottomActionBar,
     this.shown = false,
   }) : assert(duration != null, "[duration] should not be null");
 
@@ -104,6 +106,7 @@ class StoryItem {
     BoxFit imageFit = BoxFit.fitWidth,
     String caption,
     Map<String, dynamic> metadata,
+    Widget bottomActionBar,
     bool shown = false,
   }) {
     assert(imageFit != null, "[imageFit] should not be null");
@@ -150,7 +153,8 @@ class StoryItem {
           ),
         ),
         shown: false,
-        metadata: metadata);
+        metadata: metadata,
+        bottomActionBar: bottomActionBar);
   }
 
   /// Shorthand for creating inline image page.
@@ -161,6 +165,7 @@ class StoryItem {
     bool roundedTop = true,
     bool roundedBottom = false,
     Map<String, dynamic> metadata,
+    Widget bottomActionBar,
   }) {
     return StoryItem(
         Container(
@@ -192,7 +197,8 @@ class StoryItem {
           ),
         ),
         shown: shown,
-        metadata: metadata);
+        metadata: metadata,
+        bottomActionBar: bottomActionBar);
   }
 }
 
@@ -382,8 +388,28 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     this.animationController?.forward();
   }
 
-  Widget get currentView =>
-      widget.storyItems.firstWhere((it) => !it.shown, orElse: () => widget.storyItems.last).view;
+  void onTapDown(details) {
+    pause();
+    debouncer?.cancel();
+    debouncer = Timer(Duration(milliseconds: 500), () {});
+  }
+
+  void onTapUp(details) {
+    if (debouncer?.isActive == true) {
+      debouncer.cancel();
+      debouncer = null;
+
+      goForward();
+    } else {
+      debouncer.cancel();
+      debouncer = null;
+
+      unpause();
+    }
+  }
+
+  StoryItem get currentstoryItem =>
+      widget.storyItems.firstWhere((it) => !it.shown, orElse: () => widget.storyItems.last);
 
   @override
   Widget build(BuildContext context) {
@@ -391,7 +417,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       color: Colors.white,
       child: Stack(
         children: <Widget>[
-          currentView,
+          currentstoryItem.view,
           Align(
             alignment: widget.progressPosition == ProgressPosition.top
                 ? Alignment.topCenter
@@ -413,47 +439,55 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               ),
             ),
           ),
-          Align(
-            alignment: Alignment.centerRight,
-            heightFactor: 1,
-            child: RawGestureDetector(
-              gestures: <Type, GestureRecognizerFactory>{
-                TapGestureRecognizer: GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
-                    () => TapGestureRecognizer(), (instance) {
-                  instance
-                    ..onTapDown = (details) {
-                      pause();
-                      debouncer?.cancel();
-                      debouncer = Timer(Duration(milliseconds: 500), () {});
-                    }
-                    ..onTapUp = (details) {
-                      if (debouncer?.isActive == true) {
-                        debouncer.cancel();
-                        debouncer = null;
-
-                        goForward();
-                      } else {
-                        debouncer.cancel();
-                        debouncer = null;
-
-                        unpause();
-                      }
-                    };
-                })
-              },
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            heightFactor: 1,
-            child: SizedBox(
-              child: GestureDetector(
-                onTap: () {
-                  goBack();
-                },
+          Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            mainAxisSize: MainAxisSize.max,
+            children: <Widget>[
+              Flexible(
+                child: Stack(
+                  children: <Widget>[
+                    Align(
+                      alignment: Alignment.topRight,
+                      heightFactor: 1,
+                      child: Container(
+                        child: RawGestureDetector(
+                          gestures: <Type, GestureRecognizerFactory>{
+                            TapGestureRecognizer:
+                                GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
+                                    () => TapGestureRecognizer(), (instance) {
+                              instance
+                                ..onTapDown = onTapDown
+                                ..onTapUp = onTapUp;
+                            })
+                          },
+                        ),
+                      ),
+                    ),
+                    Align(
+                      alignment: Alignment.topLeft,
+                      heightFactor: 1,
+                      child: Container(
+                        child: GestureDetector(
+                          onTap: () {
+                            goBack();
+                          },
+                        ),
+                        width: 100,
+                      ),
+                    ),
+                  ],
+                ),
               ),
-              width: 70,
-            ),
+              Container(
+                height: 130,
+                child: GestureDetector(
+                  onTapDown: onTapDown,
+                  onTapUp: onTapUp,
+                  child: currentstoryItem.bottomActionBar,
+                ),
+              ),
+            ],
           ),
         ],
       ),
@@ -501,7 +535,9 @@ class PageBarState extends State<PageBar> {
     spacing = count > 15 ? 1 : count > 10 ? 2 : 4;
 
     widget.animation.addListener(() {
-      setState(() {});
+      if (this.mounted) {
+        setState(() {});
+      }
     });
   }
 
