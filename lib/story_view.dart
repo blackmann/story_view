@@ -105,9 +105,9 @@ class StoryItem {
     ImageProvider image, {
     BoxFit imageFit = BoxFit.fitWidth,
     String caption,
+    bool shown = false,
     Map<String, dynamic> metadata,
     Widget bottomActionBar,
-    bool shown = false,
   }) {
     assert(imageFit != null, "[imageFit] should not be null");
     return StoryItem(
@@ -152,7 +152,7 @@ class StoryItem {
             ],
           ),
         ),
-        shown: false,
+        shown: shown,
         metadata: metadata,
         bottomActionBar: bottomActionBar);
   }
@@ -418,27 +418,6 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       child: Stack(
         children: <Widget>[
           currentstoryItem.view,
-          Align(
-            alignment: widget.progressPosition == ProgressPosition.top
-                ? Alignment.topCenter
-                : Alignment.bottomCenter,
-            child: SafeArea(
-              bottom: widget.inline ? false : true,
-              // we use SafeArea here for notched and bezeles phones
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: PageBar(
-                  widget.storyItems.map((it) => PageData(it.duration, it.shown)).toList(),
-                  this.currentAnimation,
-                  key: UniqueKey(),
-                  indicatorHeight: widget.inline ? IndicatorHeight.small : IndicatorHeight.large,
-                ),
-              ),
-            ),
-          ),
           Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
