@@ -30,6 +30,7 @@ class StoryItem {
 
   /// The page content
   final Widget view;
+  final Widget topActionBar;
   final Widget bottomActionBar;
 
   final Map<String, dynamic> metadata;
@@ -38,6 +39,7 @@ class StoryItem {
     this.view, {
     this.duration = const Duration(seconds: 3),
     this.metadata,
+    this.topActionBar,
     this.bottomActionBar,
     this.shown = false,
   }) : assert(duration != null, "[duration] should not be null");
@@ -58,6 +60,8 @@ class StoryItem {
     bool roundedTop = false,
     bool roundedBottom = false,
     Map<String, dynamic> metadata,
+    Widget topActionBar,
+    Widget bottomActionBar,
   }) {
     double contrast = ContrastHelper.contrast([
       backgroundColor.red,
@@ -95,7 +99,9 @@ class StoryItem {
           //color: backgroundColor,
         ),
         shown: shown,
-        metadata: metadata);
+        metadata: metadata,
+        topActionBar: topActionBar,
+        bottomActionBar: bottomActionBar);
   }
 
   /// Shorthand for a full-page image content.
@@ -107,6 +113,7 @@ class StoryItem {
     String caption,
     bool shown = false,
     Map<String, dynamic> metadata,
+    Widget topActionBar,
     Widget bottomActionBar,
   }) {
     assert(imageFit != null, "[imageFit] should not be null");
@@ -154,6 +161,7 @@ class StoryItem {
         ),
         shown: shown,
         metadata: metadata,
+        topActionBar: topActionBar,
         bottomActionBar: bottomActionBar);
   }
 
@@ -165,6 +173,7 @@ class StoryItem {
     bool roundedTop = true,
     bool roundedBottom = false,
     Map<String, dynamic> metadata,
+    Widget topActionBar,
     Widget bottomActionBar,
   }) {
     return StoryItem(
@@ -198,6 +207,7 @@ class StoryItem {
         ),
         shown: shown,
         metadata: metadata,
+        topActionBar: topActionBar,
         bottomActionBar: bottomActionBar);
   }
 }
@@ -423,6 +433,38 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.max,
             children: <Widget>[
+              Align(
+                alignment: widget.progressPosition == ProgressPosition.top
+                    ? Alignment.topCenter
+                    : Alignment.bottomCenter,
+                child: SafeArea(
+                  bottom: widget.inline ? false : true,
+                  // we use SafeArea here for notched and bezels phones
+                  child: Container(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 16,
+                      vertical: 8,
+                    ),
+                    child: PageBar(
+                      widget.storyItems.map((it) => PageData(it.duration, it.shown)).toList(),
+                      this.currentAnimation,
+                      key: UniqueKey(),
+                      indicatorHeight:
+                          widget.inline ? IndicatorHeight.small : IndicatorHeight.large,
+                    ),
+                  ),
+                ),
+              ),
+              currentstoryItem.topActionBar != null
+                  ? Container(
+                      height: 70,
+                      child: GestureDetector(
+                        onTapDown: onTapDown,
+                        onTapUp: onTapUp,
+                        child: currentstoryItem.topActionBar,
+                      ),
+                    )
+                  : Container(),
               Flexible(
                 child: Stack(
                   children: <Widget>[
@@ -458,14 +500,17 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   ],
                 ),
               ),
-              Container(
-                height: 130,
-                child: GestureDetector(
-                  onTapDown: onTapDown,
-                  onTapUp: onTapUp,
-                  child: currentstoryItem.bottomActionBar,
-                ),
-              ),
+              currentstoryItem.bottomActionBar != null
+                  ? SafeArea(
+                      child: Container(
+                        child: GestureDetector(
+                          onTapDown: onTapDown,
+                          onTapUp: onTapUp,
+                          child: currentstoryItem.bottomActionBar,
+                        ),
+                      ),
+                    )
+                  : Container(),
             ],
           ),
         ],
