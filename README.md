@@ -39,7 +39,7 @@ There are shorthands provided to create common pages.
 or `Column`
 
 ### Story controller, loaders and GIF support
-While images load, it'll be a better experience to pause the stories until it's done. To achieve this effect, create a global instance of [`StoryController`](https://pub.dev/documentation/story_view/latest/story_view/StoryController-class.html) and use the shorthand `StoryItem.pageGif` or `StoryItem.inlineGif` while passing the controller to it.
+While images load, it'll be a better experience to pause the stories until it's done. To achieve this effect, create a global instance of [`StoryController`](https://pub.dev/documentation/story_view/latest/story_controller/StoryController-class.html) and use the shorthand `StoryItem.pageGif` or `StoryItem.inlineGif` while passing the controller to it.
 
 🍭 `StoryItem.pageGif` and `StoryItem.inlineGif` can also load non-animated graphic media like PNG, JPG, etc.
 
