@@ -38,17 +38,30 @@ There are shorthands provided to create common pages.
 `StoryItem.inlineImage` creates a story item that is intended to be displayed in a linear view hierarchy like `List`
 or `Column`
 
+### Story controller, loaders and GIF support
+While images load, it'll be a better experience to pause the stories until it's done. To achieve this effect, create a global instance of [`StoryController`]([`StoryItem`](https://pub.dev/documentation/story_view/latest/story_view/StoryController-class.html)) and use the shorthand `StoryItem.pageGif` or `StoryItem.inlineGif` while passing the controller to it.
+
+🍭 `StoryItem.pageGif` and `StoryItem.inlineGif` can also load non-animated graphic media like PNG, JPG, etc.
+
+
 ```dart
+...
+final controller = StoryControlelr();
+
 @override
 Widget build(context) {
   List<StoryItem> storyItems = [
     StoryItem.text(...),
     StoryItem.pageImage(...),
     StoryItem.pageImage(...),
+    StoryItem.pageGif(...,
+      controller: controller,
+      ...)
   ]; // your list of stories
 
   return StoryView(
     storyItems,
+    controller: controller, // pass controller here too
     repeat: true, // should the stories be slid forever
     onStoryShow: (s) {notifyServer(s)}
   )
