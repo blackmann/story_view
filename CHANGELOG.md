@@ -1,3 +1,9 @@
+## [0.10.0] - 2 September 2019.
+
+Animated Gifs support. 
+Ability to wait for images to load before stories proceed.
+Comes with controller to manually control playback.
+
 ## [0.9.3] - 29 July 2019.
 
 Improvement for issue #1 fix.
