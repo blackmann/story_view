@@ -33,12 +33,9 @@ class StoryItem {
   final Widget topActionBar;
   final Widget bottomActionBar;
 
-  final Map<String, dynamic> metadata;
-
   StoryItem(
     this.view, {
     this.duration = const Duration(seconds: 3),
-    this.metadata,
     this.topActionBar,
     this.bottomActionBar,
     this.shown = false,
@@ -59,7 +56,6 @@ class StoryItem {
     double fontSize = 18,
     bool roundedTop = false,
     bool roundedBottom = false,
-    Map<String, dynamic> metadata,
     Widget topActionBar,
     Widget bottomActionBar,
   }) {
@@ -99,7 +95,6 @@ class StoryItem {
           //color: backgroundColor,
         ),
         shown: shown,
-        metadata: metadata,
         topActionBar: topActionBar,
         bottomActionBar: bottomActionBar);
   }
@@ -112,7 +107,6 @@ class StoryItem {
     BoxFit imageFit = BoxFit.fitWidth,
     String caption,
     bool shown = false,
-    Map<String, dynamic> metadata,
     Widget topActionBar,
     Widget bottomActionBar,
   }) {
@@ -160,7 +154,6 @@ class StoryItem {
           ),
         ),
         shown: shown,
-        metadata: metadata,
         topActionBar: topActionBar,
         bottomActionBar: bottomActionBar);
   }
@@ -172,7 +165,6 @@ class StoryItem {
     bool shown = false,
     bool roundedTop = true,
     bool roundedBottom = false,
-    Map<String, dynamic> metadata,
     Widget topActionBar,
     Widget bottomActionBar,
   }) {
@@ -206,7 +198,6 @@ class StoryItem {
           ),
         ),
         shown: shown,
-        metadata: metadata,
         topActionBar: topActionBar,
         bottomActionBar: bottomActionBar);
   }
