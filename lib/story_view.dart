@@ -5,6 +5,12 @@ import 'dart:ui';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 
+import 'story_controller.dart';
+import 'story_image.dart';
+
+export 'story_controller.dart';
+export 'story_image.dart';
+
 /// Indicates where the progress indicators should be placed.
 enum ProgressPosition { top, bottom }
 
@@ -201,6 +207,112 @@ class StoryItem {
         topActionBar: topActionBar,
         bottomActionBar: bottomActionBar);
   }
+
+  static StoryItem pageGif(
+    String url, {
+    StoryController controller,
+    BoxFit imageFit = BoxFit.fitWidth,
+    String caption,
+    bool shown = false,
+    Map<String, dynamic> requestHeaders,
+  }) {
+    assert(imageFit != null, "[imageFit] should not be null");
+    return StoryItem(
+        Container(
+          color: Colors.black,
+          child: Stack(
+            children: <Widget>[
+              StoryImage.url(
+                url,
+                controller: controller,
+                fit: imageFit,
+                requestHeaders: requestHeaders,
+              ),
+              SafeArea(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.only(
+                      bottom: 24,
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 8,
+                    ),
+                    color: caption != null ? Colors.black54 : Colors.transparent,
+                    child: caption != null
+                        ? Text(
+                            caption,
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.center,
+                          )
+                        : SizedBox(),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+        shown: shown);
+  }
+
+  /// Shorthand for creating inline image page.
+  static StoryItem inlineGif(
+    String url, {
+    Text caption,
+    StoryController controller,
+    BoxFit imageFit = BoxFit.cover,
+    Map<String, dynamic> requestHeaders,
+    bool shown = false,
+    bool roundedTop = true,
+    bool roundedBottom = false,
+  }) {
+    return StoryItem(
+      Container(
+        decoration: BoxDecoration(
+          color: Colors.grey[100],
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(roundedTop ? 8 : 0),
+            bottom: Radius.circular(roundedBottom ? 8 : 0),
+          ),
+        ),
+        child: Container(
+          color: Colors.black,
+          child: Stack(
+            children: <Widget>[
+              StoryImage.url(
+                url,
+                controller: controller,
+                fit: imageFit,
+                requestHeaders: requestHeaders,
+              ),
+              Container(
+                margin: EdgeInsets.only(
+                  bottom: 16,
+                ),
+                padding: EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 8,
+                ),
+                child: Align(
+                  alignment: Alignment.bottomLeft,
+                  child: Container(
+                    child: caption == null ? SizedBox() : caption,
+                    width: double.infinity,
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+      shown: shown,
+    );
+  }
 }
 
 /// Widget to display stories just like Whatsapp and Instagram. Can also be used
@@ -228,8 +340,11 @@ class StoryView extends StatefulWidget {
   /// a [ListView] or [Column]) then set this to `true`.
   final bool inline;
 
+  final StoryController controller;
+
   StoryView(
     this.storyItems, {
+    this.controller,
     this.onComplete,
     this.onStoryShow,
     this.progressPosition = ProgressPosition.top,
@@ -251,13 +366,13 @@ class StoryView extends StatefulWidget {
 }
 
 class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
-  StoryViewState();
-
   AnimationController animationController;
   Animation<double> currentAnimation;
   Timer debouncer;
 
   StoryItem get lastShowing => widget.storyItems.firstWhere((it) => !it.shown, orElse: () => null);
+
+  StreamSubscription<PlaybackState> playbackSubscription;
 
   @override
   void initState() {
@@ -284,12 +399,31 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     }
 
     play();
+
+    if (widget.controller != null) {
+      this.playbackSubscription = widget.controller.playbackNotifier.listen((playbackStatus) {
+        if (playbackStatus == PlaybackState.play) {
+          unpause();
+        } else if (playbackStatus == PlaybackState.pause) {
+          pause();
+        }
+      });
+    }
   }
 
   @override
   void dispose() {
+    debouncer?.cancel();
     animationController?.dispose();
+    playbackSubscription?.cancel();
     super.dispose();
+  }
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
   }
 
   void play() {
@@ -328,6 +462,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
 
   void onComplete() {
     if (widget.onComplete != null) {
+      widget.controller?.pause();
       widget.onComplete();
     } else {
       print("Done");
@@ -343,6 +478,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   }
 
   void goBack() {
+    widget.controller?.play();
+
     animationController.stop();
 
     if (this.lastShowing == null) {
@@ -404,7 +541,22 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     } else {
       debouncer.cancel();
       debouncer = null;
+      unpause();
+    }
+  }
 
+  void controlPause() {
+    if (widget.controller != null) {
+      widget.controller.pause();
+    } else {
+      pause();
+    }
+  }
+
+  void controlUnpause() {
+    if (widget.controller != null) {
+      widget.controller.play();
+    } else {
       unpause();
     }
   }
@@ -448,7 +600,6 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               ),
               currentstoryItem.topActionBar != null
                   ? Container(
-                      height: 70,
                       child: GestureDetector(
                         onTapDown: onTapDown,
                         onTapUp: onTapUp,
@@ -554,6 +705,13 @@ class PageBarState extends State<PageBar> {
         setState(() {});
       }
     });
+  }
+
+  @override
+  void setState(fn) {
+    if (mounted) {
+      super.setState(fn);
+    }
   }
 
   bool isPlaying(PageData page) {
