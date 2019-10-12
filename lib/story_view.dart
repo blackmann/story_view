@@ -4,10 +4,12 @@ import 'dart:async';
 
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'story_video.dart';
 import 'story_image.dart';
 import 'story_controller.dart';
 
 export 'story_image.dart';
+export 'story_video.dart';
 export 'story_controller.dart';
 
 /// Indicates where the progress indicators should be placed.
@@ -298,6 +300,60 @@ class StoryItem {
       ),
       shown: shown,
     );
+  }
+
+  static StoryItem pageVideo(
+    String url, {
+    StoryController controller,
+    Duration duration,
+    BoxFit imageFit = BoxFit.fitWidth,
+    String caption,
+    bool shown = false,
+    Map<String, dynamic> requestHeaders,
+  }) {
+    assert(imageFit != null, "[imageFit] should not be null");
+    return StoryItem(
+        Container(
+          color: Colors.black,
+          child: Stack(
+            children: <Widget>[
+              StoryVideo.url(
+                url,
+                controller: controller,
+                requestHeaders: requestHeaders,
+              ),
+              SafeArea(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.only(
+                      bottom: 24,
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 24,
+                      vertical: 8,
+                    ),
+                    color:
+                        caption != null ? Colors.black54 : Colors.transparent,
+                    child: caption != null
+                        ? Text(
+                            caption,
+                            style: TextStyle(
+                              fontSize: 15,
+                              color: Colors.white,
+                            ),
+                            textAlign: TextAlign.center,
+                          )
+                        : SizedBox(),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+        shown: shown,
+        duration: duration ?? Duration(seconds: 10));
   }
 }
 

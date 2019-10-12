@@ -46,7 +46,7 @@ While images load, it'll be a better experience to pause the stories until it's 
 
 ```dart
 ...
-final controller = StoryControlelr();
+final controller = StoryController();
 
 @override
 Widget build(context) {
@@ -56,7 +56,11 @@ Widget build(context) {
     StoryItem.pageImage(...),
     StoryItem.pageGif(...,
       controller: controller,
-      ...)
+      ...),
+    StoryItem.pageVideo(
+      ...,
+      controller: controller,
+    )
   ]; // your list of stories
 
   return StoryView(
