@@ -11,6 +11,19 @@ This a Flutter widget to display stories just like Whatsapp and Instagram. Can a
 inline/inside ListView or Column just like Google News app. Comes with gestures
 to pause, forward and go to previous page.
 
+# Features
+
+🕹 Still image, GIF and video support
+
+📍 Gesture for pause, rewind and forward
+
+⚜️ Caption for each story item
+
+🎈 Animated progress indicator for each story item
+
+And useful callback to perform meta functionalities.
+
+
 # Installation
 
 To use this plugin, add `story_view` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
@@ -37,6 +50,10 @@ There are shorthands provided to create common pages.
 
 `StoryItem.inlineImage` creates a story item that is intended to be displayed in a linear view hierarchy like `List`
 or `Column`
+
+`StoryItem.inlineGif` and `StoryItem.pageGif` works same as inline and page image but supports both animated GIFs and still images. The difference is that, animated GIFs get paused when a pause gesture is made.
+
+`StoryItem.pageVideo` creates a page story item with video media. Just provide your video url and get going.
 
 ### Story controller, loaders and GIF support
 While images load, it'll be a better experience to pause the stories until it's done. To achieve this effect, create a global instance of [`StoryController`](https://pub.dev/documentation/story_view/latest/story_controller/StoryController-class.html) and use the shorthand `StoryItem.pageGif` or `StoryItem.inlineGif` while passing the controller to it.

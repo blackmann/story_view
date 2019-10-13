@@ -1,3 +1,7 @@
+## [0.11.0] - 13 October 2019.
+
+Video media support.
+
 ## [0.10.0] - 2 September 2019.
 
 Animated Gifs support. 
