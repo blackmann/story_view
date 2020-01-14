@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'story_video.dart';
 import 'story_image.dart';
 import 'story_controller.dart';
+import 'utils.dart';
 
 export 'story_image.dart';
 export 'story_video.dart';
@@ -133,8 +134,7 @@ class StoryItem {
                       horizontal: 24,
                       vertical: 8,
                     ),
-                    color:
-                        caption != null ? Colors.black54 : Colors.transparent,
+                    color: caption != null ? Colors.black54 : Colors.transparent,
                     child: caption != null
                         ? Text(
                             caption,
@@ -227,8 +227,7 @@ class StoryItem {
                       horizontal: 24,
                       vertical: 8,
                     ),
-                    color:
-                        caption != null ? Colors.black54 : Colors.transparent,
+                    color: caption != null ? Colors.black54 : Colors.transparent,
                     child: caption != null
                         ? Text(
                             caption,
@@ -310,6 +309,7 @@ class StoryItem {
     String caption,
     bool shown = false,
     Map<String, dynamic> requestHeaders,
+    Function(LoadState) onComplete,
   }) {
     assert(imageFit != null, "[imageFit] should not be null");
     return StoryItem(
@@ -321,6 +321,7 @@ class StoryItem {
                 url,
                 controller: controller,
                 requestHeaders: requestHeaders,
+                onComplete: (state) => onComplete(state),
               ),
               SafeArea(
                 child: Align(
@@ -334,8 +335,7 @@ class StoryItem {
                       horizontal: 24,
                       vertical: 8,
                     ),
-                    color:
-                        caption != null ? Colors.black54 : Colors.transparent,
+                    color: caption != null ? Colors.black54 : Colors.transparent,
                     child: caption != null
                         ? Text(
                             caption,
@@ -392,8 +392,7 @@ class StoryView extends StatefulWidget {
     this.progressPosition = ProgressPosition.top,
     this.repeat = false,
     this.inline = false,
-  })  : assert(storyItems != null && storyItems.length > 0,
-            "[storyItems] should not be null or empty"),
+  })  : assert(storyItems != null && storyItems.length > 0, "[storyItems] should not be null or empty"),
         assert(progressPosition != null, "[progressPosition] cannot be null"),
         assert(
           repeat != null,
@@ -414,8 +413,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
 
   StreamSubscription<PlaybackState> playbackSubscription;
 
-  StoryItem get lastShowing =>
-      widget.storyItems.firstWhere((it) => !it.shown, orElse: () => null);
+  StoryItem get lastShowing => widget.storyItems.firstWhere((it) => !it.shown, orElse: () => null);
 
   @override
   void initState() {
@@ -444,8 +442,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     play();
 
     if (widget.controller != null) {
-      this.playbackSubscription =
-          widget.controller.playbackNotifier.listen((playbackStatus) {
+      this.playbackSubscription = widget.controller.playbackNotifier.listen((playbackStatus) {
         if (playbackStatus == PlaybackState.play) {
           unpause();
         } else if (playbackStatus == PlaybackState.pause) {
@@ -481,8 +478,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       widget.onStoryShow(storyItem);
     }
 
-    animationController =
-        AnimationController(duration: storyItem.duration, vsync: this);
+    animationController = AnimationController(duration: storyItem.duration, vsync: this);
 
     animationController.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
@@ -587,9 +583,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     }
   }
 
-  Widget get currentView => widget.storyItems
-      .firstWhere((it) => !it.shown, orElse: () => widget.storyItems.last)
-      .view;
+  Widget get currentView => widget.storyItems.firstWhere((it) => !it.shown, orElse: () => widget.storyItems.last).view;
 
   @override
   Widget build(BuildContext context) {
@@ -599,9 +593,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
         children: <Widget>[
           currentView,
           Align(
-            alignment: widget.progressPosition == ProgressPosition.top
-                ? Alignment.topCenter
-                : Alignment.bottomCenter,
+            alignment: widget.progressPosition == ProgressPosition.top ? Alignment.topCenter : Alignment.bottomCenter,
             child: SafeArea(
               bottom: widget.inline ? false : true,
               // we use SafeArea here for notched and bezeles phones
@@ -611,14 +603,10 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   vertical: 8,
                 ),
                 child: PageBar(
-                  widget.storyItems
-                      .map((it) => PageData(it.duration, it.shown))
-                      .toList(),
+                  widget.storyItems.map((it) => PageData(it.duration, it.shown)).toList(),
                   this.currentAnimation,
                   key: UniqueKey(),
-                  indicatorHeight: widget.inline
-                      ? IndicatorHeight.small
-                      : IndicatorHeight.large,
+                  indicatorHeight: widget.inline ? IndicatorHeight.small : IndicatorHeight.large,
                 ),
               ),
             ),
@@ -628,9 +616,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
             heightFactor: 1,
             child: RawGestureDetector(
               gestures: <Type, GestureRecognizerFactory>{
-                TapGestureRecognizer:
-                    GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
-                        () => TapGestureRecognizer(), (instance) {
+                TapGestureRecognizer: GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
+                    () => TapGestureRecognizer(), (instance) {
                   instance
                     ..onTapDown = (details) {
                       controlPause();
@@ -724,8 +711,7 @@ class PageBarState extends State<PageBar> {
   }
 
   bool isPlaying(PageData page) {
-    return widget.pages.firstWhere((it) => !it.shown, orElse: () => null) ==
-        page;
+    return widget.pages.firstWhere((it) => !it.shown, orElse: () => null) == page;
   }
 
   @override
@@ -734,12 +720,10 @@ class PageBarState extends State<PageBar> {
       children: widget.pages.map((it) {
         return Expanded(
           child: Container(
-            padding: EdgeInsets.only(
-                right: widget.pages.last == it ? 0 : this.spacing),
+            padding: EdgeInsets.only(right: widget.pages.last == it ? 0 : this.spacing),
             child: StoryProgressIndicator(
               isPlaying(it) ? widget.animation.value : it.shown ? 1 : 0,
-              indicatorHeight:
-                  widget.indicatorHeight == IndicatorHeight.large ? 5 : 3,
+              indicatorHeight: widget.indicatorHeight == IndicatorHeight.large ? 5 : 3,
             ),
           ),
         );
@@ -758,8 +742,7 @@ class StoryProgressIndicator extends StatelessWidget {
   StoryProgressIndicator(
     this.value, {
     this.indicatorHeight = 5,
-  }) : assert(indicatorHeight != null && indicatorHeight > 0,
-            "[indicatorHeight] should not be null or less than 1");
+  }) : assert(indicatorHeight != null && indicatorHeight > 0, "[indicatorHeight] should not be null or less than 1");
 
   @override
   Widget build(BuildContext context) {
@@ -789,9 +772,7 @@ class IndicatorOval extends CustomPainter {
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = this.color;
     canvas.drawRRect(
-        RRect.fromRectAndRadius(
-            Rect.fromLTWH(0, 0, size.width * this.widthFactor, size.height),
-            Radius.circular(3)),
+        RRect.fromRectAndRadius(Rect.fromLTWH(0, 0, size.width * this.widthFactor, size.height), Radius.circular(3)),
         paint);
   }
 
@@ -806,16 +787,13 @@ class ContrastHelper {
   static double luminance(int r, int g, int b) {
     final a = [r, g, b].map((it) {
       double value = it.toDouble() / 255.0;
-      return value <= 0.03928
-          ? value / 12.92
-          : pow((value + 0.055) / 1.055, 2.4);
+      return value <= 0.03928 ? value / 12.92 : pow((value + 0.055) / 1.055, 2.4);
     }).toList();
 
     return a[0] * 0.2126 + a[1] * 0.7152 + a[2] * 0.0722;
   }
 
   static double contrast(rgb1, rgb2) {
-    return luminance(rgb2[0], rgb2[1], rgb2[2]) /
-        luminance(rgb1[0], rgb1[1], rgb1[2]);
+    return luminance(rgb2[0], rgb2[1], rgb2[2]) / luminance(rgb1[0], rgb1[1], rgb1[2]);
   }
 }
