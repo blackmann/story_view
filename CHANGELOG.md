@@ -1,3 +1,7 @@
+## [0.11.2] - 21 January 2020.
+
+Fix hardcoded `imageFit` for StoryImage.
+
 ## [0.11.1] - 21 January 2020.
 
 Bumped rxdart version.

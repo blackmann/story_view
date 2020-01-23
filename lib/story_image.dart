@@ -182,7 +182,7 @@ class StoryImageState extends State<StoryImage> {
       case LoadState.success:
         return RawImage(
           image: this.currentFrame,
-          fit: BoxFit.fitHeight,
+          fit: widget.fit,
         );
       case LoadState.failure:
         return Center(
