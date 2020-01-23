@@ -1,7 +1,6 @@
 name: story_view
 description: Display stories just like Whatsapp & Instagram. Can be used inline/inside ListView or Column just like Google News app. Comes with gestures to pause, forward & go to previous page.
-version: 0.11.0
-author: De-Great Yartey <mail@degreat.co.uk>
+version: 0.11.1
 homepage: https://github.com/blackmann/story_view
 
 environment:
@@ -11,7 +10,7 @@ dependencies:
   flutter:
     sdk: flutter
   flutter_cache_manager: ^1.1.1
-  rxdart: ^0.22.2
+  rxdart: ^0.23.1
   video_player: ^0.10.2+3
 
 dev_dependencies:
@@ -23,7 +22,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter.
 flutter:
-
   # To add assets to your package, add an assets section, like this:
   # assets:
   #  - images/a_dot_burr.jpeg
@@ -34,7 +32,6 @@ flutter:
   #
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
-
   # To add custom fonts to your package, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
