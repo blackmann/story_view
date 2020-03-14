@@ -631,25 +631,30 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 TapGestureRecognizer:
                     GestureRecognizerFactoryWithHandlers<TapGestureRecognizer>(
                         () => TapGestureRecognizer(), (instance) {
-                  instance
-                    ..onTapDown = (details) {
-                      controlPause();
-                      debouncer?.cancel();
-                      debouncer = Timer(Duration(milliseconds: 500), () {});
+                  instance.onTapDown = (details) {
+                    controlPause();
+                    debouncer?.cancel();
+                    debouncer = Timer(Duration(milliseconds: 500), () {});
+                  };
+
+                  instance.onTapCancel = () {
+                    debouncer?.cancel();
+                    controlUnpause();
+                  };
+
+                  instance.onTapUp = (details) {
+                    if (debouncer?.isActive == true) {
+                      debouncer.cancel();
+                      debouncer = null;
+
+                      goForward();
+                    } else {
+                      debouncer.cancel();
+                      debouncer = null;
+
+                      controlUnpause();
                     }
-                    ..onTapUp = (details) {
-                      if (debouncer?.isActive == true) {
-                        debouncer.cancel();
-                        debouncer = null;
-
-                        goForward();
-                      } else {
-                        debouncer.cancel();
-                        debouncer = null;
-
-                        controlUnpause();
-                      }
-                    };
+                  };
                 })
               },
             ),
