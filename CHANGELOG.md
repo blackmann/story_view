@@ -1,3 +1,7 @@
+## [0.11.3] - 14 March 2020.
+
+Fix swipe down pause issue on fullscreen stories.
+
 ## [0.11.2] - 21 January 2020.
 
 Fix hardcoded `imageFit` for StoryImage.
