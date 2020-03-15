@@ -9,7 +9,7 @@ Story view for apps with stories.
   <img src="https://i.ibb.co/NrLSbZv/Screenshot-1584263018.png" width=400 />
 </p>
 
-👨‍🚀 Demo project here: [storyexample](https//:github.com/blackmann/storyexample.git)
+👨‍🚀 Demo project here: [storyexample](https://github.com/blackmann/storyexample.git)
 
 🍟 Watch video demo here: [story_view demo](https://youtu.be/yHAVCsWEKQE)
 [![Youtube](https://img.youtube.com/vi/yHAVCsWEKQE/maxresdefault.jpg)](https://youtu.be/yHAVCsWEKQE)
