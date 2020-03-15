@@ -1,3 +1,7 @@
+## [0.11.4] - 15 March 2020.
+
+Duration API in shorthand methods. Roundness of inline gifs fixed.
+
 ## [0.11.3] - 14 March 2020.
 
 Fix swipe down pause issue on fullscreen stories.

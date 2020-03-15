@@ -40,7 +40,7 @@ class StoryItem {
 
   StoryItem(
     this.view, {
-    this.duration = const Duration(seconds: 3),
+    this.duration,
     this.shown = false,
   }) : assert(duration != null, "[duration] should not be null");
 
@@ -59,6 +59,7 @@ class StoryItem {
     double fontSize = 18,
     bool roundedTop = false,
     bool roundedBottom = false,
+    Duration duration,
   }) {
     double contrast = ContrastHelper.contrast([
       backgroundColor.red,
@@ -71,31 +72,33 @@ class StoryItem {
     ] /** white text */);
 
     return StoryItem(
-        Container(
-          decoration: BoxDecoration(
-            color: backgroundColor,
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(roundedTop ? 8 : 0),
-              bottom: Radius.circular(roundedBottom ? 8 : 0),
-            ),
+      Container(
+        decoration: BoxDecoration(
+          color: backgroundColor,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(roundedTop ? 8 : 0),
+            bottom: Radius.circular(roundedBottom ? 8 : 0),
           ),
-          padding: EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 16,
-          ),
-          child: Center(
-            child: Text(
-              title,
-              style: TextStyle(
-                color: contrast > 1.8 ? Colors.white : Colors.black,
-                fontSize: fontSize,
-              ),
-              textAlign: TextAlign.center,
-            ),
-          ),
-          //color: backgroundColor,
         ),
-        shown: shown);
+        padding: EdgeInsets.symmetric(
+          horizontal: 24,
+          vertical: 16,
+        ),
+        child: Center(
+          child: Text(
+            title,
+            style: TextStyle(
+              color: contrast > 1.8 ? Colors.white : Colors.black,
+              fontSize: fontSize,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        //color: backgroundColor,
+      ),
+      shown: shown,
+      duration: duration ?? Duration(seconds: 3),
+    );
   }
 
   /// Shorthand for a full-page image content.
@@ -106,6 +109,7 @@ class StoryItem {
     BoxFit imageFit = BoxFit.fitWidth,
     String caption,
     bool shown = false,
+    Duration duration,
   }) {
     assert(imageFit != null, "[imageFit] should not be null");
     return StoryItem(
@@ -151,7 +155,8 @@ class StoryItem {
             ],
           ),
         ),
-        shown: shown);
+        shown: shown,
+        duration: duration ?? Duration(seconds: 3));
   }
 
   /// Shorthand for creating inline image page.
@@ -161,6 +166,7 @@ class StoryItem {
     bool shown = false,
     bool roundedTop = true,
     bool roundedBottom = false,
+    Duration duration,
   }) {
     return StoryItem(
       Container(
@@ -192,6 +198,7 @@ class StoryItem {
         ),
       ),
       shown: shown,
+      duration: duration ?? Duration(seconds: 3),
     );
   }
 
@@ -202,50 +209,52 @@ class StoryItem {
     String caption,
     bool shown = false,
     Map<String, dynamic> requestHeaders,
+    Duration duration,
   }) {
     assert(imageFit != null, "[imageFit] should not be null");
     return StoryItem(
-        Container(
-          color: Colors.black,
-          child: Stack(
-            children: <Widget>[
-              StoryImage.url(
-                url,
-                controller: controller,
-                fit: imageFit,
-                requestHeaders: requestHeaders,
-              ),
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(
-                      bottom: 24,
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 8,
-                    ),
-                    color:
-                        caption != null ? Colors.black54 : Colors.transparent,
-                    child: caption != null
-                        ? Text(
-                            caption,
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white,
-                            ),
-                            textAlign: TextAlign.center,
-                          )
-                        : SizedBox(),
+      Container(
+        color: Colors.black,
+        child: Stack(
+          children: <Widget>[
+            StoryImage.url(
+              url,
+              controller: controller,
+              fit: imageFit,
+              requestHeaders: requestHeaders,
+            ),
+            SafeArea(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.only(
+                    bottom: 24,
                   ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 8,
+                  ),
+                  color: caption != null ? Colors.black54 : Colors.transparent,
+                  child: caption != null
+                      ? Text(
+                          caption,
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        )
+                      : SizedBox(),
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
-        shown: shown);
+      ),
+      shown: shown,
+      duration: duration ?? Duration(seconds: 3),
+    );
   }
 
   /// Shorthand for creating inline image page.
@@ -258,47 +267,49 @@ class StoryItem {
     bool shown = false,
     bool roundedTop = true,
     bool roundedBottom = false,
+    Duration duration,
   }) {
     return StoryItem(
-      Container(
-        decoration: BoxDecoration(
-          color: Colors.grey[100],
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(roundedTop ? 8 : 0),
-            bottom: Radius.circular(roundedBottom ? 8 : 0),
-          ),
-        ),
+      ClipRRect(
         child: Container(
-          color: Colors.black,
-          child: Stack(
-            children: <Widget>[
-              StoryImage.url(
-                url,
-                controller: controller,
-                fit: imageFit,
-                requestHeaders: requestHeaders,
-              ),
-              Container(
-                margin: EdgeInsets.only(
-                  bottom: 16,
+          color: Colors.grey[100],
+          child: Container(
+            color: Colors.black,
+            child: Stack(
+              children: <Widget>[
+                StoryImage.url(
+                  url,
+                  controller: controller,
+                  fit: imageFit,
+                  requestHeaders: requestHeaders,
                 ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: 24,
-                  vertical: 8,
-                ),
-                child: Align(
-                  alignment: Alignment.bottomLeft,
-                  child: Container(
-                    child: caption == null ? SizedBox() : caption,
-                    width: double.infinity,
+                Container(
+                  margin: EdgeInsets.only(
+                    bottom: 16,
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 8,
+                  ),
+                  child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Container(
+                      child: caption == null ? SizedBox() : caption,
+                      width: double.infinity,
+                    ),
                   ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
+        ),
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(roundedTop ? 8 : 0),
+          bottom: Radius.circular(roundedBottom ? 8 : 0),
         ),
       ),
       shown: shown,
+      duration: duration ?? Duration(seconds: 3),
     );
   }
 
