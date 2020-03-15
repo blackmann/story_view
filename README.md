@@ -3,9 +3,16 @@
 Story view for apps with stories.
 
 <p float="left">
-  <img src="https://i.ibb.co/nqXTcTK/sv.gif" width=400 />
+  
+  <img src="https://i.ibb.co/Q8Wtw62/Screenshot-1584263003.png" width=400 />
+  <img src="https://i.ibb.co/bz0R9bd/Screenshot-1584263008.png" width=400 />
+  <img src="https://i.ibb.co/NrLSbZv/Screenshot-1584263018.png" width=400 />
 </p>
 
+👨‍🚀 Demo project here: [storyexample](https:github.com/blackmann/storyexample.git)
+
+🍟 Watch video demo here: [story_view demo](https://youtu.be/yHAVCsWEKQE)
+[![Youtube](https://img.youtube.com/vi/yHAVCsWEKQE/maxresdefault.jpg)](https://youtu.be/yHAVCsWEKQE)
 
 This a Flutter widget to display stories just like Whatsapp and Instagram. Can also be used
 inline/inside ListView or Column just like Google News app. Comes with gestures
@@ -23,14 +30,13 @@ to pause, forward and go to previous page.
 
 And useful callback to perform meta functionalities.
 
-
 # Installation
 
 To use this plugin, add `story_view` as a [dependency in your pubspec.yaml file](https://flutter.io/platform-plugins/).
 
 # Usage
 
-Import the package into your code 
+Import the package into your code
 
 ```dart
 import "package:story_view/story_view.dart";
@@ -40,9 +46,10 @@ Look inside `examples/example.dart` on how to use this library. You can copy
 and paste the code into your `main.dart` and run to have a quick look.
 
 ## Basics
+
 Use [`StoryView`](https://pub.dev/documentation/story_view/latest/story_view/StoryView-class.html) to add stories to screen or view heirarchy. `StoryView` requires a list of [`StoryItem`](https://pub.dev/documentation/story_view/latest/story_view/StoryItem-class.html), each of which describes the view to be displayed on each story page, duration and so forth. This gives you the freedom to customize each page of the story.
 
-There are shorthands provided to create common pages. 
+There are shorthands provided to create common pages.
 
 `StoryItem.text` is a shorthand to create a story page that displays only text.
 
@@ -56,10 +63,10 @@ or `Column`
 `StoryItem.pageVideo` creates a page story item with video media. Just provide your video url and get going.
 
 ### Story controller, loaders and GIF support
+
 While images load, it'll be a better experience to pause the stories until it's done. To achieve this effect, create a global instance of [`StoryController`](https://pub.dev/documentation/story_view/latest/story_controller/StoryController-class.html) and use the shorthand `StoryItem.pageGif` or `StoryItem.inlineGif` while passing the controller to it.
 
 🍭 `StoryItem.pageGif` and `StoryItem.inlineGif` can also load non-animated graphic media like PNG, JPG, etc.
-
 
 ```dart
 ...
