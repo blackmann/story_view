@@ -19,7 +19,7 @@ class VideoLoader {
 
   VideoLoader(this.url, {this.requestHeaders});
 
-  void loadVideo(VoidCallback onComplete) {
+  void loadVideo(Function() onComplete) {
     if (this.videoFile != null) {
       this.state = LoadState.success;
       onComplete();
@@ -72,6 +72,8 @@ class StoryVideoState extends State<StoryVideo> {
   @override
   void initState() {
     super.initState();
+
+    widget.storyController.pause();
 
     widget.videoLoader.loadVideo(() {
       if (widget.videoLoader.state == LoadState.success) {

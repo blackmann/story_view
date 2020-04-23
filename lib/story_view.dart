@@ -104,7 +104,7 @@ class StoryItem {
   /// Shorthand for a full-page image content.
   ///
   /// You can provide any image provider for [image].
-  static StoryItem pageImage(
+  factory StoryItem.pageImage(
     ImageProvider image, {
     BoxFit imageFit = BoxFit.fitWidth,
     String caption,
@@ -160,7 +160,7 @@ class StoryItem {
   }
 
   /// Shorthand for creating inline image page.
-  static StoryItem inlineImage(
+  factory StoryItem.inlineImage(
     ImageProvider image, {
     Text caption,
     bool shown = false,
@@ -202,7 +202,7 @@ class StoryItem {
     );
   }
 
-  static StoryItem pageGif(
+  factory StoryItem.pageGif(
     String url, {
     StoryController controller,
     BoxFit imageFit = BoxFit.fitWidth,
@@ -258,7 +258,7 @@ class StoryItem {
   }
 
   /// Shorthand for creating inline image page.
-  static StoryItem inlineGif(
+  factory StoryItem.inlineGif(
     String url, {
     Text caption,
     StoryController controller,
@@ -313,9 +313,9 @@ class StoryItem {
     );
   }
 
-  static StoryItem pageVideo(
+  factory StoryItem.pageVideo(
     String url, {
-    StoryController controller,
+    @required StoryController controller,
     Duration duration,
     BoxFit imageFit = BoxFit.fitWidth,
     String caption,
