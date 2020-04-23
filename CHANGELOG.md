@@ -1,3 +1,7 @@
+## [0.11.5] - 23 Apr 2020.
+
+Fix issue with video stories not pausing while loading.
+
 ## [0.11.4] - 15 March 2020.
 
 Duration API in shorthand methods. Roundness of inline gifs fixed.
