@@ -86,7 +86,13 @@ Widget build(context) {
     storyItems,
     controller: controller, // pass controller here too
     repeat: true, // should the stories be slid forever
-    onStoryShow: (s) {notifyServer(s)}
+    onStoryShow: (s) {notifyServer(s)},
+    onComplete: () {},
+    onVerticalSwipeComplete: (direction) {
+      if (direction == Direction.down) {
+        Navigator.pop(context);
+      }
+    }
   )
 }
 ```
