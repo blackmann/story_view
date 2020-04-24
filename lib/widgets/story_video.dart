@@ -3,10 +3,10 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'story_view.dart';
 import 'package:video_player/video_player.dart';
 
-import 'utils.dart';
+import '../utils.dart';
+import '../controller/story_controller.dart';
 
 class VideoLoader {
   String url;
@@ -19,7 +19,7 @@ class VideoLoader {
 
   VideoLoader(this.url, {this.requestHeaders});
 
-  void loadVideo(Function() onComplete) {
+  void loadVideo(VoidCallback onComplete) {
     if (this.videoFile != null) {
       this.state = LoadState.success;
       onComplete();

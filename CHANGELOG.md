@@ -1,3 +1,7 @@
+## [0.12.0] - 24 Apr 2020.
+
+Vertical gesture support. Code clean up with minor breaking changes. Promoted the use of story controller.
+
 ## [0.11.5] - 23 Apr 2020.
 
 Fix issue with video stories not pausing while loading.
