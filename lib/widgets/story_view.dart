@@ -479,8 +479,6 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   }
 
   void play() {
-    print("Play called");
-
     _animationController?.dispose();
     // get the next playing page
     final storyItem = widget.storyItems.firstWhere((it) {
