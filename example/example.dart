@@ -18,6 +18,8 @@ class MyApp extends StatelessWidget {
 }
 
 class Home extends StatelessWidget {
+  final StoryController controller = StoryController();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -33,10 +35,12 @@ class Home extends StatelessWidget {
             Container(
               height: 300,
               child: StoryView(
-                [
+                controller: controller,
+                storyItems: [
                   StoryItem.text(
-                    "Hello world!\nHave a look at some great Ghanaian delicacies. I'm sorry if your mouth waters. \n\nTap!",
-                    Colors.orange,
+                    title:
+                        "Hello world!\nHave a look at some great Ghanaian delicacies. I'm sorry if your mouth waters. \n\nTap!",
+                    backgroundColor: Colors.orange,
                     roundedTop: true,
                   ),
                   // StoryItem.inlineImage(
@@ -52,8 +56,9 @@ class Home extends StatelessWidget {
                   //   ),
                   // ),
                   StoryItem.inlineImage(
-                    NetworkImage(
-                        "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg"),
+                    url:
+                        "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
+                    controller: controller,
                     caption: Text(
                       "Omotuo & Nkatekwan; You will love this meal if taken as supper.",
                       style: TextStyle(
@@ -63,8 +68,10 @@ class Home extends StatelessWidget {
                       ),
                     ),
                   ),
-                  StoryItem.inlineGif(
-                    "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
+                  StoryItem.inlineImage(
+                    url:
+                        "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
+                    controller: controller,
                     caption: Text(
                       "Hektas, sektas and skatad",
                       style: TextStyle(
@@ -145,31 +152,32 @@ class _MoreStoriesState extends State<MoreStories> {
         title: Text("More"),
       ),
       body: StoryView(
-        [
+        storyItems: [
           StoryItem.text(
-            "I guess you'd love to see more of our food. That's great.",
-            Colors.blue,
+            title: "I guess you'd love to see more of our food. That's great.",
+            backgroundColor: Colors.blue,
           ),
           StoryItem.text(
-            "Nice!\n\nTap to continue.",
-            Colors.red,
+            title: "Nice!\n\nTap to continue.",
+            backgroundColor: Colors.red,
           ),
           StoryItem.pageImage(
-            NetworkImage(
-                "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg"),
+            url:
+                "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
             caption: "Still sampling",
+            controller: storyController,
           ),
-          StoryItem.pageGif(
-              "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
+          StoryItem.pageImage(
+              url: "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
               caption: "Working with gifs",
               controller: storyController),
-          StoryItem.pageGif(
-            "https://media.giphy.com/media/XcA8krYsrEAYXKf4UQ/giphy.gif",
+          StoryItem.pageImage(
+            url: "https://media.giphy.com/media/XcA8krYsrEAYXKf4UQ/giphy.gif",
             caption: "Hello, from the other side",
             controller: storyController,
           ),
-          StoryItem.pageGif(
-            "https://media.giphy.com/media/XcA8krYsrEAYXKf4UQ/giphy.gif",
+          StoryItem.pageImage(
+            url: "https://media.giphy.com/media/XcA8krYsrEAYXKf4UQ/giphy.gif",
             caption: "Hello, from the other side2",
             controller: storyController,
           ),
