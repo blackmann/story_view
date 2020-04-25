@@ -368,6 +368,10 @@ class StoryView extends StatefulWidget {
   /// each time the full story completes when [repeat] is set to `true`.
   final VoidCallback onComplete;
 
+  /// Callback for when a vertical swipe gesture is detected. If you do not
+  /// want to listen to such event, do not provide it. For instance,
+  /// for inline stories inside ListViews, it is preferrable to not to
+  /// provide this callback so as to enable scroll events on the list view.
   final Function(Direction) onVerticalSwipeComplete;
 
   /// Callback for when a story is currently being shown.
@@ -414,16 +418,16 @@ class StoryView extends StatefulWidget {
 class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   AnimationController _animationController;
   Animation<double> _currentAnimation;
-  Timer _debouncer;
+  Timer _nextDebouncer;
 
   StreamSubscription<PlaybackState> _playbackSubscription;
 
   VerticalDragInfo verticalDragInfo;
 
-  StoryItem get lastShowing =>
+  StoryItem get _currentStory =>
       widget.storyItems.firstWhere((it) => !it.shown, orElse: () => null);
 
-  Widget get currentView => widget.storyItems
+  Widget get _currentView => widget.storyItems
       .firstWhere((it) => !it.shown, orElse: () => widget.storyItems.last)
       .view;
 
@@ -451,23 +455,41 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       });
     }
 
-    play();
-
     this._playbackSubscription =
         widget.controller.playbackNotifier.listen((playbackStatus) {
-      if (playbackStatus == PlaybackState.play) {
-        this._animationController?.forward();
-      } else if (playbackStatus == PlaybackState.pause) {
-        pause();
+      switch (playbackStatus) {
+        case PlaybackState.play:
+          _removeNextHold();
+          this._animationController?.forward();
+          break;
+
+        case PlaybackState.pause:
+          _holdNext(); // then pause animation
+          this._animationController?.stop(canceled: false);
+          break;
+
+        case PlaybackState.next:
+          _removeNextHold();
+          _goForward();
+          break;
+
+        case PlaybackState.previous:
+          _removeNextHold();
+          _goBack();
+          break;
       }
     });
+
+    _play();
   }
 
   @override
   void dispose() {
-    _debouncer?.cancel();
+    _clearDebouncer();
+
     _animationController?.dispose();
     _playbackSubscription?.cancel();
+
     super.dispose();
   }
 
@@ -478,7 +500,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     }
   }
 
-  void play() {
+  void _play() {
     _animationController?.dispose();
     // get the next playing page
     final storyItem = widget.storyItems.firstWhere((it) {
@@ -496,28 +518,26 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       if (status == AnimationStatus.completed) {
         storyItem.shown = true;
         if (widget.storyItems.last != storyItem) {
-          beginPlay();
+          _beginPlay();
         } else {
           // done playing
-          onComplete();
+          _onComplete();
         }
       }
     });
 
     _currentAnimation =
         Tween(begin: 0.0, end: 1.0).animate(_animationController);
-    _animationController.forward();
 
-    // ****
     widget.controller.play();
   }
 
-  void beginPlay() {
+  void _beginPlay() {
     setState(() {});
-    play();
+    _play();
   }
 
-  void onComplete() {
+  void _onComplete() {
     if (widget.onComplete != null) {
       widget.controller.pause();
       widget.onComplete();
@@ -528,48 +548,41 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
         it.shown = false;
       });
 
-      beginPlay();
+      _beginPlay();
     }
   }
 
-  void goBack() {
-    widget.controller.play();
-
+  void _goBack() {
     _animationController.stop();
 
-    if (this.lastShowing == null) {
+    if (this._currentStory == null) {
       widget.storyItems.last.shown = false;
     }
 
-    if (this.lastShowing == widget.storyItems.first) {
-      beginPlay();
+    if (this._currentStory == widget.storyItems.first) {
+      _beginPlay();
     } else {
-      this.lastShowing.shown = false;
-      int lastPos = widget.storyItems.indexOf(this.lastShowing);
+      this._currentStory.shown = false;
+      int lastPos = widget.storyItems.indexOf(this._currentStory);
       final previous = widget.storyItems[lastPos - 1];
 
       previous.shown = false;
 
-      beginPlay();
+      _beginPlay();
     }
   }
 
-  void _clearDebouncer() {
-    _debouncer?.cancel();
-    _debouncer = null;
-  }
-
-  void goForward() {
-    if (this.lastShowing != widget.storyItems.last) {
+  void _goForward() {
+    if (this._currentStory != widget.storyItems.last) {
       _animationController.stop();
 
       // get last showing
-      final _last = this.lastShowing;
+      final _last = this._currentStory;
 
       if (_last != null) {
         _last.shown = true;
         if (_last != widget.storyItems.last) {
-          beginPlay();
+          _beginPlay();
         }
       }
     } else {
@@ -578,20 +591,19 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     }
   }
 
-  void pause() {
-    this._animationController?.stop(canceled: false);
+  void _clearDebouncer() {
+    _nextDebouncer?.cancel();
+    _nextDebouncer = null;
   }
 
-  void unpause() {
-    _clearDebouncer();
-    widget.controller.play();
+  void _removeNextHold() {
+    _nextDebouncer?.cancel();
+    _nextDebouncer = null;
   }
 
-  void _pauseDebounce() {
-    widget.controller.pause();
-
-    _debouncer?.cancel();
-    _debouncer = Timer(Duration(milliseconds: 500), () {});
+  void _holdNext() {
+    _nextDebouncer?.cancel();
+    _nextDebouncer = Timer(Duration(milliseconds: 500), () {});
   }
 
   @override
@@ -600,7 +612,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       color: Colors.white,
       child: Stack(
         children: <Widget>[
-          currentView,
+          _currentView,
           Align(
             alignment: widget.progressPosition == ProgressPosition.top
                 ? Alignment.topCenter
@@ -631,51 +643,60 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               heightFactor: 1,
               child: GestureDetector(
                 onTapDown: (details) {
-                  _pauseDebounce();
+                  widget.controller.pause();
                 },
                 onTapCancel: () {
-                  unpause();
+                  widget.controller.play();
                 },
                 onTapUp: (details) {
-                  if (_debouncer?.isActive == true) {
-                    _clearDebouncer();
-                    goForward();
+                  // if debounce timed out (not active) then continue anim
+                  if (_nextDebouncer?.isActive == false) {
+                    widget.controller.play();
                   } else {
-                    unpause();
+                    widget.controller.next();
                   }
                 },
-                onVerticalDragStart: (details) {
-                  _pauseDebounce();
-                },
-                onVerticalDragCancel: () {
-                  unpause();
-                },
-                onVerticalDragUpdate: (details) {
-                  if (verticalDragInfo == null) {
-                    verticalDragInfo = VerticalDragInfo();
-                  }
+                onVerticalDragStart: widget.onVerticalSwipeComplete == null
+                    ? null
+                    : (details) {
+                        widget.controller.pause();
+                      },
+                onVerticalDragCancel: widget.onVerticalSwipeComplete == null
+                    ? null
+                    : () {
+                        widget.controller.play();
+                      },
+                onVerticalDragUpdate: widget.onVerticalSwipeComplete == null
+                    ? null
+                    : (details) {
+                        if (verticalDragInfo == null) {
+                          verticalDragInfo = VerticalDragInfo();
+                        }
 
-                  verticalDragInfo.update(details.primaryDelta);
+                        verticalDragInfo.update(details.primaryDelta);
 
-                  // TODO: provide callback interface for animation purposes
-                },
-                onVerticalDragEnd: (details) {
-                  unpause();
-                  // finish up drag cycle
-                  if (!verticalDragInfo.cancel &&
-                      widget.onVerticalSwipeComplete != null) {
-                    widget.onVerticalSwipeComplete(verticalDragInfo.direction);
-                  }
+                        // TODO: provide callback interface for animation purposes
+                      },
+                onVerticalDragEnd: widget.onVerticalSwipeComplete == null
+                    ? null
+                    : (details) {
+                        widget.controller.play();
+                        // finish up drag cycle
+                        if (!verticalDragInfo.cancel &&
+                            widget.onVerticalSwipeComplete != null) {
+                          widget.onVerticalSwipeComplete(
+                              verticalDragInfo.direction);
+                        }
 
-                  verticalDragInfo = null;
-                },
+                        verticalDragInfo = null;
+                      },
               )),
           Align(
             alignment: Alignment.centerLeft,
             heightFactor: 1,
             child: SizedBox(
                 child: GestureDetector(onTap: () {
-                  goBack();
+                  widget.controller.previous();
                 }),
                 width: 70),
           ),
