@@ -92,7 +92,8 @@ Widget build(context) {
       if (direction == Direction.down) {
         Navigator.pop(context);
       }
-    }
+    } // To disable vertical swipe gestures, ignore this parameter.
+      // Preferrably for inline story view.
   )
 }
 ```

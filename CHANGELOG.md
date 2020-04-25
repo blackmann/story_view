@@ -1,3 +1,7 @@
+## [0.12.1] - 24 Apr 2020.
+
+Fix issue #40 and #41. Refactor interaction events to use controller.
+
 ## [0.12.0] - 24 Apr 2020.
 
 Vertical gesture support. Code clean up with minor breaking changes. Promoted the use of story controller.
