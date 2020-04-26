@@ -25,14 +25,16 @@ class VideoLoader {
       onComplete();
     }
 
-    final fileStream =
-        DefaultCacheManager().getFile(this.url, headers: this.requestHeaders);
+    final fileStream = DefaultCacheManager()
+        .getFileStream(this.url, headers: this.requestHeaders);
 
-    fileStream.listen((fileInfo) {
-      if (this.videoFile == null) {
-        this.state = LoadState.success;
-        this.videoFile = fileInfo.file;
-        onComplete();
+    fileStream.listen((fileResponse) {
+      if (fileResponse is FileInfo) {
+        if (this.videoFile == null) {
+          this.state = LoadState.success;
+          this.videoFile = fileResponse.file;
+          onComplete();
+        }
       }
     });
   }

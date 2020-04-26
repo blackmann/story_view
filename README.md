@@ -58,7 +58,7 @@ There are shorthands provided to create common pages.
 `StoryItem.inlineImage` creates a story item that is intended to be displayed in a linear view hierarchy like `List`
 or `Column`
 
-> > 🍭 Both `.inlineImage` and `pageImage` support animated GIFs.
+> 🍭 Both `.inlineImage` and `pageImage` support animated GIFs.
 
 `StoryItem.pageVideo` creates a page story item with video media. Just provide your video url and get going.
 

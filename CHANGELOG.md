@@ -1,4 +1,8 @@
-## [0.12.1] - 24 Apr 2020.
+## [0.12.2] - 26 Apr 2020.
+
+Update dependencies.
+
+## [0.12.1] - 25 Apr 2020.
 
 Fix issue #40 and #41. Refactor interaction events to use controller.
 

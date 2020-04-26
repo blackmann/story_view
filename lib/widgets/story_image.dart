@@ -29,11 +29,12 @@ class ImageLoader {
       onComplete();
     }
 
-    final fileStream =
-        DefaultCacheManager().getFile(this.url, headers: this.requestHeaders);
+    final fileStream = DefaultCacheManager()
+        .getFileStream(this.url, headers: this.requestHeaders);
 
     fileStream.listen(
-      (fileInfo) {
+      (fileResponse) {
+        if (!(fileResponse is FileInfo)) return;
         // the reason for this is that, when the cache manager fetches
         // the image again from network, the provided `onComplete` should
         // not be called again
@@ -41,7 +42,7 @@ class ImageLoader {
           return;
         }
 
-        final imageBytes = fileInfo.file.readAsBytesSync();
+        final imageBytes = (fileResponse as FileInfo).file.readAsBytesSync();
 
         this.state = LoadState.success;
 
