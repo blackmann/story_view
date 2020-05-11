@@ -10,7 +10,7 @@ import '../controller/story_controller.dart';
 import '../utils.dart';
 
 /// Indicates where the progress indicators should be placed.
-enum ProgressPosition { top, bottom }
+enum ProgressPosition { none, top, bottom }
 
 /// This is used to specify the height of the progress indicator. Inline stories
 /// should use [small]
@@ -402,7 +402,6 @@ class StoryView extends StatefulWidget {
     this.onVerticalSwipeComplete,
   })  : assert(storyItems != null && storyItems.length > 0,
             "[storyItems] should not be null or empty"),
-        assert(progressPosition != null, "[progressPosition] cannot be null"),
         assert(
           repeat != null,
           "[repeat] cannot be null",
@@ -613,31 +612,33 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       child: Stack(
         children: <Widget>[
           _currentView,
-          Align(
-            alignment: widget.progressPosition == ProgressPosition.top
-                ? Alignment.topCenter
-                : Alignment.bottomCenter,
-            child: SafeArea(
-              bottom: widget.inline ? false : true,
-              // we use SafeArea here for notched and bezeles phones
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: 16,
-                  vertical: 8,
-                ),
-                child: PageBar(
-                  widget.storyItems
-                      .map((it) => PageData(it.duration, it.shown))
-                      .toList(),
-                  this._currentAnimation,
-                  key: UniqueKey(),
-                  indicatorHeight: widget.inline
-                      ? IndicatorHeight.small
-                      : IndicatorHeight.large,
+          if (widget.progressPosition == ProgressPosition.none) {
+            Align(
+              alignment: widget.progressPosition == ProgressPosition.top
+                  ? Alignment.topCenter
+                  : Alignment.bottomCenter,
+              child: SafeArea(
+                bottom: widget.inline ? false : true,
+                // we use SafeArea here for notched and bezeles phones
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 16,
+                    vertical: 8,
+                  ),
+                  child: PageBar(
+                    widget.storyItems
+                        .map((it) => PageData(it.duration, it.shown))
+                        .toList(),
+                    this._currentAnimation,
+                    key: UniqueKey(),
+                    indicatorHeight: widget.inline
+                        ? IndicatorHeight.small
+                        : IndicatorHeight.large,
+                  ),
                 ),
               ),
             ),
-          ),
+          }
           Align(
               alignment: Alignment.centerRight,
               heightFactor: 1,
