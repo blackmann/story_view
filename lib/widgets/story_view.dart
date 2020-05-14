@@ -54,7 +54,6 @@ class StoryItem {
     @required Color backgroundColor,
     TextStyle textStyle,
     bool shown = false,
-    double fontSize = 18,
     bool roundedTop = false,
     bool roundedBottom = false,
     Duration duration,
@@ -90,7 +89,6 @@ class StoryItem {
                 ) ??
                 TextStyle(
                   color: contrast > 1.8 ? Colors.white : Colors.black,
-                  fontSize: fontSize,
                 ),
             textAlign: TextAlign.center,
           ),
