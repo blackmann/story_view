@@ -156,10 +156,15 @@ class _MoreStoriesState extends State<MoreStories> {
           StoryItem.text(
             title: "I guess you'd love to see more of our food. That's great.",
             backgroundColor: Colors.blue,
+            
           ),
           StoryItem.text(
             title: "Nice!\n\nTap to continue.",
             backgroundColor: Colors.red,
+            textStyle: TextStyle(
+              fontFamily: 'Dancing',
+              fontSize: 40,
+            ),
           ),
           StoryItem.pageImage(
             url:

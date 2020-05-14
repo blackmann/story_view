@@ -52,8 +52,8 @@ class StoryItem {
   static StoryItem text({
     @required String title,
     @required Color backgroundColor,
+    TextStyle textStyle,
     bool shown = false,
-    double fontSize = 18,
     bool roundedTop = false,
     bool roundedBottom = false,
     Duration duration,
@@ -84,10 +84,13 @@ class StoryItem {
         child: Center(
           child: Text(
             title,
-            style: TextStyle(
-              color: contrast > 1.8 ? Colors.white : Colors.black,
-              fontSize: fontSize,
-            ),
+            style: textStyle?.copyWith(
+                  color: contrast > 1.8 ? Colors.white : Colors.black,
+                ) ??
+                TextStyle(
+                  color: contrast > 1.8 ? Colors.white : Colors.black,
+                  fontSize: 18,
+                ),
             textAlign: TextAlign.center,
           ),
         ),
