@@ -89,6 +89,7 @@ class StoryItem {
                 ) ??
                 TextStyle(
                   color: contrast > 1.8 ? Colors.white : Colors.black,
+                  fontSize: 18,
                 ),
             textAlign: TextAlign.center,
           ),
