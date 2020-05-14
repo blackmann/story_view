@@ -1,3 +1,6 @@
+## [0.12.3] - 14 May 2020.
+`fontSize` has been replaced with `textStyle`. Minor breaking change.
+
 ## [0.12.2] - 26 Apr 2020.
 
 Update dependencies.
