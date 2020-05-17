@@ -104,7 +104,8 @@ class StoryItem {
   /// Factory constructor for page images. [controller] should be same instance as
   /// one passed to the `StoryView`
   factory StoryItem.pageImage({
-    @required String url,
+    String url,
+    String file,
     @required StoryController controller,
     BoxFit imageFit = BoxFit.fitWidth,
     String caption,
@@ -118,7 +119,8 @@ class StoryItem {
         child: Stack(
           children: <Widget>[
             StoryImage.url(
-              url,
+              url: url,
+              file: file,
               controller: controller,
               fit: imageFit,
               requestHeaders: requestHeaders,
@@ -160,7 +162,8 @@ class StoryItem {
   /// Shorthand for creating inline image. [controller] should be same instance as
   /// one passed to the `StoryView`
   factory StoryItem.inlineImage({
-    @required String url,
+    String url,
+    String file,
     @required Text caption,
     @required StoryController controller,
     BoxFit imageFit = BoxFit.cover,
@@ -179,7 +182,8 @@ class StoryItem {
             child: Stack(
               children: <Widget>[
                 StoryImage.url(
-                  url,
+                  url: url,
+                  file: file,
                   controller: controller,
                   fit: imageFit,
                   requestHeaders: requestHeaders,
@@ -211,8 +215,9 @@ class StoryItem {
 
   /// Shorthand for creating page video. [controller] should be same instance as
   /// one passed to the `StoryView`
-  factory StoryItem.pageVideo(
-    String url, {
+  factory StoryItem.pageVideo({
+    String url,
+    String file,
     @required StoryController controller,
     Duration duration,
     BoxFit imageFit = BoxFit.fitWidth,
@@ -226,7 +231,8 @@ class StoryItem {
           child: Stack(
             children: <Widget>[
               StoryVideo.url(
-                url,
+                url: url,
+                file: file,
                 controller: controller,
                 requestHeaders: requestHeaders,
               ),

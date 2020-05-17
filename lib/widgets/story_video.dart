@@ -10,14 +10,14 @@ import '../controller/story_controller.dart';
 
 class VideoLoader {
   String url;
-
+  String file;
   File videoFile;
 
   Map<String, dynamic> requestHeaders;
 
   LoadState state = LoadState.loading;
 
-  VideoLoader(this.url, {this.requestHeaders});
+  VideoLoader({this.url, this.file, this.requestHeaders});
 
   void loadVideo(VoidCallback onComplete) {
     if (this.videoFile != null) {
@@ -25,18 +25,23 @@ class VideoLoader {
       onComplete();
     }
 
-    final fileStream = DefaultCacheManager()
-        .getFileStream(this.url, headers: this.requestHeaders);
-
-    fileStream.listen((fileResponse) {
-      if (fileResponse is FileInfo) {
-        if (this.videoFile == null) {
-          this.state = LoadState.success;
-          this.videoFile = fileResponse.file;
-          onComplete();
+    if (url == null) {
+      this.state = LoadState.success;
+      this.videoFile = new File(file);
+      onComplete();
+    } else {
+      final fileStream = DefaultCacheManager()
+          .getFileStream(this.url, headers: this.requestHeaders);
+      fileStream.listen((fileResponse) {
+        if (fileResponse is FileInfo) {
+          if (this.videoFile == null) {
+            this.state = LoadState.success;
+            this.videoFile = fileResponse.file;
+            onComplete();
+          }
         }
-      }
-    });
+      });
+    }
   }
 }
 
@@ -47,12 +52,14 @@ class StoryVideo extends StatefulWidget {
   StoryVideo(this.videoLoader, {this.storyController, Key key})
       : super(key: key ?? UniqueKey());
 
-  static StoryVideo url(String url,
-      {StoryController controller,
+  static StoryVideo url(
+      {String url,
+      String file,
+      StoryController controller,
       Map<String, dynamic> requestHeaders,
       Key key}) {
     return StoryVideo(
-      VideoLoader(url, requestHeaders: requestHeaders),
+      VideoLoader(url: url, file: file, requestHeaders: requestHeaders),
       storyController: controller,
       key: key,
     );
