@@ -12,7 +12,9 @@ class StoryController {
 
   final initialStoryIndex;
 
-  StoryController({this.initialStoryIndex = 0});
+  bool isAudioMuted;
+
+  StoryController({this.initialStoryIndex = 0,this.isAudioMuted = false});
 
   /// Stream that broadcasts the playback state of the stories.
   final playbackNotifier = BehaviorSubject<PlaybackState>();
@@ -43,10 +45,12 @@ class StoryController {
 
 
   void muteAudio(){
+    isAudioMuted = true;
     playbackNotifier.add(PlaybackState.mute);
   }
 
   void unMuteAudio(){
+    isAudioMuted = false;
     playbackNotifier.add(PlaybackState.unmute);
   }
 }

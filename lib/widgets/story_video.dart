@@ -80,7 +80,8 @@ class StoryVideoState extends State<StoryVideo> {
     widget.videoLoader.loadVideo(() {
       if (widget.videoLoader.state == LoadState.success) {
         this.playerController =
-            VideoPlayerController.file(widget.videoLoader.videoFile);
+            VideoPlayerController.file(widget.videoLoader.videoFile)
+              ..setVolume(widget.storyController.isAudioMuted ? 0 : 1.0);
 
         playerController.initialize().then((v) {
           setState(() {});
@@ -97,7 +98,7 @@ class StoryVideoState extends State<StoryVideo> {
             } else if(playbackState == PlaybackState.mute){
               playerController.setVolume(0);
             } else if(playbackState == PlaybackState.unmute){
-              playerController.setVolume(100);
+              playerController.setVolume(1.0);
             }
           });
         }
