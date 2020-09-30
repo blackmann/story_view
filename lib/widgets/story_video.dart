@@ -92,8 +92,12 @@ class StoryVideoState extends State<StoryVideo> {
               widget.storyController.playbackNotifier.listen((playbackState) {
             if (playbackState == PlaybackState.pause) {
               playerController.pause();
-            } else {
+            } else if(playbackState == PlaybackState.play){
               playerController.play();
+            } else if(playbackState == PlaybackState.mute){
+              playerController.setVolume(0);
+            } else if(playbackState == PlaybackState.unmute){
+              playerController.setVolume(100);
             }
           });
         }
