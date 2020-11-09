@@ -96,7 +96,7 @@ packages:
       name: flutter_cache_manager
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.4.2"
+    version: "2.0.0"
   flutter_test:
     dependency: "direct dev"
     description: flutter
@@ -155,7 +155,7 @@ packages:
       name: path_provider
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.6.17"
+    version: "1.6.24"
   path_provider_linux:
     dependency: transitive
     description:
@@ -321,7 +321,7 @@ packages:
       name: video_player
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.11.0"
+    version: "1.0.0"
   video_player_platform_interface:
     dependency: transitive
     description:
