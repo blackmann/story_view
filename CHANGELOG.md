@@ -1,3 +1,6 @@
+## [0.12.5] - 14 Nov 2020.
+Upgraded video_player to latest version
+
 ## [0.12.4] - 29 Oct 2020.
 Upgraded flutter_cache_manager to latest version
 
