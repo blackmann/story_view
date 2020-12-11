@@ -760,7 +760,7 @@ class PageBarState extends State<PageBar> {
     super.initState();
 
     int count = widget.pages.length;
-    spacing = count > 15 ? 1 : count > 10 ? 2 : 4;
+    spacing = (count > 15) ? 1 : ((count > 10) ? 2 : 4);
 
     widget.animation.addListener(() {
       setState(() {});
@@ -788,7 +788,7 @@ class PageBarState extends State<PageBar> {
             padding: EdgeInsets.only(
                 right: widget.pages.last == it ? 0 : this.spacing),
             child: StoryProgressIndicator(
-              isPlaying(it) ? widget.animation.value : it.shown ? 1 : 0,
+              isPlaying(it) ? widget.animation.value : (it.shown ? 1 : 0),
               indicatorHeight:
                   widget.indicatorHeight == IndicatorHeight.large ? 5 : 3,
             ),
