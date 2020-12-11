@@ -41,6 +41,7 @@ class Home extends StatelessWidget {
                     title:
                         "Hello world!\nHave a look at some great Ghanaian delicacies. I'm sorry if your mouth waters. \n\nTap!",
                     backgroundColor: Colors.orange,
+                    index: 0,
                     roundedTop: true,
                   ),
                   // StoryItem.inlineImage(
@@ -59,6 +60,7 @@ class Home extends StatelessWidget {
                     url:
                         "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
                     controller: controller,
+                    index: 1,
                     caption: Text(
                       "Omotuo & Nkatekwan; You will love this meal if taken as supper.",
                       style: TextStyle(
@@ -72,6 +74,7 @@ class Home extends StatelessWidget {
                     url:
                         "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
                     controller: controller,
+                    index: 2,
                     caption: Text(
                       "Hektas, sektas and skatad",
                       style: TextStyle(
@@ -156,11 +159,12 @@ class _MoreStoriesState extends State<MoreStories> {
           StoryItem.text(
             title: "I guess you'd love to see more of our food. That's great.",
             backgroundColor: Colors.blue,
-            
+            index: 0,
           ),
           StoryItem.text(
             title: "Nice!\n\nTap to continue.",
             backgroundColor: Colors.red,
+            index: 1,
             textStyle: TextStyle(
               fontFamily: 'Dancing',
               fontSize: 40,
@@ -170,20 +174,24 @@ class _MoreStoriesState extends State<MoreStories> {
             url:
                 "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
             caption: "Still sampling",
+            index: 2,
             controller: storyController,
           ),
           StoryItem.pageImage(
               url: "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
               caption: "Working with gifs",
+              index: 3,
               controller: storyController),
           StoryItem.pageImage(
             url: "https://media.giphy.com/media/XcA8krYsrEAYXKf4UQ/giphy.gif",
             caption: "Hello, from the other side",
+            index: 4,
             controller: storyController,
           ),
           StoryItem.pageImage(
             url: "https://media.giphy.com/media/XcA8krYsrEAYXKf4UQ/giphy.gif",
             caption: "Hello, from the other side2",
+            index: 5,
             controller: storyController,
           ),
         ],

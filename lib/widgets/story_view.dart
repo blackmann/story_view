@@ -1,13 +1,13 @@
+import 'dart:async';
 import 'dart:math';
 import 'dart:ui';
-import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'story_video.dart';
-import 'story_image.dart';
 
 import '../controller/story_controller.dart';
 import '../utils.dart';
+import 'story_image.dart';
+import 'story_video.dart';
 
 /// Indicates where the progress indicators should be placed.
 enum ProgressPosition { top, bottom }
@@ -34,9 +34,11 @@ class StoryItem {
 
   /// The page content
   final Widget view;
+  final int index;
 
   StoryItem(
     this.view, {
+    @required this.index,
     this.duration,
     this.shown = false,
   }) : assert(duration != null, "[duration] should not be null");
@@ -52,6 +54,7 @@ class StoryItem {
   static StoryItem text({
     @required String title,
     @required Color backgroundColor,
+    @required int index,
     TextStyle textStyle,
     bool shown = false,
     bool roundedTop = false,
@@ -96,6 +99,7 @@ class StoryItem {
         ),
         //color: backgroundColor,
       ),
+      index: index,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
@@ -106,6 +110,7 @@ class StoryItem {
   factory StoryItem.pageImage({
     @required String url,
     @required StoryController controller,
+    @required int index,
     BoxFit imageFit = BoxFit.fitWidth,
     String caption,
     bool shown = false,
@@ -152,6 +157,7 @@ class StoryItem {
           ],
         ),
       ),
+      index: index,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
@@ -163,6 +169,7 @@ class StoryItem {
     @required String url,
     @required Text caption,
     @required StoryController controller,
+    @required int index,
     BoxFit imageFit = BoxFit.cover,
     Map<String, dynamic> requestHeaders,
     bool shown = false,
@@ -204,6 +211,7 @@ class StoryItem {
           bottom: Radius.circular(roundedBottom ? 8 : 0),
         ),
       ),
+      index: index,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
@@ -214,6 +222,7 @@ class StoryItem {
   factory StoryItem.pageVideo(
     String url, {
     @required StoryController controller,
+    @required int index,
     Duration duration,
     BoxFit imageFit = BoxFit.fitWidth,
     String caption,
@@ -252,6 +261,7 @@ class StoryItem {
             ],
           ),
         ),
+        index: index,
         shown: shown,
         duration: duration ?? Duration(seconds: 10));
   }
@@ -261,6 +271,7 @@ class StoryItem {
   /// up.
   factory StoryItem.pageProviderImage(
     ImageProvider image, {
+    @required int index,
     BoxFit imageFit = BoxFit.fitWidth,
     String caption,
     bool shown = false,
@@ -310,6 +321,7 @@ class StoryItem {
             ],
           ),
         ),
+        index: index,
         shown: shown,
         duration: duration ?? Duration(seconds: 3));
   }
@@ -319,6 +331,7 @@ class StoryItem {
   /// up.
   factory StoryItem.inlineProviderImage(
     ImageProvider image, {
+    @required int index,
     Text caption,
     bool shown = false,
     bool roundedTop = true,
@@ -354,6 +367,7 @@ class StoryItem {
           ),
         ),
       ),
+      index: index,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
@@ -746,11 +760,7 @@ class PageBarState extends State<PageBar> {
     super.initState();
 
     int count = widget.pages.length;
-    spacing = count > 15
-        ? 1
-        : count > 10
-            ? 2
-            : 4;
+    spacing = count > 15 ? 1 : count > 10 ? 2 : 4;
 
     widget.animation.addListener(() {
       setState(() {});
@@ -778,11 +788,7 @@ class PageBarState extends State<PageBar> {
             padding: EdgeInsets.only(
                 right: widget.pages.last == it ? 0 : this.spacing),
             child: StoryProgressIndicator(
-              isPlaying(it)
-                  ? widget.animation.value
-                  : it.shown
-                      ? 1
-                      : 0,
+              isPlaying(it) ? widget.animation.value : it.shown ? 1 : 0,
               indicatorHeight:
                   widget.indicatorHeight == IndicatorHeight.large ? 5 : 3,
             ),
