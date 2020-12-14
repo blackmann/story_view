@@ -34,13 +34,10 @@ class StoryItem {
 
   /// The page content
   final Widget view;
-  final int index;
-
   StoryItem(
     this.view, {
-    @required this.index,
-    this.duration,
-    this.shown = false,
+      this.duration,
+        this.shown = false,
   }) : assert(duration != null, "[duration] should not be null");
 
   /// Short hand to create text-only page.
@@ -54,7 +51,7 @@ class StoryItem {
   static StoryItem text({
     @required String title,
     @required Color backgroundColor,
-    @required int index,
+    UniqueKey key,
     TextStyle textStyle,
     bool shown = false,
     bool roundedTop = false,
@@ -73,6 +70,7 @@ class StoryItem {
 
     return StoryItem(
       Container(
+        key: key,
         decoration: BoxDecoration(
           color: backgroundColor,
           borderRadius: BorderRadius.vertical(
@@ -99,7 +97,6 @@ class StoryItem {
         ),
         //color: backgroundColor,
       ),
-      index: index,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
@@ -110,7 +107,7 @@ class StoryItem {
   factory StoryItem.pageImage({
     @required String url,
     @required StoryController controller,
-    @required int index,
+    UniqueKey key,
     BoxFit imageFit = BoxFit.fitWidth,
     String caption,
     bool shown = false,
@@ -119,6 +116,7 @@ class StoryItem {
   }) {
     return StoryItem(
       Container(
+        key: key,
         color: Colors.black,
         child: Stack(
           children: <Widget>[
@@ -157,7 +155,6 @@ class StoryItem {
           ],
         ),
       ),
-      index: index,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
@@ -169,7 +166,7 @@ class StoryItem {
     @required String url,
     @required Text caption,
     @required StoryController controller,
-    @required int index,
+    UniqueKey key,
     BoxFit imageFit = BoxFit.cover,
     Map<String, dynamic> requestHeaders,
     bool shown = false,
@@ -179,6 +176,7 @@ class StoryItem {
   }) {
     return StoryItem(
       ClipRRect(
+        key: key,
         child: Container(
           color: Colors.grey[100],
           child: Container(
@@ -211,7 +209,6 @@ class StoryItem {
           bottom: Radius.circular(roundedBottom ? 8 : 0),
         ),
       ),
-      index: index,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
@@ -222,7 +219,7 @@ class StoryItem {
   factory StoryItem.pageVideo(
     String url, {
     @required StoryController controller,
-    @required int index,
+    UniqueKey key,
     Duration duration,
     BoxFit imageFit = BoxFit.fitWidth,
     String caption,
@@ -231,6 +228,7 @@ class StoryItem {
   }) {
     return StoryItem(
         Container(
+          key: key,
           color: Colors.black,
           child: Stack(
             children: <Widget>[
@@ -261,7 +259,6 @@ class StoryItem {
             ],
           ),
         ),
-        index: index,
         shown: shown,
         duration: duration ?? Duration(seconds: 10));
   }
@@ -271,7 +268,7 @@ class StoryItem {
   /// up.
   factory StoryItem.pageProviderImage(
     ImageProvider image, {
-    @required int index,
+    UniqueKey key,
     BoxFit imageFit = BoxFit.fitWidth,
     String caption,
     bool shown = false,
@@ -280,6 +277,7 @@ class StoryItem {
     assert(imageFit != null, "[imageFit] should not be null");
     return StoryItem(
         Container(
+          key: key,
           color: Colors.black,
           child: Stack(
             children: <Widget>[
@@ -321,7 +319,6 @@ class StoryItem {
             ],
           ),
         ),
-        index: index,
         shown: shown,
         duration: duration ?? Duration(seconds: 3));
   }
@@ -331,7 +328,7 @@ class StoryItem {
   /// up.
   factory StoryItem.inlineProviderImage(
     ImageProvider image, {
-    @required int index,
+    UniqueKey key,
     Text caption,
     bool shown = false,
     bool roundedTop = true,
@@ -340,6 +337,7 @@ class StoryItem {
   }) {
     return StoryItem(
       Container(
+        key: key,
         decoration: BoxDecoration(
             color: Colors.grey[100],
             borderRadius: BorderRadius.vertical(
@@ -367,7 +365,6 @@ class StoryItem {
           ),
         ),
       ),
-      index: index,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
