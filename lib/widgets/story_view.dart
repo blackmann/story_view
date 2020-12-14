@@ -51,7 +51,7 @@ class StoryItem {
   static StoryItem text({
     @required String title,
     @required Color backgroundColor,
-    UniqueKey key,
+    ValueKey key,
     TextStyle textStyle,
     bool shown = false,
     bool roundedTop = false,
@@ -107,7 +107,7 @@ class StoryItem {
   factory StoryItem.pageImage({
     @required String url,
     @required StoryController controller,
-    UniqueKey key,
+    ValueKey key,
     BoxFit imageFit = BoxFit.fitWidth,
     String caption,
     bool shown = false,
@@ -166,7 +166,7 @@ class StoryItem {
     @required String url,
     @required Text caption,
     @required StoryController controller,
-    UniqueKey key,
+    ValueKey key,
     BoxFit imageFit = BoxFit.cover,
     Map<String, dynamic> requestHeaders,
     bool shown = false,
@@ -219,7 +219,7 @@ class StoryItem {
   factory StoryItem.pageVideo(
     String url, {
     @required StoryController controller,
-    UniqueKey key,
+    ValueKey key,
     Duration duration,
     BoxFit imageFit = BoxFit.fitWidth,
     String caption,
@@ -268,7 +268,7 @@ class StoryItem {
   /// up.
   factory StoryItem.pageProviderImage(
     ImageProvider image, {
-    UniqueKey key,
+    ValueKey key,
     BoxFit imageFit = BoxFit.fitWidth,
     String caption,
     bool shown = false,
@@ -328,7 +328,7 @@ class StoryItem {
   /// up.
   factory StoryItem.inlineProviderImage(
     ImageProvider image, {
-    UniqueKey key,
+    ValueKey key,
     Text caption,
     bool shown = false,
     bool roundedTop = true,
