@@ -1,3 +1,6 @@
+## [0.12.6] - 17 Dec 2020.
+Merged PR #74. Provision Key to store values. More here https://github.com/blackmann/story_view/pull/74
+
 ## [0.12.5] - 14 Nov 2020.
 Upgraded video_player to latest version
 
