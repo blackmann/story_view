@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:video_player/video_player.dart';
@@ -20,6 +21,11 @@ class VideoLoader {
   VideoLoader(this.url, {this.requestHeaders});
 
   void loadVideo(VoidCallback onComplete) {
+    if(kIsWeb){
+      this.state = LoadState.success;
+      onComplete();
+      return;
+    }
     if (this.videoFile != null) {
       this.state = LoadState.success;
       onComplete();
@@ -79,9 +85,16 @@ class StoryVideoState extends State<StoryVideo> {
 
     widget.videoLoader.loadVideo(() {
       if (widget.videoLoader.state == LoadState.success) {
-        this.playerController =
-            VideoPlayerController.file(widget.videoLoader.videoFile)
-              ..setVolume(widget.storyController.isAudioMuted ? 0 : 1.0);
+        if(kIsWeb){
+          print("Loading Video URL: widget.videoLoader.url");
+          this.playerController = VideoPlayerController.network(widget.videoLoader.url)
+            ..setVolume(widget.storyController.isAudioMuted ? 0 : 1.0);
+        }else{
+          this.playerController =
+          VideoPlayerController.file(widget.videoLoader.videoFile)
+            ..setVolume(widget.storyController.isAudioMuted ? 0 : 1.0);
+        }
+
 
         playerController.initialize().then((v) {
           setState(() {});
