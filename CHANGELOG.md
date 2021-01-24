@@ -1,3 +1,6 @@
+## [0.12.7] - 24 Jan 2021.
+Upgraded rxdart to latest version
+
 ## [0.12.6] - 17 Dec 2020.
 Merged PR #74. Provision Key to store values. More here https://github.com/blackmann/story_view/pull/74
 
