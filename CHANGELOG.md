@@ -1,3 +1,6 @@
+## [0.12.8] - 4 Feb 2021
+Merged #84 - Fix Error if playerController has not been loaded and is null
+
 ## [0.12.7] - 24 Jan 2021.
 Upgraded rxdart to latest version
 
