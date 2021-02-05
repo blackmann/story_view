@@ -32,12 +32,17 @@ class StoryItem {
   /// story item.
   bool shown;
 
+  /// Content of the story, witch has haptic logics. So it should be at the top of
+  /// the Stack to handle haptic events
+  final Widget hapticContent;
+
   /// The page content
   final Widget view;
   StoryItem(
     this.view, {
-      this.duration,
-        this.shown = false,
+    this.duration,
+    this.hapticContent,
+    this.shown = false,
   }) : assert(duration != null, "[duration] should not be null");
 
   /// Short hand to create text-only page.
@@ -56,6 +61,7 @@ class StoryItem {
     bool shown = false,
     bool roundedTop = false,
     bool roundedBottom = false,
+    Widget hapticContent,
     Duration duration,
   }) {
     double contrast = ContrastHelper.contrast([
@@ -98,6 +104,7 @@ class StoryItem {
         //color: backgroundColor,
       ),
       shown: shown,
+      hapticContent: hapticContent,
       duration: duration ?? Duration(seconds: 3),
     );
   }
@@ -110,6 +117,7 @@ class StoryItem {
     Key key,
     BoxFit imageFit = BoxFit.fitWidth,
     String caption,
+    Widget hapticContent,
     bool shown = false,
     Map<String, dynamic> requestHeaders,
     Duration duration,
@@ -156,6 +164,7 @@ class StoryItem {
         ),
       ),
       shown: shown,
+      hapticContent: hapticContent,
       duration: duration ?? Duration(seconds: 3),
     );
   }
@@ -172,6 +181,7 @@ class StoryItem {
     bool shown = false,
     bool roundedTop = true,
     bool roundedBottom = false,
+    Widget hapticContent,
     Duration duration,
   }) {
     return StoryItem(
@@ -210,6 +220,7 @@ class StoryItem {
         ),
       ),
       shown: shown,
+      hapticContent: hapticContent,
       duration: duration ?? Duration(seconds: 3),
     );
   }
@@ -223,6 +234,7 @@ class StoryItem {
     Duration duration,
     BoxFit imageFit = BoxFit.fitWidth,
     String caption,
+    Widget hapticContent,
     bool shown = false,
     Map<String, dynamic> requestHeaders,
   }) {
@@ -260,6 +272,7 @@ class StoryItem {
           ),
         ),
         shown: shown,
+        hapticContent: hapticContent,
         duration: duration ?? Duration(seconds: 10));
   }
 
@@ -271,6 +284,7 @@ class StoryItem {
     Key key,
     BoxFit imageFit = BoxFit.fitWidth,
     String caption,
+    Widget hapticContent,
     bool shown = false,
     Duration duration,
   }) {
@@ -320,6 +334,7 @@ class StoryItem {
           ),
         ),
         shown: shown,
+        hapticContent: hapticContent,
         duration: duration ?? Duration(seconds: 3));
   }
 
@@ -330,6 +345,7 @@ class StoryItem {
     ImageProvider image, {
     Key key,
     Text caption,
+    Widget hapticContent,
     bool shown = false,
     bool roundedTop = true,
     bool roundedBottom = false,
@@ -366,6 +382,7 @@ class StoryItem {
         ),
       ),
       shown: shown,
+      hapticContent: hapticContent,
       duration: duration ?? Duration(seconds: 3),
     );
   }
@@ -440,10 +457,10 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
 
   StoryItem get _currentStory =>
       widget.storyItems.firstWhere((it) => !it.shown, orElse: () => null);
+  StoryItem get _currentOrLastStory => widget.storyItems
+      .firstWhere((it) => !it.shown, orElse: () => widget.storyItems.last);
 
-  Widget get _currentView => widget.storyItems
-      .firstWhere((it) => !it.shown, orElse: () => widget.storyItems.last)
-      .view;
+  Widget get _currentView => _currentOrLastStory.view;
 
   @override
   void initState() {
@@ -714,6 +731,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 }),
                 width: 70),
           ),
+          _currentOrLastStory.hapticContent ?? const SizedBox.shrink()
         ],
       ),
     );
