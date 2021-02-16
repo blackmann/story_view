@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:io';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
@@ -14,12 +15,12 @@ class ImageLoader {
   ui.Codec frames;
 
   String url;
-
+  String file;
   Map<String, dynamic> requestHeaders;
 
   LoadState state = LoadState.loading; // by default
 
-  ImageLoader(this.url, {this.requestHeaders});
+  ImageLoader({this.url, this.file, this.requestHeaders});
 
   /// Load image from disk cache first, if not found then load from network.
   /// `onComplete` is called when [imageBytes] become available.
@@ -28,38 +29,49 @@ class ImageLoader {
       this.state = LoadState.success;
       onComplete();
     }
-
-    final fileStream = DefaultCacheManager()
-        .getFileStream(this.url, headers: this.requestHeaders);
-
-    fileStream.listen(
-      (fileResponse) {
-        if (!(fileResponse is FileInfo)) return;
-        // the reason for this is that, when the cache manager fetches
-        // the image again from network, the provided `onComplete` should
-        // not be called again
-        if (this.frames != null) {
-          return;
-        }
-
-        final imageBytes = (fileResponse as FileInfo).file.readAsBytesSync();
-
-        this.state = LoadState.success;
-
-        PaintingBinding.instance.instantiateImageCodec(imageBytes).then(
-            (codec) {
-          this.frames = codec;
-          onComplete();
-        }, onError: (error) {
-          this.state = LoadState.failure;
-          onComplete();
-        });
-      },
-      onError: (error) {
+    if (this.url == null) {
+      final imageBytes = new File(this.file).readAsBytesSync();
+      this.state = LoadState.success;
+      PaintingBinding.instance.instantiateImageCodec(imageBytes).then((codec) {
+        this.frames = codec;
+        onComplete();
+      }, onError: (error) {
         this.state = LoadState.failure;
         onComplete();
-      },
-    );
+      });
+    } else {
+      final fileStream = DefaultCacheManager()
+          .getFileStream(this.url, headers: this.requestHeaders);
+
+      fileStream.listen(
+        (fileResponse) {
+          if (!(fileResponse is FileInfo)) return;
+          // the reason for this is that, when the cache manager fetches
+          // the image again from network, the provided `onComplete` should
+          // not be called again
+          if (this.frames != null) {
+            return;
+          }
+
+          final imageBytes = (fileResponse as FileInfo).file.readAsBytesSync();
+
+          this.state = LoadState.success;
+
+          PaintingBinding.instance.instantiateImageCodec(imageBytes).then(
+              (codec) {
+            this.frames = codec;
+            onComplete();
+          }, onError: (error) {
+            this.state = LoadState.failure;
+            onComplete();
+          });
+        },
+        onError: (error) {
+          this.state = LoadState.failure;
+          onComplete();
+        },
+      );
+    }
   }
 }
 
@@ -81,8 +93,9 @@ class StoryImage extends StatefulWidget {
   }) : super(key: key ?? UniqueKey());
 
   /// Use this shorthand to fetch images/gifs from the provided [url]
-  factory StoryImage.url(
-    String url, {
+  factory StoryImage.url({
+    String url,
+    String file,
     StoryController controller,
     Map<String, dynamic> requestHeaders,
     BoxFit fit = BoxFit.fitWidth,
@@ -90,7 +103,8 @@ class StoryImage extends StatefulWidget {
   }) {
     return StoryImage(
         ImageLoader(
-          url,
+          url: url,
+          file: file,
           requestHeaders: requestHeaders,
         ),
         controller: controller,
