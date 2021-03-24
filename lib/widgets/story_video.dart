@@ -136,7 +136,7 @@ class StoryVideoState extends State<StoryVideo> {
         );
         break;
       case LoadState.success:
-        if(playerController.value.initialized){
+        if(playerController.value.isInitialized){
           return AspectRatio(
             aspectRatio: playerController.value.aspectRatio,
             child: VideoPlayer(playerController),
