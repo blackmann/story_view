@@ -39,7 +39,7 @@ class Home extends StatelessWidget {
                 storyItems: [
                   StoryItem.text(
                     title:
-                        "Hello world!\nHave a look at some great Ghanaian delicacies. I'm sorry if your mouth waters. \n\nTap!",
+                    "Hello world\nHave a look at some great Ghanaian delicacies. I'm sorry if your mouth waters. \n\nTap!",
                     backgroundColor: Colors.orange,
                     roundedTop: true,
                   ),
@@ -57,7 +57,7 @@ class Home extends StatelessWidget {
                   // ),
                   StoryItem.inlineImage(
                     url:
-                        "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
+                    "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
                     controller: controller,
                     caption: Text(
                       "Omotuo & Nkatekwan; You will love this meal if taken as supper.",
@@ -70,7 +70,7 @@ class Home extends StatelessWidget {
                   ),
                   StoryItem.inlineImage(
                     url:
-                        "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
+                    "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
                     controller: controller,
                     caption: Text(
                       "Hektas, sektas and skatad",
@@ -83,7 +83,10 @@ class Home extends StatelessWidget {
                   )
                 ],
                 onStoryShow: (s) {
-                  print("Showing a story");
+                  print("Showing the position ${s.position}");
+                },
+                onStoryShowWithDirection: (s, d) {
+                  print("Showing the position ${s.position} and $d");
                 },
                 onComplete: () {
                   print("Completed a cycle");
@@ -103,7 +106,7 @@ class Home extends StatelessWidget {
                   decoration: BoxDecoration(
                       color: Colors.black54,
                       borderRadius:
-                          BorderRadius.vertical(bottom: Radius.circular(8))),
+                      BorderRadius.vertical(bottom: Radius.circular(8))),
                   padding: EdgeInsets.symmetric(vertical: 8),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -154,20 +157,22 @@ class _MoreStoriesState extends State<MoreStories> {
       body: StoryView(
         storyItems: [
           StoryItem.text(
-            title: "I guess you'd love to see more of our food. That's great.",
-            backgroundColor: Colors.blue,
+              title: "I guess you'd love to see more of our food. That's great.",
+              backgroundColor: Colors.blue,
+              position: 1
           ),
           StoryItem.text(
-            title: "Nice!\n\nTap to continue.",
-            backgroundColor: Colors.red,
-            textStyle: TextStyle(
-              fontFamily: 'Dancing',
-              fontSize: 40,
-            ),
+              title: "Nice!\n\nTap to continue.",
+              backgroundColor: Colors.red,
+              textStyle: TextStyle(
+                fontFamily: 'Dancing',
+                fontSize: 40,
+              ),
+              position: 2
           ),
           StoryItem.pageImage(
             url:
-                "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
+            "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
             caption: "Still sampling",
             controller: storyController,
           ),
@@ -187,10 +192,16 @@ class _MoreStoriesState extends State<MoreStories> {
           ),
         ],
         onStoryShow: (s) {
-          print("Showing a story");
+          print("Showing the position ${s.position}");
+        },
+        onStoryShowWithDirection: (s, d) {
+          print("Showing the position ${s.position} and $d");
         },
         onComplete: () {
           print("Completed a cycle");
+        },
+        onStoryClick: (d) {
+          print("Showing $d");
         },
         progressPosition: ProgressPosition.top,
         repeat: false,
