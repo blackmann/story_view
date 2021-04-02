@@ -17,7 +17,7 @@ enum ProgressPosition { top, bottom }
 /// should use [small]
 enum IndicatorHeight { small, large }
 
-/// Return the possible controller directions
+/// Return the possible controller directions move
 enum Movement{ forward, backward }
 
 /// This is a representation of a story item (or page).
