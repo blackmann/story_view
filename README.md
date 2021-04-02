@@ -42,8 +42,7 @@ Import the package into your code
 import "package:story_view/story_view.dart";
 ```
 
-Look inside `examples/example.dart` on how to use this library. You can copy
-and paste the code into your `main.dart` and run to have a quick look.
+Look inside `main.dart` and run to have a quick look.
 
 ## Basics
 
@@ -87,6 +86,8 @@ Widget build(context) {
     controller: controller, // pass controller here too
     repeat: true, // should the stories be slid forever
     onStoryShow: (s) {notifyServer(s)},
+    onStoryShowWithDirection: (s, d) {}, // Display the movement when its change to another story
+    onStoryClick: (d) {}, // Display the movement clicked
     onComplete: () {},
     onVerticalSwipeComplete: (direction) {
       if (direction == Direction.down) {
