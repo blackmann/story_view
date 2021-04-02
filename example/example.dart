@@ -157,18 +157,18 @@ class _MoreStoriesState extends State<MoreStories> {
       body: StoryView(
         storyItems: [
           StoryItem.text(
-            title: "I guess you'd love to see more of our food. That's great.",
-            backgroundColor: Colors.blue,
-            position: 1
+              title: "I guess you'd love to see more of our food. That's great.",
+              backgroundColor: Colors.blue,
+              position: 1
           ),
           StoryItem.text(
-            title: "Nice!\n\nTap to continue.",
-            backgroundColor: Colors.red,
-            textStyle: TextStyle(
-              fontFamily: 'Dancing',
-              fontSize: 40,
-            ),
-            position: 2
+              title: "Nice!\n\nTap to continue.",
+              backgroundColor: Colors.red,
+              textStyle: TextStyle(
+                fontFamily: 'Dancing',
+                fontSize: 40,
+              ),
+              position: 2
           ),
           StoryItem.pageImage(
             url:

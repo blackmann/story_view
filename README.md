@@ -42,7 +42,7 @@ Import the package into your code
 import "package:story_view/story_view.dart";
 ```
 
-Look inside `main.dart` and run to have a quick look.
+Look inside `examples/example.dart` on how to use this library. You can copy and paste the code into your `main.dart` and run to have a quick look.
 
 ## Basics
 
