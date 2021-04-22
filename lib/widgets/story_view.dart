@@ -37,8 +37,8 @@ class StoryItem {
   final Widget view;
   StoryItem(
     this.view, {
-      required this.duration,
-        this.shown = false,
+    required this.duration,
+    this.shown = false,
   }) : assert(duration != null, "[duration] should not be null");
 
   /// Short hand to create text-only page.
@@ -439,12 +439,15 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
 
   VerticalDragInfo? verticalDragInfo;
 
-  StoryItem? get _currentStory =>
-      widget.storyItems.firstWhere((it) => !it!.shown, orElse: () => null);
+  StoryItem? get _currentStory {
+    return widget.storyItems.firstWhereOrNull((it) => !it!.shown);
+  }
 
-  Widget get _currentView => widget.storyItems
-      .firstWhere((it) => !it!.shown, orElse: () => widget.storyItems.last)!
-      .view;
+  Widget get _currentView {
+    var item = widget.storyItems.firstWhereOrNull((it) => !it!.shown);
+    item ??= widget.storyItems.last;
+    return item?.view ?? Container();
+  }
 
   @override
   void initState() {
@@ -452,18 +455,12 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
 
     // All pages after the first unshown page should have their shown value as
     // false
-
-    final firstPage = widget.storyItems.firstWhere((it) {
-      return !it!.shown;
-    }, orElse: () {
+    final firstPage = widget.storyItems.firstWhereOrNull((it) => !it!.shown);
+    if (firstPage == null) {
       widget.storyItems.forEach((it2) {
         it2!.shown = false;
       });
-
-      return null;
-    });
-
-    if (firstPage != null) {
+    } else {
       final lastShownPos = widget.storyItems.indexOf(firstPage);
       widget.storyItems.sublist(lastShownPos).forEach((it) {
         it!.shown = false;
@@ -602,7 +599,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       }
     } else {
       // this is the last page, progress animation should skip to end
-      _animationController!.animateTo(1.0, duration: Duration(milliseconds: 10));
+      _animationController!
+          .animateTo(1.0, duration: Duration(milliseconds: 10));
     }
   }
 
@@ -773,8 +771,7 @@ class PageBarState extends State<PageBar> {
   }
 
   bool isPlaying(PageData page) {
-    return widget.pages.firstWhereOrNull((it) => !it.shown) ==
-        page;
+    return widget.pages.firstWhereOrNull((it) => !it.shown) == page;
   }
 
   @override

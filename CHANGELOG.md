@@ -1,3 +1,6 @@
+## [0.13.1] - 22 April 2021
+Fixed null errors.
+
 ## [0.12.8] - 4 Feb 2021
 Merged #84 - Fix Error if playerController has not been loaded and is null
 
