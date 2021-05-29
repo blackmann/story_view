@@ -25,8 +25,8 @@ class VideoLoader {
       onComplete();
     }
 
-    final fileStream = DefaultCacheManager()
-        .getFileStream(this.url, headers: this.requestHeaders as Map<String, String>?);
+    final fileStream = DefaultCacheManager().getFileStream(this.url,
+        headers: this.requestHeaders as Map<String, String>?);
 
     fileStream.listen((fileResponse) {
       if (fileResponse is FileInfo) {
@@ -43,19 +43,24 @@ class VideoLoader {
 class StoryVideo extends StatefulWidget {
   final StoryController? storyController;
   final VideoLoader videoLoader;
+  final VideoPlayerController? playerController;
 
-  StoryVideo(this.videoLoader, {this.storyController, Key? key})
-      : super(key: key ?? UniqueKey());
+  StoryVideo(
+    this.videoLoader, {
+    this.storyController,
+    this.playerController,
+    Key? key,
+  }) : super(key: key ?? UniqueKey());
 
   static StoryVideo url(String url,
       {StoryController? controller,
       Map<String, dynamic>? requestHeaders,
+      VideoPlayerController? playerController,
       Key? key}) {
-    return StoryVideo(
-      VideoLoader(url, requestHeaders: requestHeaders),
-      storyController: controller,
-      key: key,
-    );
+    return StoryVideo(VideoLoader(url, requestHeaders: requestHeaders),
+        storyController: controller,
+        key: key,
+        playerController: playerController);
   }
 
   @override
@@ -69,8 +74,6 @@ class StoryVideoState extends State<StoryVideo> {
 
   StreamSubscription? _streamSubscription;
 
-  VideoPlayerController? playerController;
-
   @override
   void initState() {
     super.initState();
@@ -79,21 +82,30 @@ class StoryVideoState extends State<StoryVideo> {
 
     widget.videoLoader.loadVideo(() {
       if (widget.videoLoader.state == LoadState.success) {
+        /*
+          Moved to `StoryView`
+         
         this.playerController =
             VideoPlayerController.file(widget.videoLoader.videoFile!);
 
-        playerController!.initialize().then((v) {
+        widget.playerController!.initialize().then((v) {
           setState(() {});
           widget.storyController!.play();
         });
+         */
+
+        if (widget.playerController!.value.isInitialized) {
+          widget.storyController!.play();
+          setState(() {});
+        } else {}
 
         if (widget.storyController != null) {
           _streamSubscription =
               widget.storyController!.playbackNotifier.listen((playbackState) {
             if (playbackState == PlaybackState.pause) {
-              playerController!.pause();
+              widget.playerController!.pause();
             } else {
-              playerController!.play();
+              widget.playerController!.play();
             }
           });
         }
@@ -105,11 +117,11 @@ class StoryVideoState extends State<StoryVideo> {
 
   Widget getContentView() {
     if (widget.videoLoader.state == LoadState.success &&
-        playerController!.value.isInitialized) {
+        widget.playerController!.value.isInitialized) {
       return Center(
         child: AspectRatio(
-          aspectRatio: playerController!.value.aspectRatio,
-          child: VideoPlayer(playerController!),
+          aspectRatio: widget.playerController!.value.aspectRatio,
+          child: VideoPlayer(widget.playerController!),
         ),
       );
     }
@@ -146,7 +158,7 @@ class StoryVideoState extends State<StoryVideo> {
 
   @override
   void dispose() {
-    playerController?.dispose();
+    // playerController?.dispose(); moved to `StoryView`
     _streamSubscription?.cancel();
     super.dispose();
   }

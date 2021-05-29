@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
 import '../controller/story_controller.dart';
 import '../utils.dart';
@@ -16,6 +17,8 @@ enum ProgressPosition { top, bottom }
 /// This is used to specify the height of the progress indicator. Inline stories
 /// should use [small]
 enum IndicatorHeight { small, large }
+
+typedef ContentView = Widget Function(VideoPlayerController? playerController);
 
 /// This is a representation of a story item (or page).
 class StoryItem {
@@ -33,13 +36,22 @@ class StoryItem {
   /// story item.
   bool shown;
 
+  /// url is used to re-initialize video player after its disposed.
+  /// Situation: When user switch back again to view previous video.
+  String? url;
+
+  /// VideoPlayerController to play videos.
+  /// It is initialized and disposed in `StoryView`
+  VideoPlayerController? playerController;
+
   /// The page content
-  final Widget view;
-  StoryItem(
-    this.view, {
-    required this.duration,
-    this.shown = false,
-  }) : assert(duration != null, "[duration] should not be null");
+  final ContentView view;
+  StoryItem(this.view,
+      {required this.duration,
+      this.shown = false,
+      this.url,
+      this.playerController})
+      : assert(duration != null, "[duration] should not be null");
 
   /// Short hand to create text-only page.
   ///
@@ -70,7 +82,7 @@ class StoryItem {
     ] /** white text */);
 
     return StoryItem(
-      Container(
+      (_) => Container(
         key: key,
         decoration: BoxDecoration(
           color: backgroundColor,
@@ -116,7 +128,7 @@ class StoryItem {
     Duration? duration,
   }) {
     return StoryItem(
-      Container(
+      (_) => Container(
         key: key,
         color: Colors.black,
         child: Stack(
@@ -176,7 +188,7 @@ class StoryItem {
     Duration? duration,
   }) {
     return StoryItem(
-      ClipRRect(
+      (_) => ClipRRect(
         key: key,
         child: Container(
           color: Colors.grey[100],
@@ -227,40 +239,47 @@ class StoryItem {
     bool shown = false,
     Map<String, dynamic>? requestHeaders,
   }) {
+    final VideoPlayerController _videoPlayerController =
+        VideoPlayerController.network(url);
+
     return StoryItem(
-        Container(
-          key: key,
-          color: Colors.black,
-          child: Stack(
-            children: <Widget>[
-              StoryVideo.url(
-                url,
-                controller: controller,
-                requestHeaders: requestHeaders,
+        (playerController) => Container(
+              key: key,
+              color: Colors.black,
+              child: Stack(
+                children: <Widget>[
+                  StoryVideo.url(url,
+                      controller: controller,
+                      requestHeaders: requestHeaders,
+                      playerController: playerController),
+                  SafeArea(
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.only(bottom: 24),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                        color: caption != null
+                            ? Colors.black54
+                            : Colors.transparent,
+                        child: caption != null
+                            ? Text(
+                                caption,
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.white),
+                                textAlign: TextAlign.center,
+                              )
+                            : SizedBox(),
+                      ),
+                    ),
+                  )
+                ],
               ),
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(bottom: 24),
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    color:
-                        caption != null ? Colors.black54 : Colors.transparent,
-                    child: caption != null
-                        ? Text(
-                            caption,
-                            style: TextStyle(fontSize: 15, color: Colors.white),
-                            textAlign: TextAlign.center,
-                          )
-                        : SizedBox(),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
+            ),
         shown: shown,
+        url: url,
+        playerController: _videoPlayerController,
         duration: duration ?? Duration(seconds: 10));
   }
 
@@ -277,49 +296,50 @@ class StoryItem {
   }) {
     assert(imageFit != null, "[imageFit] should not be null");
     return StoryItem(
-        Container(
-          key: key,
-          color: Colors.black,
-          child: Stack(
-            children: <Widget>[
-              Center(
-                child: Image(
-                  image: image,
-                  height: double.infinity,
-                  width: double.infinity,
-                  fit: imageFit,
-                ),
-              ),
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(
-                      bottom: 24,
+        (_) => Container(
+              key: key,
+              color: Colors.black,
+              child: Stack(
+                children: <Widget>[
+                  Center(
+                    child: Image(
+                      image: image,
+                      height: double.infinity,
+                      width: double.infinity,
+                      fit: imageFit,
                     ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 8,
-                    ),
-                    color:
-                        caption != null ? Colors.black54 : Colors.transparent,
-                    child: caption != null
-                        ? Text(
-                            caption,
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white,
-                            ),
-                            textAlign: TextAlign.center,
-                          )
-                        : SizedBox(),
                   ),
-                ),
-              )
-            ],
-          ),
-        ),
+                  SafeArea(
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.only(
+                          bottom: 24,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 8,
+                        ),
+                        color: caption != null
+                            ? Colors.black54
+                            : Colors.transparent,
+                        child: caption != null
+                            ? Text(
+                                caption,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.center,
+                              )
+                            : SizedBox(),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
         shown: shown,
         duration: duration ?? Duration(seconds: 3));
   }
@@ -337,7 +357,7 @@ class StoryItem {
     Duration? duration,
   }) {
     return StoryItem(
-      Container(
+      (_) => Container(
         key: key,
         decoration: BoxDecoration(
             color: Colors.grey[100],
@@ -439,15 +459,15 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
 
   VerticalDragInfo? verticalDragInfo;
 
+  bool _lock = true;
+
   StoryItem? get _currentStory {
     return widget.storyItems.firstWhereOrNull((it) => !it!.shown);
   }
 
-  Widget get _currentView {
-    var item = widget.storyItems.firstWhereOrNull((it) => !it!.shown);
-    item ??= widget.storyItems.last;
-    return item?.view ?? Container();
-  }
+  ContentView get _currentView => widget.storyItems
+      .firstWhere((it) => !it!.shown, orElse: () => widget.storyItems.last)!
+      .view;
 
   @override
   void initState() {
@@ -461,6 +481,16 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
         it2!.shown = false;
       });
     } else {
+      final int _index = widget.storyItems.indexOf(firstPage);
+
+      /// Initialize the first controller.
+      _initializeController(_index).whenComplete(() {
+        _playController(_index);
+      });
+
+      /// Start initializing the next story.
+      _initializeController(_index + 1).whenComplete(() => _lock = false);
+
       final lastShownPos = widget.storyItems.indexOf(firstPage);
       widget.storyItems.sublist(lastShownPos).forEach((it) {
         it!.shown = false;
@@ -501,6 +531,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
 
     _animationController?.dispose();
     _playbackSubscription?.cancel();
+    _disposeAllVideoControllers();
 
     super.dispose();
   }
@@ -509,6 +540,62 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   void setState(fn) {
     if (mounted) {
       super.setState(fn);
+    }
+  }
+
+  void _disposeAllVideoControllers() {
+    for (final StoryItem? _story in widget.storyItems) {
+      try {
+        final _controller = _story!.playerController;
+        _controller!.dispose();
+      } catch (e) {
+        // already disposed
+        return;
+      }
+    }
+  }
+
+  void _disposeController(int index) {
+    try {
+      final _controller = widget.storyItems[index]!.playerController;
+      _controller!.dispose();
+    } catch (e) {
+      return;
+    }
+  }
+
+  void _playController(int index) {
+    try {
+      widget.storyItems[index]!.playerController!.play();
+    } catch (e) {
+      // not a video.
+    }
+  }
+
+  Future<void> _initializeController(int index) async {
+    try {
+      if (widget.storyItems[index]!.playerController!.value.isInitialized) {
+        final String url = widget.storyItems[index]!.url!;
+
+        final VideoPlayerController _controller =
+            VideoPlayerController.network(url);
+
+        await _controller.initialize();
+
+        final _oldStoryItem = widget.storyItems[index]!;
+        widget.storyItems.removeAt(index);
+
+        _oldStoryItem.playerController = _controller;
+        widget.storyItems.insert(index, _oldStoryItem);
+      } else {
+        await widget.storyItems[index]!.playerController!.initialize();
+      }
+    } catch (e) {
+      // RangeError and not-a-video error
+      if (_lock) {
+        _lock = false;
+      }
+      setState(() {});
     }
   }
 
@@ -526,11 +613,18 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     _animationController =
         AnimationController(duration: storyItem.duration, vsync: this);
 
+    // start
+    if (storyItem.playerController != null &&
+        storyItem.playerController!.value.isInitialized) {
+      storyItem.playerController!.play();
+    }
+
     _animationController!.addStatusListener((status) {
       if (status == AnimationStatus.completed) {
-        storyItem.shown = true;
+        // not assigned here anymore.
+        // storyItem.shown = true;
         if (widget.storyItems.last != storyItem) {
-          _beginPlay();
+          _goForward();
         } else {
           // done playing
           _onComplete();
@@ -549,43 +643,79 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     _play();
   }
 
-  void _onComplete() {
-    if (widget.onComplete != null) {
-      widget.controller.pause();
-      widget.onComplete!();
-    }
-
-    if (widget.repeat) {
-      widget.storyItems.forEach((it) {
-        it!.shown = false;
-      });
-
-      _beginPlay();
+  Future<void> _stopController(int index) async {
+    try {
+      if (widget.storyItems[index]?.playerController != null) {
+        final VideoPlayerController _controller =
+            widget.storyItems[index]!.playerController!;
+        _controller.pause();
+        await _controller.seekTo(const Duration(seconds: 0));
+      }
+    } catch (e) {
+      // Range Error and not-a-video-error
+      return;
     }
   }
 
   void _goBack() {
+    if (_lock) {
+      return;
+    }
+
+    _lock = true;
+
     _animationController!.stop();
 
-    if (this._currentStory == null) {
+    if (_currentStory == null) {
       widget.storyItems.last!.shown = false;
     }
 
-    if (this._currentStory == widget.storyItems.first) {
+    if (_currentStory == widget.storyItems.first) {
+      _lock = false;
+      _stopController(0);
       _beginPlay();
     } else {
-      this._currentStory!.shown = false;
-      int lastPos = widget.storyItems.indexOf(this._currentStory);
+      final int index = widget.storyItems.indexOf(_currentStory);
+
+      //Stop the current controller
+      _stopController(index);
+
+      ///Dispose [index + 1] controller
+      _disposeController(index + 1);
+
+      ///Initialize [index-2] player
+      _initializeController(index - 2).whenComplete(() => _lock = false);
+
+      _currentStory!.shown = false;
+      int lastPos = widget.storyItems.indexOf(_currentStory);
       final previous = widget.storyItems[lastPos - 1]!;
 
       previous.shown = false;
 
       _beginPlay();
     }
+    setState(() {});
   }
 
   void _goForward() {
+    if (_lock) {
+      return;
+    }
+
+    _lock = true;
+
     if (this._currentStory != widget.storyItems.last) {
+      final int index = widget.storyItems.indexOf(this._currentStory);
+
+      ///Stop [index] player
+      _stopController(index);
+
+      ///Dispose [index-1] player
+      _disposeController(index - 1);
+
+      ///Initialize [index+2] player
+      _initializeController(index + 2).whenComplete(() => _lock = false);
+
       _animationController!.stop();
 
       // get last showing
@@ -601,6 +731,22 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       // this is the last page, progress animation should skip to end
       _animationController!
           .animateTo(1.0, duration: Duration(milliseconds: 10));
+    }
+    setState(() {});
+  }
+
+  void _onComplete() {
+    if (widget.onComplete != null) {
+      widget.controller.pause();
+      widget.onComplete!();
+    }
+
+    if (widget.repeat) {
+      widget.storyItems.forEach((it) {
+        it!.shown = false;
+      });
+
+      _beginPlay();
     }
   }
 
@@ -625,7 +771,14 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       color: Colors.white,
       child: Stack(
         children: <Widget>[
-          _currentView,
+          _currentView(widget.storyItems
+              .firstWhere(
+                  (it) =>
+                      !it!.shown &&
+                      it.playerController !=
+                          null, // both not shown and is video
+                  orElse: () => widget.storyItems.last)!
+              .playerController),
           Align(
             alignment: widget.progressPosition == ProgressPosition.top
                 ? Alignment.topCenter
