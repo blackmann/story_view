@@ -98,4 +98,26 @@ Widget build(context) {
 }
 ```
 
+### Now with support to HookWidget 
+
+Using the hook `useStoryController` you don't have to worry about (or forgot) calling the dispose method for the controller and is now able to use it inside a `HookWidget`.
+
+```dart
+import 'package:flutter_hooks/flutter_hooks.dart';
+
+class StoriesPage extends HookWidget {
+  @override
+  Widget build(BuildContext context) {
+    final StoryController controller = useStoryController();
+    return Material(
+       type: MaterialType.transparency,
+       child: StoryView(
+         storyItems: buildStoryItems(),
+         controller: controller,
+       ),
+     );
+   }
+}
+```
+
 🍭 Now, tell your users some stories.
