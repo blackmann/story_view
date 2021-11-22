@@ -1,3 +1,7 @@
+## [0.13.2] - 22 November 2021
+- Upgraded rxdart to latest version
+- Remove unnecessary null assertions
+
 ## [0.13.1] - 22 April 2021
 Fixed null errors.
 
