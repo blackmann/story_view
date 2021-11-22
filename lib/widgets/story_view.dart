@@ -161,6 +161,23 @@ class StoryItem {
     );
   }
 
+  factory StoryItem.widget({
+    required Widget widget,
+    required StoryController controller,
+    Key? key,
+    bool shown = false,
+    Duration? duration,
+  }) {
+    return StoryItem(
+      Container(
+        key: key,
+        child: widget,
+      ),
+      shown: shown,
+      duration: duration ?? Duration(seconds: 3),
+    );
+  }
+
   /// Shorthand for creating inline image. [controller] should be same instance as
   /// one passed to the `StoryView`
   factory StoryItem.inlineImage({
