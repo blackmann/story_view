@@ -161,6 +161,8 @@ class StoryItem {
     );
   }
 
+  /// Factory constructor for custom widgets. [controller] should be same instance as
+  /// one passed to the `StoryView`
   factory StoryItem.widget({
     required Widget widget,
     required StoryController controller,
