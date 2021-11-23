@@ -171,10 +171,7 @@ class StoryItem {
     Duration? duration,
   }) {
     return StoryItem(
-      Container(
-        key: key,
-        child: widget,
-      ),
+      widget,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
