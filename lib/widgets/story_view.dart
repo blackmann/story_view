@@ -161,6 +161,8 @@ class StoryItem {
     );
   }
 
+  /// Factory constructor for custom widgets. [controller] should be same instance as
+  /// one passed to the `StoryView`
   factory StoryItem.widget({
     required Widget widget,
     required StoryController controller,
@@ -169,10 +171,7 @@ class StoryItem {
     Duration? duration,
   }) {
     return StoryItem(
-      Container(
-        key: key,
-        child: widget,
-      ),
+      widget,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
