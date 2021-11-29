@@ -161,6 +161,22 @@ class StoryItem {
     );
   }
 
+  /// Factory constructor for custom widgets. [controller] should be same instance as
+  /// one passed to the `StoryView`
+  factory StoryItem.widget({
+    required Widget widget,
+    required StoryController controller,
+    Key? key,
+    bool shown = false,
+    Duration? duration,
+  }) {
+    return StoryItem(
+      widget,
+      shown: shown,
+      duration: duration ?? Duration(seconds: 3),
+    );
+  }
+
   /// Shorthand for creating inline image. [controller] should be same instance as
   /// one passed to the `StoryView`
   factory StoryItem.inlineImage({
@@ -378,6 +394,9 @@ class StoryView extends StatefulWidget {
   /// The pages to displayed.
   final List<StoryItem?> storyItems;
 
+  /// Show or not story progress indicator.
+  final bool? showStoryProgressIndicator;
+
   /// Callback for when a full cycle of story is shown. This will be called
   /// each time the full story completes when [repeat] is set to `true`.
   final VoidCallback? onComplete;
@@ -408,6 +427,7 @@ class StoryView extends StatefulWidget {
   StoryView({
     required this.storyItems,
     required this.controller,
+    this.showStoryProgressIndicator,
     this.onComplete,
     this.onStoryShow,
     this.progressPosition = ProgressPosition.top,
@@ -639,6 +659,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   indicatorHeight: widget.inline
                       ? IndicatorHeight.small
                       : IndicatorHeight.large,
+                  showStoryProgressIndicator: widget.showStoryProgressIndicator,
                 ),
               ),
             ),
@@ -726,11 +747,12 @@ class PageBar extends StatefulWidget {
   final List<PageData> pages;
   final Animation<double>? animation;
   final IndicatorHeight indicatorHeight;
-
+  final bool? showStoryProgressIndicator;
   PageBar(
     this.pages,
     this.animation, {
     this.indicatorHeight = IndicatorHeight.large,
+    this.showStoryProgressIndicator,
     Key? key,
   }) : super(key: key);
 
@@ -774,11 +796,15 @@ class PageBarState extends State<PageBar> {
           child: Container(
             padding: EdgeInsets.only(
                 right: widget.pages.last == it ? 0 : this.spacing),
-            child: StoryProgressIndicator(
-              isPlaying(it) ? widget.animation!.value : (it.shown ? 1 : 0),
-              indicatorHeight:
-                  widget.indicatorHeight == IndicatorHeight.large ? 5 : 3,
-            ),
+            child: widget.showStoryProgressIndicator ?? false
+                ? SizedBox()
+                : StoryProgressIndicator(
+                    isPlaying(it)
+                        ? widget.animation!.value
+                        : (it.shown ? 1 : 0),
+                    indicatorHeight:
+                        widget.indicatorHeight == IndicatorHeight.large ? 5 : 3,
+                  ),
           ),
         );
       }).toList(),
