@@ -152,6 +152,8 @@ class _MoreStoriesState extends State<MoreStories> {
         title: Text("More"),
       ),
       body: StoryView(
+        width: 500,
+        height: 500,
         storyItems: [
           StoryItem.text(
             title: "I guess you'd love to see more of our food. That's great.",

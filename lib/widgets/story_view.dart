@@ -389,6 +389,18 @@ class StoryView extends StatefulWidget {
   /// provide this callback so as to enable scroll events on the list view.
   final Function(Direction?)? onVerticalSwipeComplete;
 
+  /// Callback for when a vertical swipe gesture is detected. If you do not
+  /// want to listen to such event, do not provide it. For instance,
+  /// for inline stories inside ListViews, it is preferrable to not to
+  /// provide this callback so as to enable scroll events on the list view.
+  final double? width;
+
+  /// Callback for when a vertical swipe gesture is detected. If you do not
+  /// want to listen to such event, do not provide it. For instance,
+  /// for inline stories inside ListViews, it is preferrable to not to
+  /// provide this callback so as to enable scroll events on the list view.
+  final double? height;
+
   /// Callback for when a story is currently being shown.
   final ValueChanged<StoryItem>? onStoryShow;
 
@@ -409,6 +421,8 @@ class StoryView extends StatefulWidget {
   StoryView({
     required this.storyItems,
     required this.controller,
+    this.width,
+    this.height,
     this.onComplete,
     this.onStoryShow,
     this.progressPosition = ProgressPosition.top,
@@ -442,9 +456,13 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   StoryItem? get _currentStory =>
       widget.storyItems.firstWhere((it) => !it!.shown, orElse: () => null);
 
-  Widget get _currentView => widget.storyItems
-      .firstWhere((it) => !it!.shown, orElse: () => widget.storyItems.last)!
-      .view;
+  Widget get _currentView => Container(
+    width: widget.width,
+    height: widget.height,
+    child: widget.storyItems
+        .firstWhere((it) => !it!.shown, orElse: () => widget.storyItems.last)!
+        .view,
+  );
 
   @override
   void initState() {
