@@ -17,10 +17,16 @@ enum ProgressPosition { top, bottom }
 /// should use [small]
 enum IndicatorHeight { small, large }
 
+/// Return the possible controller directions move
+enum Movement{ forward, backward }
+
 /// This is a representation of a story item (or page).
 class StoryItem {
   /// Specifies how long the page should be displayed. It should be a reasonable
   /// amount of time greater than 0 milliseconds.
+  final int position;
+
+
   final Duration duration;
 
   /// Has this page been shown already? This is used to indicate that the page
@@ -37,6 +43,7 @@ class StoryItem {
   final Widget view;
   StoryItem(
       this.view, {
+        required this.position,
         required this.duration,
         this.shown = false,
       }) : assert(duration != null, "[duration] should not be null");
@@ -58,6 +65,7 @@ class StoryItem {
     bool roundedTop = false,
     bool roundedBottom = false,
     Duration? duration,
+    var position
   }) {
     double contrast = ContrastHelper.contrast([
       backgroundColor.red,
@@ -98,6 +106,7 @@ class StoryItem {
         ),
         //color: backgroundColor,
       ),
+      position: position,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
@@ -114,6 +123,7 @@ class StoryItem {
     bool shown = false,
     Map<String, dynamic>? requestHeaders,
     Duration? duration,
+    var position,
   }) {
     return StoryItem(
       Container(
@@ -156,6 +166,7 @@ class StoryItem {
           ],
         ),
       ),
+      position: position,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
@@ -174,6 +185,7 @@ class StoryItem {
     bool roundedTop = true,
     bool roundedBottom = false,
     Duration? duration,
+    var position
   }) {
     return StoryItem(
       ClipRRect(
@@ -210,6 +222,7 @@ class StoryItem {
           bottom: Radius.circular(roundedBottom ? 8 : 0),
         ),
       ),
+      position: position,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
@@ -226,6 +239,7 @@ class StoryItem {
         String? caption,
         bool shown = false,
         Map<String, dynamic>? requestHeaders,
+        var position
       }) {
     return StoryItem(
         Container(
@@ -260,6 +274,7 @@ class StoryItem {
             ],
           ),
         ),
+        position: position,
         shown: shown,
         duration: duration ?? Duration(seconds: 10));
   }
@@ -274,6 +289,7 @@ class StoryItem {
         String? caption,
         bool shown = false,
         Duration? duration,
+        var position
       }) {
     assert(imageFit != null, "[imageFit] should not be null");
     return StoryItem(
@@ -320,6 +336,7 @@ class StoryItem {
             ],
           ),
         ),
+        position: position,
         shown: shown,
         duration: duration ?? Duration(seconds: 3));
   }
@@ -335,6 +352,7 @@ class StoryItem {
         bool roundedTop = true,
         bool roundedBottom = false,
         Duration? duration,
+        var position
       }) {
     return StoryItem(
       Container(
@@ -367,6 +385,7 @@ class StoryItem {
         ),
       ),
       shown: shown,
+      position: position,
       duration: duration ?? Duration(seconds: 3),
     );
   }
@@ -389,18 +408,16 @@ class StoryView extends StatefulWidget {
   /// provide this callback so as to enable scroll events on the list view.
   final Function(Direction?)? onVerticalSwipeComplete;
 
-  /// Callback for when a vertical swipe gesture is detected. If you do not
-  /// want to listen to such event, do not provide it. For instance,
-  /// for inline stories inside ListViews, it is preferrable to not to
-  /// provide this callback so as to enable scroll events on the list view.
-
-  /// Callback for when a vertical swipe gesture is detected. If you do not
-  /// want to listen to such event, do not provide it. For instance,
-  /// for inline stories inside ListViews, it is preferrable to not to
-  /// provide this callback so as to enable scroll events on the list view.
-
   /// Callback for when a story is currently being shown.
-  final ValueChanged<StoryItem>? onStoryShow;
+  final ValueChanged<StoryItem?>? onStoryShow;
+
+  /// Callback for when a story is currently being shown
+  /// and return the movement.
+  final Function(StoryItem?, Movement?)? onStoryShowWithDirection;
+
+  /// Callback for when the user click the story to go next or previous
+  /// and return the movement clicked.
+  final Function(Movement?)? onStoryClick;
 
   /// Where the progress indicator should be placed.
   final ProgressPosition progressPosition;
@@ -421,6 +438,8 @@ class StoryView extends StatefulWidget {
     required this.controller,
     this.onComplete,
     this.onStoryShow,
+    this.onStoryShowWithDirection,
+    this.onStoryClick,
     this.progressPosition = ProgressPosition.top,
     this.repeat = false,
     this.inline = false,
@@ -505,7 +524,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
           }
         });
 
-    _play();
+    _play(Movement.forward);
   }
 
   @override
@@ -525,7 +544,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     }
   }
 
-  void _play() {
+  void _play(var direction) {
     _animationController?.dispose();
     // get the next playing page
     final storyItem = widget.storyItems.firstWhere((it) {
@@ -536,6 +555,10 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       widget.onStoryShow!(storyItem);
     }
 
+    if (widget.onStoryShowWithDirection != null) {
+      widget.onStoryShowWithDirection!(storyItem, direction);
+    }
+
     _animationController =
         AnimationController(duration: storyItem.duration, vsync: this);
 
@@ -543,7 +566,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       if (status == AnimationStatus.completed) {
         storyItem.shown = true;
         if (widget.storyItems.last != storyItem) {
-          _beginPlay();
+          _beginPlay(Movement.forward);
         } else {
           // done playing
           _onComplete();
@@ -557,9 +580,9 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     widget.controller.play();
   }
 
-  void _beginPlay() {
+  void _beginPlay(var direction) {
     setState(() {});
-    _play();
+    _play(direction);
   }
 
   void _onComplete() {
@@ -573,7 +596,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
         it!.shown = false;
       });
 
-      _beginPlay();
+      _beginPlay(Movement.forward);
     }
   }
 
@@ -585,7 +608,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     }
 
     if (this._currentStory == widget.storyItems.first) {
-      _beginPlay();
+      _beginPlay(Movement.backward);
     } else {
       this._currentStory!.shown = false;
       int lastPos = widget.storyItems.indexOf(this._currentStory);
@@ -593,7 +616,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
 
       previous.shown = false;
 
-      _beginPlay();
+      _beginPlay(Movement.backward);
     }
   }
 
@@ -607,7 +630,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       if (_last != null) {
         _last.shown = true;
         if (_last != widget.storyItems.last) {
-          _beginPlay();
+          _beginPlay(Movement.forward);
         }
       }
     } else {
@@ -679,6 +702,9 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                     widget.controller.play();
                   } else {
                     widget.controller.next();
+                    if (widget.onStoryClick != null) {
+                      widget.onStoryClick!(Movement.forward);
+                    }
                   }
                 },
                 onVerticalDragStart: widget.onVerticalSwipeComplete == null
@@ -722,6 +748,9 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
             child: SizedBox(
                 child: GestureDetector(onTap: () {
                   widget.controller.previous();
+                  if (widget.onStoryClick != null) {
+                    widget.onStoryClick!(Movement.backward);
+                  }
                 }),
                 width: 70),
           ),
