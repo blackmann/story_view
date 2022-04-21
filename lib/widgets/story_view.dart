@@ -143,7 +143,7 @@ class StoryItem {
                 child: Container(
                   width: double.infinity,
                   margin: EdgeInsets.only(
-                    bottom: 24,
+                    bottom: 112,
                   ),
                   padding: EdgeInsets.symmetric(
                     horizontal: 24,
@@ -472,8 +472,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       widget.storyItems.firstWhere((it) => !it!.shown, orElse: () => null);
 
   Widget get _currentView => widget.storyItems
-        .firstWhere((it) => !it!.shown, orElse: () => widget.storyItems.last)!
-        .view;
+      .firstWhere((it) => !it!.shown, orElse: () => widget.storyItems.last)!
+      .view;
 
   @override
   void initState() {
