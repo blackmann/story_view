@@ -1,5 +1,4 @@
 import 'package:rxdart/rxdart.dart';
-import 'package:story_view/story_view.dart';
 
 enum PlaybackState { pause, play, next, previous,mute,unmute }
 

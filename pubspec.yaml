@@ -4,14 +4,15 @@ version: 0.15.0
 homepage: https://github.com/blackmann/story_view
 
 environment:
-  sdk: ">=2.11.0 <3.0.0"
+  sdk: '>=2.12.0 <3.0.0'
 
 dependencies:
   flutter:
     sdk: flutter
-  flutter_cache_manager: ^2.1.2
-  rxdart: ^0.25.0
-  video_player: ^2.0.2
+  flutter_cache_manager: ^3.3.0
+  rxdart: ^0.27.3
+  video_player: ^2.4.0
+  collection: ^1.15.0-nullsafety.4
 
 dev_dependencies:
   flutter_test:

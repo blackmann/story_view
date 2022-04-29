@@ -12,9 +12,9 @@ import '../controller/story_controller.dart';
 class VideoLoader {
   String url;
 
-  File videoFile;
+  File? videoFile;
 
-  Map<String, dynamic> requestHeaders;
+  Map<String, dynamic>? requestHeaders;
 
   LoadState state = LoadState.loading;
 
@@ -32,7 +32,7 @@ class VideoLoader {
     }
 
     final fileStream = DefaultCacheManager()
-        .getFileStream(this.url, headers: this.requestHeaders);
+        .getFileStream(this.url, headers: this.requestHeaders as Map<String, String>?);
 
     fileStream.listen((fileResponse) {
       if (fileResponse is FileInfo) {
@@ -47,16 +47,16 @@ class VideoLoader {
 }
 
 class StoryVideo extends StatefulWidget {
-  final StoryController storyController;
+  final StoryController? storyController;
   final VideoLoader videoLoader;
 
-  StoryVideo(this.videoLoader, {this.storyController, Key key})
+  StoryVideo(this.videoLoader, {this.storyController, Key? key})
       : super(key: key ?? UniqueKey());
 
   static StoryVideo url(String url,
-      {StoryController controller,
-      Map<String, dynamic> requestHeaders,
-      Key key}) {
+      {StoryController? controller,
+      Map<String, dynamic>? requestHeaders,
+      Key? key}) {
     return StoryVideo(
       VideoLoader(url, requestHeaders: requestHeaders),
       storyController: controller,
@@ -71,39 +71,39 @@ class StoryVideo extends StatefulWidget {
 }
 
 class StoryVideoState extends State<StoryVideo> {
-  Future<void> playerLoader;
+  Future<void>? playerLoader;
 
-  StreamSubscription _streamSubscription;
+  StreamSubscription? _streamSubscription;
 
-  VideoPlayerController playerController;
+  late VideoPlayerController playerController;
 
   @override
   void initState() {
     super.initState();
 
-    widget.storyController.pause();
+    widget.storyController!.pause();
 
     widget.videoLoader.loadVideo(() {
       if (widget.videoLoader.state == LoadState.success) {
         if(kIsWeb){
           print("Loading Video URL: widget.videoLoader.url");
           this.playerController = VideoPlayerController.network(widget.videoLoader.url)
-            ..setVolume(widget.storyController.isAudioMuted ? 0 : 1.0);
+            ..setVolume(widget.storyController!.isAudioMuted ? 0 : 1.0);
         }else{
           this.playerController =
-          VideoPlayerController.file(widget.videoLoader.videoFile)
-            ..setVolume(widget.storyController.isAudioMuted ? 0 : 1.0);
+          VideoPlayerController.file(widget.videoLoader.videoFile!)
+            ..setVolume(widget.storyController!.isAudioMuted ? 0 : 1.0);
         }
 
 
         playerController.initialize().then((v) {
           setState(() {});
-          widget.storyController.play();
+          widget.storyController!.play();
         });
 
         if (widget.storyController != null) {
           _streamSubscription =
-              widget.storyController.playbackNotifier.listen((playbackState) {
+              widget.storyController!.playbackNotifier.listen((playbackState) {
             if (playbackState == PlaybackState.pause) {
               playerController.pause();
             } else if(playbackState == PlaybackState.play){

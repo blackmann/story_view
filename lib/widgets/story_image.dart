@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 import '../utils.dart';
@@ -11,11 +10,11 @@ import '../controller/story_controller.dart';
 /// Utitlity to load image (gif, png, jpg, etc) media just once. Resource is
 /// cached to disk with default configurations of [DefaultCacheManager].
 class ImageLoader {
-  ui.Codec frames;
+  ui.Codec? frames;
 
   String url;
 
-  Map<String, dynamic> requestHeaders;
+  Map<String, dynamic>? requestHeaders;
 
   LoadState state = LoadState.loading; // by default
 
@@ -30,7 +29,7 @@ class ImageLoader {
     }
 
     final fileStream = DefaultCacheManager()
-        .getFileStream(this.url, headers: this.requestHeaders);
+        .getFileStream(this.url, headers: this.requestHeaders as Map<String, String>?);
 
     fileStream.listen(
       (fileResponse) {
@@ -42,11 +41,11 @@ class ImageLoader {
           return;
         }
 
-        final imageBytes = (fileResponse as FileInfo).file.readAsBytesSync();
+        final imageBytes = fileResponse.file.readAsBytesSync();
 
         this.state = LoadState.success;
 
-        PaintingBinding.instance.instantiateImageCodec(imageBytes).then(
+        PaintingBinding.instance!.instantiateImageCodec(imageBytes).then(
             (codec) {
           this.frames = codec;
           onComplete();
@@ -69,13 +68,13 @@ class ImageLoader {
 class StoryImage extends StatefulWidget {
   final ImageLoader imageLoader;
 
-  final BoxFit fit;
+  final BoxFit? fit;
 
-  final StoryController controller;
+  final StoryController? controller;
 
   StoryImage(
     this.imageLoader, {
-    Key key,
+    Key? key,
     this.controller,
     this.fit,
   }) : super(key: key ?? UniqueKey());
@@ -83,10 +82,10 @@ class StoryImage extends StatefulWidget {
   /// Use this shorthand to fetch images/gifs from the provided [url]
   factory StoryImage.url(
     String url, {
-    StoryController controller,
-    Map<String, dynamic> requestHeaders,
+    StoryController? controller,
+    Map<String, dynamic>? requestHeaders,
     BoxFit fit = BoxFit.fitWidth,
-    Key key,
+    Key? key,
   }) {
     return StoryImage(
         ImageLoader(
@@ -103,11 +102,11 @@ class StoryImage extends StatefulWidget {
 }
 
 class StoryImageState extends State<StoryImage> {
-  ui.Image currentFrame;
+  ui.Image? currentFrame;
 
-  Timer _timer;
+  Timer? _timer;
 
-  StreamSubscription<PlaybackState> _streamSubscription;
+  StreamSubscription<PlaybackState>? _streamSubscription;
 
   @override
   void initState() {
@@ -115,7 +114,7 @@ class StoryImageState extends State<StoryImage> {
 
     if (widget.controller != null) {
       this._streamSubscription =
-          widget.controller.playbackNotifier.listen((playbackState) {
+          widget.controller!.playbackNotifier.listen((playbackState) {
         // for the case of gifs we need to pause/play
         if (widget.imageLoader.frames == null) {
           return;
@@ -163,11 +162,11 @@ class StoryImageState extends State<StoryImage> {
     this._timer?.cancel();
 
     if (widget.controller != null &&
-        widget.controller.playbackNotifier.value == PlaybackState.pause) {
+        widget.controller!.playbackNotifier.value == PlaybackState.pause) {
       return;
     }
 
-    final nextFrame = await widget.imageLoader.frames.getNextFrame();
+    final nextFrame = await widget.imageLoader.frames!.getNextFrame();
 
     this.currentFrame = nextFrame.image;
 
