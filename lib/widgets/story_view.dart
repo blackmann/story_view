@@ -39,7 +39,7 @@ class StoryItem {
     this.view, {
     required this.duration,
     this.shown = false,
-  }) : assert(duration != null, "[duration] should not be null");
+  });
 
   /// Short hand to create text-only page.
   ///
@@ -165,7 +165,7 @@ class StoryItem {
   /// one passed to the `StoryView`
   factory StoryItem.inlineImage({
     required String url,
-    required Text caption,
+    Text? caption,
     required StoryController controller,
     Key? key,
     BoxFit imageFit = BoxFit.cover,
@@ -275,7 +275,6 @@ class StoryItem {
     bool shown = false,
     Duration? duration,
   }) {
-    assert(imageFit != null, "[imageFit] should not be null");
     return StoryItem(
         Container(
           key: key,
@@ -415,14 +414,7 @@ class StoryView extends StatefulWidget {
     this.repeat = false,
     this.inline = false,
     this.onVerticalSwipeComplete,
-  })  : assert(storyItems != null && storyItems.length > 0,
-            "[storyItems] should not be null or empty"),
-        assert(progressPosition != null, "[progressPosition] cannot be null"),
-        assert(
-          repeat != null,
-          "[repeat] cannot be null",
-        ),
-        assert(inline != null, "[inline] cannot be null");
+  });
 
   @override
   State<StatefulWidget> createState() {
@@ -804,8 +796,7 @@ class StoryProgressIndicator extends StatelessWidget {
   StoryProgressIndicator(
     this.value, {
     this.indicatorHeight = 5,
-  }) : assert(indicatorHeight != null && indicatorHeight > 0,
-            "[indicatorHeight] should not be null or less than 1");
+  });
 
   @override
   Widget build(BuildContext context) {
