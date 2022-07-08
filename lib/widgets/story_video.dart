@@ -25,8 +25,8 @@ class VideoLoader {
       onComplete();
     }
 
-    final fileStream = DefaultCacheManager()
-        .getFileStream(this.url, headers: this.requestHeaders as Map<String, String>?);
+    final fileStream = DefaultCacheManager().getFileStream(this.url,
+        headers: this.requestHeaders as Map<String, String>?);
 
     fileStream.listen((fileResponse) {
       if (fileResponse is FileInfo) {
@@ -45,15 +45,19 @@ class StoryVideo extends StatefulWidget {
   final VideoLoader videoLoader;
   final VideoPlayerController? playerController;
 
-  StoryVideo(this.videoLoader, {this.storyController,this.playerController, Key? key})
+  StoryVideo(this.videoLoader,
+      {this.storyController, this.playerController, Key? key})
       : super(key: key ?? UniqueKey());
+
   static StoryVideo url(String url,
       {StoryController? controller,
       Map<String, dynamic>? requestHeaders,
+      VideoPlayerController? playerController,
       Key? key}) {
     return StoryVideo(
       VideoLoader(url, requestHeaders: requestHeaders),
       storyController: controller,
+      playerController: playerController,
       key: key,
     );
   }
@@ -79,7 +83,8 @@ class StoryVideoState extends State<StoryVideo> {
 
     widget.videoLoader.loadVideo(() {
       if (widget.videoLoader.state == LoadState.success) {
-        this.playerController =widget.playerController??VideoPlayerController.file(widget.videoLoader.videoFile!);
+        this.playerController = widget.playerController ??
+            VideoPlayerController.file(widget.videoLoader.videoFile!);
         playerController!.initialize().then((v) {
           setState(() {});
           widget.storyController!.play();

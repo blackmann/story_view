@@ -4,6 +4,7 @@ import 'dart:ui';
 
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
+import 'package:video_player/video_player.dart';
 
 import '../controller/story_controller.dart';
 import '../utils.dart';
@@ -35,6 +36,7 @@ class StoryItem {
 
   /// The page content
   final Widget view;
+
   StoryItem(
     this.view, {
     required this.duration,
@@ -226,6 +228,7 @@ class StoryItem {
     String? caption,
     bool shown = false,
     Map<String, dynamic>? requestHeaders,
+    VideoPlayerController? playerController,
   }) {
     return StoryItem(
         Container(
@@ -236,6 +239,7 @@ class StoryItem {
               StoryVideo.url(
                 url,
                 controller: controller,
+                playerController: playerController,
                 requestHeaders: requestHeaders,
               ),
               SafeArea(
