@@ -397,6 +397,9 @@ class StoryView extends StatefulWidget {
   /// Show or not story progress indicator.
   final bool? showStoryProgressIndicator;
 
+  /// Define current story progress color
+  final Color? activeStoryProgressColor;
+
   /// Callback for when a full cycle of story is shown. This will be called
   /// each time the full story completes when [repeat] is set to `true`.
   final VoidCallback? onComplete;
@@ -434,6 +437,7 @@ class StoryView extends StatefulWidget {
     this.repeat = false,
     this.inline = false,
     this.onVerticalSwipeComplete,
+    this.activeStoryProgressColor,
   });
 
   @override
@@ -660,6 +664,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                       ? IndicatorHeight.small
                       : IndicatorHeight.large,
                   showStoryProgressIndicator: widget.showStoryProgressIndicator,
+                  activeStoryProgressColor: widget.activeStoryProgressColor,
                 ),
               ),
             ),
@@ -748,11 +753,14 @@ class PageBar extends StatefulWidget {
   final Animation<double>? animation;
   final IndicatorHeight indicatorHeight;
   final bool? showStoryProgressIndicator;
+  final Color? activeStoryProgressColor;
+
   PageBar(
     this.pages,
     this.animation, {
     this.indicatorHeight = IndicatorHeight.large,
     this.showStoryProgressIndicator,
+    this.activeStoryProgressColor,
     Key? key,
   }) : super(key: key);
 
@@ -804,6 +812,7 @@ class PageBarState extends State<PageBar> {
                         : (it.shown ? 1 : 0),
                     indicatorHeight:
                         widget.indicatorHeight == IndicatorHeight.large ? 5 : 3,
+                    activeStoryProgressColor: widget.activeStoryProgressColor,
                   ),
           ),
         );
@@ -818,10 +827,12 @@ class StoryProgressIndicator extends StatelessWidget {
   /// From `0.0` to `1.0`, determines the progress of the indicator
   final double value;
   final double indicatorHeight;
+  final Color? activeStoryProgressColor;
 
   StoryProgressIndicator(
     this.value, {
     this.indicatorHeight = 5,
+    this.activeStoryProgressColor,
   });
 
   @override
@@ -831,7 +842,9 @@ class StoryProgressIndicator extends StatelessWidget {
         this.indicatorHeight,
       ),
       foregroundPainter: IndicatorOval(
-        Colors.white.withOpacity(0.8),
+        activeStoryProgressColor == null
+            ? Colors.white.withOpacity(0.8)
+            : activeStoryProgressColor!.withOpacity(0.8),
         this.value,
       ),
       painter: IndicatorOval(
