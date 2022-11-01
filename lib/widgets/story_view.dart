@@ -813,6 +813,7 @@ class PageBarState extends State<PageBar> {
                     indicatorHeight:
                         widget.indicatorHeight == IndicatorHeight.large ? 5 : 3,
                     activeStoryProgressColor: widget.activeStoryProgressColor,
+                    isCurrent: isPlaying(it),
                   ),
           ),
         );
@@ -828,11 +829,13 @@ class StoryProgressIndicator extends StatelessWidget {
   final double value;
   final double indicatorHeight;
   final Color? activeStoryProgressColor;
+  final bool isCurrent;
 
   StoryProgressIndicator(
     this.value, {
     this.indicatorHeight = 5,
     this.activeStoryProgressColor,
+    required this.isCurrent,
   });
 
   @override
@@ -842,9 +845,11 @@ class StoryProgressIndicator extends StatelessWidget {
         this.indicatorHeight,
       ),
       foregroundPainter: IndicatorOval(
-        activeStoryProgressColor == null
-            ? Colors.white.withOpacity(0.8)
-            : activeStoryProgressColor!.withOpacity(0.8),
+        isCurrent
+            ? activeStoryProgressColor == null
+                ? Colors.white.withOpacity(0.8)
+                : activeStoryProgressColor!.withOpacity(0.8)
+            : Colors.white.withOpacity(0.8),
         this.value,
       ),
       painter: IndicatorOval(
