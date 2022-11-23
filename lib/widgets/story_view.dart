@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
@@ -427,6 +426,8 @@ class StoryView extends StatefulWidget {
   // Controls the playback of the stories
   final StoryController controller;
 
+  final bool Function()? canGoToNext;
+
   StoryView({
     required this.storyItems,
     required this.controller,
@@ -438,6 +439,7 @@ class StoryView extends StatefulWidget {
     this.inline = false,
     this.onVerticalSwipeComplete,
     this.activeStoryProgressColor,
+    this.canGoToNext,
   });
 
   @override
@@ -497,8 +499,15 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
           break;
 
         case PlaybackState.next:
-          _removeNextHold();
-          _goForward();
+          final result = widget.canGoToNext?.call() ?? true;
+
+          if (result) {
+            _removeNextHold();
+            _goForward();
+          } else {
+            widget.controller.play();
+          }
+
           break;
 
         case PlaybackState.previous:

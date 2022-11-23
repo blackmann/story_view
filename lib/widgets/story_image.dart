@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:ui' as ui;
 
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 import '../utils.dart';
@@ -46,7 +45,7 @@ class ImageLoader {
 
         this.state = LoadState.success;
 
-        PaintingBinding.instance!.instantiateImageCodec(imageBytes).then(
+        PaintingBinding.instance.instantiateImageCodec(imageBytes).then(
             (codec) {
           this.frames = codec;
           onComplete();
