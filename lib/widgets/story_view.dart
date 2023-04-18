@@ -837,13 +837,14 @@ class StoryProgressIndicator extends StatelessWidget {
   /// From `0.0` to `1.0`, determines the progress of the indicator
   final double value;
   final double indicatorHeight;
-  final Color? activeStoryProgressColor;
+  final Color? activeStoryProgressColor, backgroundStoryProgressColor;
   final bool isCurrent;
 
   StoryProgressIndicator(
     this.value, {
     this.indicatorHeight = 5,
     this.activeStoryProgressColor,
+    this.backgroundStoryProgressColor,
     required this.isCurrent,
   });
 
@@ -858,11 +859,15 @@ class StoryProgressIndicator extends StatelessWidget {
             ? activeStoryProgressColor == null
                 ? Colors.white.withOpacity(0.8)
                 : activeStoryProgressColor!.withOpacity(0.8)
-            : Colors.white.withOpacity(0.8),
+            : backgroundStoryProgressColor == null
+                ? Colors.white.withOpacity(0.8)
+                : backgroundStoryProgressColor!.withOpacity(0.8),
         this.value,
       ),
       painter: IndicatorOval(
-        Colors.white.withOpacity(0.4),
+        backgroundStoryProgressColor == null
+            ? Colors.white.withOpacity(0.4)
+            : backgroundStoryProgressColor!.withOpacity(.4),
         1.0,
       ),
     );
