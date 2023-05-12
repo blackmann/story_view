@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
@@ -35,10 +34,19 @@ class StoryItem {
 
   /// The page content
   final Widget view;
+
+  /// Custom widget that cannot get with controller
+  final Widget customWidget;
+
+  /// put custom argument if you need to get something when story showed
+  final Map<String, dynamic> args;
+
   StoryItem(
     this.view, {
+    required this.customWidget,
     required this.duration,
     this.shown = false,
+    this.args = const {},
   });
 
   /// Short hand to create text-only page.
@@ -52,12 +60,14 @@ class StoryItem {
   static StoryItem text({
     required String title,
     required Color backgroundColor,
+    Widget customWidget = const SizedBox.shrink(),
     Key? key,
     TextStyle? textStyle,
     bool shown = false,
     bool roundedTop = false,
     bool roundedBottom = false,
     Duration? duration,
+    Map<String, dynamic> args = const {},
   }) {
     double contrast = ContrastHelper.contrast([
       backgroundColor.red,
@@ -98,8 +108,10 @@ class StoryItem {
         ),
         //color: backgroundColor,
       ),
+      customWidget: customWidget,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
+      args: args,
     );
   }
 
@@ -114,11 +126,15 @@ class StoryItem {
     bool shown = false,
     Map<String, dynamic>? requestHeaders,
     Duration? duration,
+    Widget customWidget = const SizedBox.shrink(),
+    Map<String, dynamic> args = const {},
+    EdgeInsets customPaddingContent = EdgeInsets.zero,
   }) {
     return StoryItem(
       Container(
         key: key,
         color: Colors.black,
+        padding: customPaddingContent,
         child: Stack(
           children: <Widget>[
             StoryImage.url(
@@ -156,8 +172,10 @@ class StoryItem {
           ],
         ),
       ),
+      customWidget: customWidget,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
+      args: args,
     );
   }
 
@@ -167,6 +185,7 @@ class StoryItem {
     required String url,
     Text? caption,
     required StoryController controller,
+    Widget customWidget = const SizedBox.shrink(),
     Key? key,
     BoxFit imageFit = BoxFit.cover,
     Map<String, dynamic>? requestHeaders,
@@ -174,6 +193,7 @@ class StoryItem {
     bool roundedTop = true,
     bool roundedBottom = false,
     Duration? duration,
+    Map<String, dynamic> args = const {},
   }) {
     return StoryItem(
       ClipRRect(
@@ -210,8 +230,10 @@ class StoryItem {
           bottom: Radius.circular(roundedBottom ? 8 : 0),
         ),
       ),
+      customWidget: customWidget,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
+      args: args,
     );
   }
 
@@ -220,48 +242,52 @@ class StoryItem {
   factory StoryItem.pageVideo(
     String url, {
     required StoryController controller,
+    Widget customWidget = const SizedBox.shrink(),
     Key? key,
     Duration? duration,
     BoxFit imageFit = BoxFit.fitWidth,
     String? caption,
     bool shown = false,
     Map<String, dynamic>? requestHeaders,
+    Map<String, dynamic> args = const {},
   }) {
     return StoryItem(
-        Container(
-          key: key,
-          color: Colors.black,
-          child: Stack(
-            children: <Widget>[
-              StoryVideo.url(
-                url,
-                controller: controller,
-                requestHeaders: requestHeaders,
-              ),
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(bottom: 24),
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    color:
-                        caption != null ? Colors.black54 : Colors.transparent,
-                    child: caption != null
-                        ? Text(
-                            caption,
-                            style: TextStyle(fontSize: 15, color: Colors.white),
-                            textAlign: TextAlign.center,
-                          )
-                        : SizedBox(),
-                  ),
+      Container(
+        key: key,
+        color: Colors.black,
+        child: Stack(
+          children: <Widget>[
+            StoryVideo.url(
+              url,
+              controller: controller,
+              requestHeaders: requestHeaders,
+            ),
+            SafeArea(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
+                  width: double.infinity,
+                  margin: EdgeInsets.only(bottom: 24),
+                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                  color: caption != null ? Colors.black54 : Colors.transparent,
+                  child: caption != null
+                      ? Text(
+                          caption,
+                          style: TextStyle(fontSize: 15, color: Colors.white),
+                          textAlign: TextAlign.center,
+                        )
+                      : SizedBox(),
                 ),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
-        shown: shown,
-        duration: duration ?? Duration(seconds: 10));
+      ),
+      customWidget: customWidget,
+      shown: shown,
+      duration: duration ?? Duration(seconds: 10),
+      args: args,
+    );
   }
 
   /// Shorthand for creating a story item from an image provider such as `AssetImage`
@@ -274,53 +300,57 @@ class StoryItem {
     String? caption,
     bool shown = false,
     Duration? duration,
+    Widget customWidget = const SizedBox.shrink(),
+    Map<String, dynamic> args = const {},
   }) {
     return StoryItem(
-        Container(
-          key: key,
-          color: Colors.black,
-          child: Stack(
-            children: <Widget>[
-              Center(
-                child: Image(
-                  image: image,
-                  height: double.infinity,
+      Container(
+        key: key,
+        color: Colors.black,
+        child: Stack(
+          children: <Widget>[
+            Center(
+              child: Image(
+                image: image,
+                height: double.infinity,
+                width: double.infinity,
+                fit: imageFit,
+              ),
+            ),
+            SafeArea(
+              child: Align(
+                alignment: Alignment.bottomCenter,
+                child: Container(
                   width: double.infinity,
-                  fit: imageFit,
+                  margin: EdgeInsets.only(
+                    bottom: 24,
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 24,
+                    vertical: 8,
+                  ),
+                  color: caption != null ? Colors.black54 : Colors.transparent,
+                  child: caption != null
+                      ? Text(
+                          caption,
+                          style: TextStyle(
+                            fontSize: 15,
+                            color: Colors.white,
+                          ),
+                          textAlign: TextAlign.center,
+                        )
+                      : SizedBox(),
                 ),
               ),
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(
-                      bottom: 24,
-                    ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 8,
-                    ),
-                    color:
-                        caption != null ? Colors.black54 : Colors.transparent,
-                    child: caption != null
-                        ? Text(
-                            caption,
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white,
-                            ),
-                            textAlign: TextAlign.center,
-                          )
-                        : SizedBox(),
-                  ),
-                ),
-              )
-            ],
-          ),
+            )
+          ],
         ),
-        shown: shown,
-        duration: duration ?? Duration(seconds: 3));
+      ),
+      customWidget: customWidget,
+      shown: shown,
+      duration: duration ?? Duration(seconds: 3),
+      args: args,
+    );
   }
 
   /// Shorthand for creating an inline story item from an image provider such as `AssetImage`
@@ -334,6 +364,8 @@ class StoryItem {
     bool roundedTop = true,
     bool roundedBottom = false,
     Duration? duration,
+    Widget customWidget = const SizedBox.shrink(),
+    Map<String, dynamic> args = const {},
   }) {
     return StoryItem(
       Container(
@@ -365,8 +397,10 @@ class StoryItem {
           ),
         ),
       ),
+      customWidget: customWidget,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
+      args: args,
     );
   }
 }
@@ -426,7 +460,8 @@ class StoryView extends StatefulWidget {
   }
 }
 
-class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
+class StoryViewState extends State<StoryView>
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   AnimationController? _animationController;
   Animation<double>? _currentAnimation;
   Timer? _nextDebouncer;
@@ -445,9 +480,17 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     return item?.view ?? Container();
   }
 
+  Widget get _customWidget {
+    var item = widget.storyItems.firstWhereOrNull((it) => !it!.shown);
+    item ??= widget.storyItems.last;
+    return item?.customWidget ?? SizedBox.shrink();
+  }
+
   @override
   void initState() {
     super.initState();
+
+    WidgetsBinding.instance.addObserver(this);
 
     // All pages after the first unshown page should have their shown value as
     // false
@@ -495,6 +538,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   void dispose() {
     _clearDebouncer();
 
+    WidgetsBinding.instance.removeObserver(this);
     _animationController?.dispose();
     _playbackSubscription?.cancel();
 
@@ -713,9 +757,23 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 }),
                 width: 70),
           ),
+          _customWidget,
         ],
       ),
     );
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    print("$runtimeType AppLifecycleState - $state");
+    if (state == AppLifecycleState.paused ||
+        state == AppLifecycleState.inactive) {
+      widget.controller.pause();
+    }
+
+    if (state == AppLifecycleState.resumed) {
+      widget.controller.play();
+    }
   }
 }
 
@@ -822,7 +880,7 @@ class StoryProgressIndicator extends StatelessWidget {
         this.value,
       ),
       painter: IndicatorOval(
-        this.indicatorColor.withOpacity(0.4),
+        Colors.white,
         1.0,
       ),
     );
