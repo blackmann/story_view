@@ -20,23 +20,26 @@ class VideoLoader {
   VideoLoader(this.url, {this.requestHeaders});
 
   void loadVideo(VoidCallback onComplete) {
-    if (this.videoFile != null) {
-      this.state = LoadState.success;
+    if(url.isNotEmpty) {
       onComplete();
     }
-
-    final fileStream = DefaultCacheManager()
-        .getFileStream(this.url, headers: this.requestHeaders as Map<String, String>?);
-
-    fileStream.listen((fileResponse) {
-      if (fileResponse is FileInfo) {
-        if (this.videoFile == null) {
-          this.state = LoadState.success;
-          this.videoFile = fileResponse.file;
-          onComplete();
-        }
-      }
-    });
+    // if (this.videoFile != null) {
+    //   this.state = LoadState.success;
+    //   onComplete();
+    // }
+    //
+    // final fileStream = DefaultCacheManager()
+    //     .getFileStream(this.url, headers: this.requestHeaders as Map<String, String>?);
+    //
+    // fileStream.listen((fileResponse) {
+    //   if (fileResponse is FileInfo) {
+    //     if (this.videoFile == null) {
+    //       this.state = LoadState.success;
+    //       this.videoFile = fileResponse.file;
+    //       onComplete();
+    //     }
+    //   }
+    // });
   }
 }
 
@@ -78,12 +81,13 @@ class StoryVideoState extends State<StoryVideo> {
     widget.storyController!.pause();
 
     widget.videoLoader.loadVideo(() {
-      if (widget.videoLoader.state == LoadState.success) {
+      // if (widget.videoLoader.state == LoadState.success) {
         this.playerController =
-            VideoPlayerController.file(widget.videoLoader.videoFile!);
+            VideoPlayerController.network(widget.videoLoader.url);
 
         playerController!.initialize().then((v) {
           setState(() {});
+          widget.videoLoader.state = LoadState.success;
           widget.storyController!.play();
         });
 
@@ -97,9 +101,9 @@ class StoryVideoState extends State<StoryVideo> {
             }
           });
         }
-      } else {
-        setState(() {});
-      }
+      // } else {
+      //   setState(() {});
+      // }
     });
   }
 
