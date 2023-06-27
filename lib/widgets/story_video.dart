@@ -46,17 +46,20 @@ class VideoLoader {
 class StoryVideo extends StatefulWidget {
   final StoryController? storyController;
   final VideoLoader videoLoader;
+  final VideoPlayerController? playerController;
 
-  StoryVideo(this.videoLoader, {this.storyController, Key? key})
+  StoryVideo(this.videoLoader, {this.storyController, Key? key, this.playerController})
       : super(key: key ?? UniqueKey());
 
   static StoryVideo url(String url,
       {StoryController? controller,
       Map<String, dynamic>? requestHeaders,
+        VideoPlayerController? playerController,
       Key? key}) {
     return StoryVideo(
       VideoLoader(url, requestHeaders: requestHeaders),
       storyController: controller,
+      playerController: playerController,
       key: key,
     );
   }
@@ -77,19 +80,20 @@ class StoryVideoState extends State<StoryVideo> {
   @override
   void initState() {
     super.initState();
-
+    widget.videoLoader.state = LoadState.loading;
     widget.storyController!.pause();
-
+    setState(() {});
+    WidgetsBinding.instance.addPostFrameCallback((_) {
     widget.videoLoader.loadVideo(() {
       // if (widget.videoLoader.state == LoadState.success) {
-        this.playerController =
-            VideoPlayerController.network(widget.videoLoader.url);
+        playerController = widget.playerController;
+            // VideoPlayerController.network(widget.videoLoader.url);
 
-        playerController!.initialize().then((v) {
+        // playerController!.initialize().then((v) {
           setState(() {});
           widget.videoLoader.state = LoadState.success;
           widget.storyController!.play();
-        });
+        // });
 
         if (widget.storyController != null) {
           _streamSubscription =
@@ -104,6 +108,7 @@ class StoryVideoState extends State<StoryVideo> {
       // } else {
       //   setState(() {});
       // }
+    });
     });
   }
 
