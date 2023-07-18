@@ -40,7 +40,7 @@ class StoryItem {
   VideoPlayerController? playerController;
 
   /// The page content
-  final Widget view;
+  final ContentView view;
 
   StoryItem(this.view,
       {required this.duration,
@@ -78,7 +78,7 @@ class StoryItem {
     ] /** white text */);
 
     return StoryItem(
-      Container(
+      (_) => Container(
         key: key,
         decoration: BoxDecoration(
           color: backgroundColor,
@@ -124,7 +124,7 @@ class StoryItem {
     Duration? duration,
   }) {
     return StoryItem(
-      Container(
+      (_) => Container(
         key: key,
         color: Colors.black,
         child: Stack(
@@ -184,7 +184,7 @@ class StoryItem {
     Duration? duration,
   }) {
     return StoryItem(
-      ClipRRect(
+      (_) => ClipRRect(
         key: key,
         child: Container(
           color: Colors.grey[100],
@@ -239,38 +239,41 @@ class StoryItem {
     final VideoPlayerController _videoPlayerController =
         VideoPlayerController.network(url);
     return StoryItem(
-        Container(
-          key: key,
-          color: Colors.black,
-          child: Stack(
-            children: <Widget>[
-              StoryVideo.url(url,
-                  controller: controller,
-                  isHLS: isHLS,
-                  requestHeaders: requestHeaders,
-                  playerController: _videoPlayerController),
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(bottom: 24),
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    color:
-                        caption != null ? Colors.black54 : Colors.transparent,
-                    child: caption != null
-                        ? Text(
-                            caption,
-                            style: TextStyle(fontSize: 15, color: Colors.white),
-                            textAlign: TextAlign.center,
-                          )
-                        : SizedBox(),
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
+        (playerController) => Container(
+              key: key,
+              color: Colors.black,
+              child: Stack(
+                children: <Widget>[
+                  StoryVideo.url(url,
+                      controller: controller,
+                      requestHeaders: requestHeaders,
+                      playerController: playerController,
+                      isHLS: isHLS),
+                  SafeArea(
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.only(bottom: 24),
+                        padding:
+                            EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                        color: caption != null
+                            ? Colors.black54
+                            : Colors.transparent,
+                        child: caption != null
+                            ? Text(
+                                caption,
+                                style: TextStyle(
+                                    fontSize: 15, color: Colors.white),
+                                textAlign: TextAlign.center,
+                              )
+                            : SizedBox(),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
         shown: shown,
         url: url,
         playerController: _videoPlayerController,
@@ -290,44 +293,45 @@ class StoryItem {
   }) {
     assert(imageFit != null, "[imageFit] should not be null");
     return StoryItem(
-        Container(
-          key: key,
-          color: Colors.black,
-          child: Stack(
-            children: <Widget>[
-              Center(
-                child: Image(
-                  image: image,
-                  height: double.infinity,
-                  width: double.infinity,
-                  fit: imageFit,
-                ),
-              ),
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(
-                      bottom: 24,
+        (_) => Container(
+              key: key,
+              color: Colors.black,
+              child: Stack(
+                children: <Widget>[
+                  Center(
+                    child: Image(
+                      image: image,
+                      height: double.infinity,
+                      width: double.infinity,
+                      fit: imageFit,
                     ),
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 24,
-                      vertical: 8,
-                    ),
-                    color:
-                        caption != null ? Colors.black54 : Colors.transparent,
-                    child: caption != null
-                        ? Text(
-                            caption,
-                            style: TextStyle(
-                              fontSize: 15,
-                              color: Colors.white,
-                            ),
-                            textAlign: TextAlign.center,
-                          )
-                        : SizedBox(),
                   ),
+                  SafeArea(
+                    child: Align(
+                      alignment: Alignment.bottomCenter,
+                      child: Container(
+                        width: double.infinity,
+                        margin: EdgeInsets.only(
+                          bottom: 24,
+                        ),
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 24,
+                          vertical: 8,
+                        ),
+                        color: caption != null
+                            ? Colors.black54
+                            : Colors.transparent,
+                        child: caption != null
+                            ? Text(
+                                caption,
+                                style: TextStyle(
+                                  fontSize: 15,
+                                  color: Colors.white,
+                                ),
+                                textAlign: TextAlign.center,
+                              )
+                            : SizedBox(),
+                      ),
                 ),
               )
             ],
@@ -350,7 +354,7 @@ class StoryItem {
     Duration? duration,
   }) {
     return StoryItem(
-      Container(
+      (_) => Container(
         key: key,
         decoration: BoxDecoration(
             color: Colors.grey[100],
@@ -458,7 +462,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     return widget.storyItems.firstWhereOrNull((it) => !it!.shown);
   }
 
-  Widget get _currentView => widget.storyItems
+  ContentView get _currentView => widget.storyItems
       .firstWhere((it) => !it!.shown, orElse: () => widget.storyItems.last)!
       .view;
 
@@ -761,7 +765,14 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       color: Colors.white,
       child: Stack(
         children: <Widget>[
-          _currentView,
+          _currentView(widget.storyItems
+              .firstWhere(
+                  (it) =>
+                      !it!.shown &&
+                      it.playerController !=
+                          null, // both not shown and is video
+                  orElse: () => widget.storyItems.last)!
+              .playerController),
           Visibility(
             visible: widget.progressPosition != ProgressPosition.none,
             child: Align(
