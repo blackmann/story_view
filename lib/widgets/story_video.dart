@@ -5,8 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:video_player/video_player.dart';
 
-import '../utils.dart';
 import '../controller/story_controller.dart';
+import '../utils.dart';
 
 class VideoLoader {
   String url;
@@ -43,19 +43,19 @@ class VideoLoader {
 class StoryVideo extends StatefulWidget {
   final StoryController? storyController;
   final VideoLoader videoLoader;
+  final bool isHLS;
 
-  StoryVideo(this.videoLoader, {this.storyController, Key? key})
+  StoryVideo(this.videoLoader,
+      {this.storyController, this.isHLS = false, Key? key})
       : super(key: key ?? UniqueKey());
 
   static StoryVideo url(String url,
       {StoryController? controller,
+      required bool isHLS,
       Map<String, dynamic>? requestHeaders,
       Key? key}) {
-    return StoryVideo(
-      VideoLoader(url, requestHeaders: requestHeaders),
-      storyController: controller,
-      key: key,
-    );
+    return StoryVideo(VideoLoader(url, requestHeaders: requestHeaders),
+        storyController: controller, key: key, isHLS: isHLS);
   }
 
   @override
@@ -79,10 +79,16 @@ class StoryVideoState extends State<StoryVideo> {
 
     widget.videoLoader.loadVideo(() {
       if (widget.videoLoader.state == LoadState.success) {
-        this.playerController =
-            VideoPlayerController.file(widget.videoLoader.videoFile!);
+        /// if video is HLS, need to load it from network, if is a downloaded file, need to load it from local cache
+        if (widget.isHLS){
+          this.playerController =
+              VideoPlayerController.network(widget.videoLoader.url);
+        } else {
+          this.playerController =
+              VideoPlayerController.file(widget.videoLoader.videoFile!);
 
-        playerController!.initialize().then((v) {
+        }
+        this.playerController!.initialize().then((v) {
           setState(() {});
           widget.storyController!.play();
         });
@@ -114,7 +120,7 @@ class StoryVideoState extends State<StoryVideo> {
       );
     }
 
-    return widget.videoLoader.state == LoadState.loading
+    return widget.videoLoader.state == LoadState.loading || !playerController!.value.isInitialized == true
         ? Center(
             child: Container(
               width: 70,
