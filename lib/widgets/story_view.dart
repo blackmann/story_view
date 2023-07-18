@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
@@ -225,6 +224,7 @@ class StoryItem {
     BoxFit imageFit = BoxFit.fitWidth,
     String? caption,
     bool shown = false,
+    bool isHLS = false,
     Map<String, dynamic>? requestHeaders,
   }) {
     return StoryItem(
@@ -236,6 +236,7 @@ class StoryItem {
               StoryVideo.url(
                 url,
                 controller: controller,
+                isHLS: isHLS,
                 requestHeaders: requestHeaders,
               ),
               SafeArea(
