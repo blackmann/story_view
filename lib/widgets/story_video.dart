@@ -26,8 +26,8 @@ class VideoLoader {
       onComplete();
     }
 
-    final fileStream = DefaultCacheManager().getFileStream(this.url,
-        headers: this.requestHeaders as Map<String, String>?);
+    final fileStream = DefaultCacheManager()
+        .getFileStream(this.url, headers: this.requestHeaders as Map<String, String>?);
 
     fileStream.listen((fileResponse) {
       if (fileResponse is FileInfo) {
@@ -45,26 +45,18 @@ class StoryVideo extends StatefulWidget {
   final StoryController? storyController;
   final VideoLoader videoLoader;
   final bool isHLS;
-  final VideoPlayerController? playerController;
 
   StoryVideo(this.videoLoader,
-      {this.storyController,
-      this.playerController,
-      this.isHLS = false,
-      Key? key})
+      {this.storyController, this.isHLS = false, Key? key})
       : super(key: key ?? UniqueKey());
 
   static StoryVideo url(String url,
       {StoryController? controller,
       required bool isHLS,
       Map<String, dynamic>? requestHeaders,
-      VideoPlayerController? playerController,
       Key? key}) {
     return StoryVideo(VideoLoader(url, requestHeaders: requestHeaders),
-        storyController: controller,
-        key: key,
-        playerController: playerController,
-        isHLS: isHLS);
+        storyController: controller, key: key, isHLS: isHLS);
   }
 
   @override
@@ -89,30 +81,26 @@ class StoryVideoState extends State<StoryVideo> {
     widget.videoLoader.loadVideo(() {
       if (widget.videoLoader.state == LoadState.success) {
         /// if video is HLS, need to load it from network, if is a downloaded file, need to load it from local cache
-        if (widget.isHLS) {
+        if (widget.isHLS){
           this.playerController =
               VideoPlayerController.network(widget.videoLoader.url);
         } else {
           this.playerController =
               VideoPlayerController.file(widget.videoLoader.videoFile!);
-        }
-        // this.playerController!.initialize().then((v) {
-        //   setState(() {});
-        //   widget.storyController!.play();
-        // });
 
-        if (widget.playerController!.value.isInitialized) {
-          widget.storyController!.play();
+        }
+        this.playerController!.initialize().then((v) {
           setState(() {});
-        } else {}
+          widget.storyController!.play();
+        });
 
         if (widget.storyController != null) {
           _streamSubscription =
               widget.storyController!.playbackNotifier.listen((playbackState) {
             if (playbackState == PlaybackState.pause) {
-              widget.playerController!.pause();
+              playerController!.pause();
             } else {
-              widget.playerController!.play();
+              playerController!.play();
             }
           });
         }
@@ -124,11 +112,11 @@ class StoryVideoState extends State<StoryVideo> {
 
   Widget getContentView() {
     if (widget.videoLoader.state == LoadState.success &&
-        widget.playerController!.value.isInitialized) {
+        playerController!.value.isInitialized) {
       return Center(
         child: AspectRatio(
-          aspectRatio: widget.playerController!.value.aspectRatio,
-          child: VideoPlayer(widget.playerController!),
+          aspectRatio: playerController!.value.aspectRatio,
+          child: VideoPlayer(playerController!),
         ),
       );
     }
@@ -169,7 +157,7 @@ class StoryVideoState extends State<StoryVideo> {
 
   @override
   void dispose() {
-    // playerController?.dispose();
+    playerController?.dispose();
     _streamSubscription?.cancel();
     super.dispose();
   }
