@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:shimmer/shimmer.dart';
 import 'package:video_player/video_player.dart';
 
 import '../controller/story_controller.dart';
@@ -25,8 +26,8 @@ class VideoLoader {
       onComplete();
     }
 
-    final fileStream = DefaultCacheManager()
-        .getFileStream(this.url, headers: this.requestHeaders as Map<String, String>?);
+    final fileStream = DefaultCacheManager().getFileStream(this.url,
+        headers: this.requestHeaders as Map<String, String>?);
 
     fileStream.listen((fileResponse) {
       if (fileResponse is FileInfo) {
@@ -44,18 +45,26 @@ class StoryVideo extends StatefulWidget {
   final StoryController? storyController;
   final VideoLoader videoLoader;
   final bool isHLS;
+  final VideoPlayerController? playerController;
 
   StoryVideo(this.videoLoader,
-      {this.storyController, this.isHLS = false, Key? key})
+      {this.storyController,
+      this.playerController,
+      this.isHLS = false,
+      Key? key})
       : super(key: key ?? UniqueKey());
 
   static StoryVideo url(String url,
       {StoryController? controller,
       required bool isHLS,
       Map<String, dynamic>? requestHeaders,
+      VideoPlayerController? playerController,
       Key? key}) {
     return StoryVideo(VideoLoader(url, requestHeaders: requestHeaders),
-        storyController: controller, key: key, isHLS: isHLS);
+        storyController: controller,
+        key: key,
+        playerController: playerController,
+        isHLS: isHLS);
   }
 
   @override
@@ -80,26 +89,30 @@ class StoryVideoState extends State<StoryVideo> {
     widget.videoLoader.loadVideo(() {
       if (widget.videoLoader.state == LoadState.success) {
         /// if video is HLS, need to load it from network, if is a downloaded file, need to load it from local cache
-        if (widget.isHLS){
+        if (widget.isHLS) {
           this.playerController =
               VideoPlayerController.network(widget.videoLoader.url);
         } else {
           this.playerController =
               VideoPlayerController.file(widget.videoLoader.videoFile!);
-
         }
-        this.playerController!.initialize().then((v) {
-          setState(() {});
+        // this.playerController!.initialize().then((v) {
+        //   setState(() {});
+        //   widget.storyController!.play();
+        // });
+
+        if (widget.playerController!.value.isInitialized) {
           widget.storyController!.play();
-        });
+          setState(() {});
+        } else {}
 
         if (widget.storyController != null) {
           _streamSubscription =
               widget.storyController!.playbackNotifier.listen((playbackState) {
             if (playbackState == PlaybackState.pause) {
-              playerController!.pause();
+              widget.playerController!.pause();
             } else {
-              playerController!.play();
+              widget.playerController!.play();
             }
           });
         }
@@ -111,23 +124,27 @@ class StoryVideoState extends State<StoryVideo> {
 
   Widget getContentView() {
     if (widget.videoLoader.state == LoadState.success &&
-        playerController!.value.isInitialized) {
+        widget.playerController!.value.isInitialized) {
       return Center(
         child: AspectRatio(
-          aspectRatio: playerController!.value.aspectRatio,
-          child: VideoPlayer(playerController!),
+          aspectRatio: widget.playerController!.value.aspectRatio,
+          child: VideoPlayer(widget.playerController!),
         ),
       );
     }
 
-    return widget.videoLoader.state == LoadState.loading || !playerController!.value.isInitialized == true
-        ? Center(
+    return widget.videoLoader.state == LoadState.loading ||
+            !playerController!.value.isInitialized == true
+        ? Shimmer.fromColors(
+            baseColor: Color(0xFF222124),
+            highlightColor: Colors.grey.withOpacity(0.2),
             child: Container(
-              width: 70,
-              height: 70,
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                strokeWidth: 3,
+              color: Colors.black,
+              child: Container(
+                decoration: ShapeDecoration(
+                  color: Colors.grey[500]!,
+                  shape: const RoundedRectangleBorder(),
+                ),
               ),
             ),
           )
@@ -152,7 +169,7 @@ class StoryVideoState extends State<StoryVideo> {
 
   @override
   void dispose() {
-    playerController?.dispose();
+    // playerController?.dispose();
     _streamSubscription?.cancel();
     super.dispose();
   }
