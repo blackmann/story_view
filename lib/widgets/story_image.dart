@@ -1,12 +1,13 @@
 import 'dart:async';
 import 'dart:ui' as ui;
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/painting.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:shimmer/shimmer.dart';
 
-import '../utils.dart';
 import '../controller/story_controller.dart';
+import '../utils.dart';
 
 /// Utitlity to load image (gif, png, jpg, etc) media just once. Resource is
 /// cached to disk with default configurations of [DefaultCacheManager].
@@ -195,13 +196,16 @@ class StoryImageState extends State<StoryImage> {
           ),
         ));
       default:
-        return Center(
+        return Shimmer.fromColors(
+          baseColor: Color(0xFF222124),
+          highlightColor: Colors.grey.withOpacity(0.2),
           child: Container(
-            width: 70,
-            height: 70,
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              strokeWidth: 3,
+            color: Colors.black,
+            child: Container(
+              decoration: ShapeDecoration(
+                color: Colors.grey[500]!,
+                shape: const RoundedRectangleBorder(),
+              ),
             ),
           ),
         );
@@ -210,10 +214,21 @@ class StoryImageState extends State<StoryImage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      child: getContentView(),
+    return Stack(
+      children: [
+        ImageFiltered(
+          imageFilter: ImageFilter.blur(sigmaY: 15, sigmaX: 15),
+          //SigmaX and Y are just for X and Y directions
+          child: Container(
+            width: double.infinity,
+            height: double.infinity,
+            child: getContentView(),
+          ),
+        ),
+        Center(
+          child: getContentView(),
+        ),
+      ],
     );
   }
 }
