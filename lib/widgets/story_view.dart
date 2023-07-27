@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:math';
-import 'dart:ui';
 
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
@@ -33,13 +32,16 @@ class StoryItem {
   /// story item.
   bool shown;
 
+  String? url;
+
   /// The page content
   final Widget view;
-  StoryItem(
-    this.view, {
-    required this.duration,
-    this.shown = false,
-  });
+
+  StoryItem(this.view,
+      {required this.duration,
+      this.shown = false,
+      this.url})
+      : assert(duration != null, "[duration] should not be null");
 
   /// Short hand to create text-only page.
   ///
@@ -225,6 +227,7 @@ class StoryItem {
     BoxFit imageFit = BoxFit.fitWidth,
     String? caption,
     bool shown = false,
+    bool isHLS = false,
     Map<String, dynamic>? requestHeaders,
   }) {
     return StoryItem(
@@ -233,11 +236,10 @@ class StoryItem {
           color: Colors.black,
           child: Stack(
             children: <Widget>[
-              StoryVideo.url(
-                url,
-                controller: controller,
-                requestHeaders: requestHeaders,
-              ),
+              StoryVideo.url(url,
+                  controller: controller,
+                  isHLS: isHLS,
+                  requestHeaders: requestHeaders),
               SafeArea(
                 child: Align(
                   alignment: Alignment.bottomCenter,
