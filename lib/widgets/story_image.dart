@@ -214,6 +214,10 @@ class StoryImageState extends State<StoryImage> {
 
   @override
   Widget build(BuildContext context) {
-    return getContentView();
+    return  Container(
+      width: double.infinity,
+      height: double.infinity,
+      child: getContentView(),
+    );
   }
 }
