@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:cached_video_player/cached_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:shimmer/shimmer.dart';
@@ -26,8 +27,8 @@ class VideoLoader {
       onComplete();
     }
 
-    final fileStream = DefaultCacheManager()
-        .getFileStream(this.url, headers: this.requestHeaders as Map<String, String>?);
+    final fileStream = DefaultCacheManager().getFileStream(this.url,
+        headers: this.requestHeaders as Map<String, String>?);
 
     fileStream.listen((fileResponse) {
       if (fileResponse is FileInfo) {
@@ -70,7 +71,7 @@ class StoryVideoState extends State<StoryVideo> {
 
   StreamSubscription? _streamSubscription;
 
-  VideoPlayerController? playerController;
+  CachedVideoPlayerController? playerController;
 
   @override
   void initState() {
@@ -81,13 +82,12 @@ class StoryVideoState extends State<StoryVideo> {
     widget.videoLoader.loadVideo(() {
       if (widget.videoLoader.state == LoadState.success) {
         /// if video is HLS, need to load it from network, if is a downloaded file, need to load it from local cache
-        if (widget.isHLS){
+        if (widget.isHLS) {
           this.playerController =
-              VideoPlayerController.network(widget.videoLoader.url);
+              CachedVideoPlayerController.network(widget.videoLoader.url);
         } else {
           this.playerController =
-              VideoPlayerController.file(widget.videoLoader.videoFile!);
-
+              CachedVideoPlayerController.file(widget.videoLoader.videoFile!);
         }
         this.playerController!.initialize().then((v) {
           setState(() {});
@@ -116,7 +116,7 @@ class StoryVideoState extends State<StoryVideo> {
       return Center(
         child: AspectRatio(
           aspectRatio: playerController!.value.aspectRatio,
-          child: VideoPlayer(playerController!),
+          child: CachedVideoPlayer(playerController!),
         ),
       );
     }

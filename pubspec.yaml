@@ -14,6 +14,7 @@ dependencies:
   video_player: ^2.0.0
   collection: ^1.15.0
   shimmer:
+  cached_video_player: ^2.0.4
 
 dev_dependencies:
   flutter_test:
