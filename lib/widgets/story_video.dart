@@ -80,9 +80,9 @@ class StoryVideoState extends State<StoryVideo> {
   @override
   void initState() {
     super.initState();
-    widget.videoLoader.state = LoadState.loading;
+    // widget.videoLoader.state = LoadState.loading;
     widget.storyController!.pause();
-    setState(() {});
+    // setState(() {});
     WidgetsBinding.instance.addPostFrameCallback((_) {
     widget.videoLoader.loadVideo(() {
       // if (widget.videoLoader.state == LoadState.success) {
