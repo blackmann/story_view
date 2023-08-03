@@ -2,7 +2,6 @@ import 'dart:async';
 import 'dart:io';
 
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:video_player/video_player.dart';
 
 import '../utils.dart';
@@ -84,6 +83,10 @@ class StoryVideoState extends State<StoryVideo> {
     widget.storyController!.pause();
     // setState(() {});
     WidgetsBinding.instance.addPostFrameCallback((_) {
+      if(widget.playerController == null) {
+        widget.storyController!.play();
+        return;
+      }
     widget.videoLoader.loadVideo(() {
       // if (widget.videoLoader.state == LoadState.success) {
         playerController = widget.playerController;
