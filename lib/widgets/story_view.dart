@@ -37,10 +37,7 @@ class StoryItem {
   /// The page content
   final Widget view;
 
-  StoryItem(this.view,
-      {required this.duration,
-      this.shown = false,
-      this.url})
+  StoryItem(this.view, {required this.duration, this.shown = false, this.url})
       : assert(duration != null, "[duration] should not be null");
 
   /// Short hand to create text-only page.
@@ -393,6 +390,8 @@ class StoryView extends StatefulWidget {
   /// Callback for when a story is currently being shown.
   final ValueChanged<StoryItem>? onStoryShow;
 
+  final ValueChanged<int>? onStoryReplied;
+
   /// Where the progress indicator should be placed.
   final ProgressPosition progressPosition;
 
@@ -417,6 +416,7 @@ class StoryView extends StatefulWidget {
     required this.controller,
     this.onComplete,
     this.onStoryShow,
+    this.onStoryReplied,
     this.progressPosition = ProgressPosition.top,
     this.repeat = false,
     this.inline = false,
@@ -490,6 +490,10 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
           _removeNextHold();
           _goBack();
           break;
+
+        case PlaybackState.resume:
+          _removeNextHold();
+          this._animationController?.forward();
       }
     });
 
@@ -520,8 +524,14 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       return !it!.shown;
     })!;
 
+    final storyIndex = widget.storyItems.indexOf(storyItem);
+
     if (widget.onStoryShow != null) {
       widget.onStoryShow!(storyItem);
+    }
+
+    if (widget.onStoryReplied != null) {
+      widget.onStoryReplied!(storyIndex);
     }
 
     _animationController =
@@ -829,11 +839,11 @@ class StoryProgressIndicator extends StatelessWidget {
         this.indicatorHeight,
       ),
       foregroundPainter: IndicatorOval(
-        this.indicatorForegroundColor?? Colors.white.withOpacity(0.8),
+        this.indicatorForegroundColor ?? Colors.white.withOpacity(0.8),
         this.value,
       ),
       painter: IndicatorOval(
-        this.indicatorColor?? Colors.white.withOpacity(0.4),
+        this.indicatorColor ?? Colors.white.withOpacity(0.4),
         1.0,
       ),
     );
