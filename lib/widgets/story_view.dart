@@ -5,7 +5,7 @@ import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
 
 import '../controller/story_controller.dart';
-import '../utils.dart';
+import '../utils/utils.dart';
 import 'story_image.dart';
 import 'story_video.dart';
 

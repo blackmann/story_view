@@ -7,7 +7,7 @@ import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../controller/story_controller.dart';
-import '../utils.dart';
+import '../utils/utils.dart';
 
 class VideoLoader {
   String url;
