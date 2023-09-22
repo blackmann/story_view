@@ -5,13 +5,13 @@ import 'package:cached_video_player/cached_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:video_player/video_player.dart';
 
 import '../controller/story_controller.dart';
 import '../utils.dart';
 
 class VideoLoader {
   String url;
+  String storyIndex;
 
   File? videoFile;
 
@@ -19,7 +19,7 @@ class VideoLoader {
 
   LoadState state = LoadState.loading;
 
-  VideoLoader(this.url, {this.requestHeaders});
+  VideoLoader(this.url, this.storyIndex, {this.requestHeaders});
 
   void loadVideo(VoidCallback onComplete) {
     if (this.videoFile != null) {
@@ -51,12 +51,12 @@ class StoryVideo extends StatefulWidget {
       {this.storyController, this.isHLS = false, Key? key})
       : super(key: key ?? UniqueKey());
 
-  static StoryVideo url(String url,
+  static StoryVideo url(String url, String storyId,
       {StoryController? controller,
       required bool isHLS,
       Map<String, dynamic>? requestHeaders,
       Key? key}) {
-    return StoryVideo(VideoLoader(url, requestHeaders: requestHeaders),
+    return StoryVideo(VideoLoader(url, storyId, requestHeaders: requestHeaders),
         storyController: controller, key: key, isHLS: isHLS);
   }
 
