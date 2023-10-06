@@ -1,13 +1,12 @@
 import 'dart:async';
 import 'dart:ui' as ui;
-import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:shimmer/shimmer.dart';
 
 import '../controller/story_controller.dart';
-import '../utils.dart';
+import '../utils/utils.dart';
 
 /// Utitlity to load image (gif, png, jpg, etc) media just once. Resource is
 /// cached to disk with default configurations of [DefaultCacheManager].
@@ -15,12 +14,13 @@ class ImageLoader {
   ui.Codec? frames;
 
   String url;
+  String storyId;
 
   Map<String, dynamic>? requestHeaders;
 
   LoadState state = LoadState.loading; // by default
 
-  ImageLoader(this.url, {this.requestHeaders});
+  ImageLoader(this.url, this.storyId, {this.requestHeaders});
 
   /// Load image from disk cache first, if not found then load from network.
   /// `onComplete` is called when [imageBytes] become available.
@@ -83,7 +83,8 @@ class StoryImage extends StatefulWidget {
 
   /// Use this shorthand to fetch images/gifs from the provided [url]
   factory StoryImage.url(
-    String url, {
+    String url,
+    String storyId, {
     StoryController? controller,
     Map<String, dynamic>? requestHeaders,
     BoxFit fit = BoxFit.fitWidth,
@@ -92,6 +93,7 @@ class StoryImage extends StatefulWidget {
     return StoryImage(
         ImageLoader(
           url,
+          storyId,
           requestHeaders: requestHeaders,
         ),
         controller: controller,
@@ -107,7 +109,7 @@ class StoryImageState extends State<StoryImage> {
   ui.Image? currentFrame;
 
   Timer? _timer;
-
+  int? _resumeTimerDuration;
   StreamSubscription<PlaybackState>? _streamSubscription;
 
   @override
@@ -123,7 +125,12 @@ class StoryImageState extends State<StoryImage> {
         }
 
         if (playbackState == PlaybackState.pause) {
+          this._resumeTimerDuration = this._timer?.tick;
           this._timer?.cancel();
+        } else if (playbackState == PlaybackState.resume) {
+          //_timer = Timer(_resumeTimerDuration, () { });
+          this._timer =
+              Timer(Duration(milliseconds: _resumeTimerDuration ?? 0), forward);
         } else {
           forward();
         }
@@ -180,6 +187,15 @@ class StoryImageState extends State<StoryImage> {
     setState(() {});
   }
 
+  void resume() async {
+    if (widget.controller != null &&
+        widget.controller!.playbackNotifier.stream.value ==
+            PlaybackState.pause) {
+      return;
+    }
+    this._streamSubscription?.resume();
+  }
+
   Widget getContentView() {
     switch (widget.imageLoader.state) {
       case LoadState.success:
@@ -214,7 +230,7 @@ class StoryImageState extends State<StoryImage> {
 
   @override
   Widget build(BuildContext context) {
-    return  Container(
+    return Container(
       width: double.infinity,
       height: double.infinity,
       child: getContentView(),
