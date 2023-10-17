@@ -490,6 +490,11 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
           _removeNextHold();
           _goBack();
           break;
+
+        case PlaybackState.previous:
+          _removeNextHold();
+          _goBack();
+          break;
       }
     });
 
@@ -582,6 +587,12 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       previous.shown = false;
 
       _beginPlay();
+    }
+  }
+
+  void _jumpTo() {
+    for(int i = 0; i<= widget.controller.index; i++){
+      this.widget.storyItems[i] = true;
     }
   }
 
