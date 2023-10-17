@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:story_view/story_view.dart';
+import 'package:story_view/controller/story_controller.dart';
+import 'package:story_view/widgets/story_view.dart';
 
 void main() => runApp(MyApp());
 
@@ -24,20 +25,21 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Delicious Ghanaian Meals"),
+        title: const Text("Delicious Ghanaian Meals"),
       ),
       body: Container(
-        margin: EdgeInsets.all(
+        margin: const EdgeInsets.all(
           8,
         ),
         child: ListView(
           children: <Widget>[
-            Container(
+            SizedBox(
               height: 300,
               child: StoryView(
                 controller: controller,
                 storyItems: [
                   StoryItem.text(
+                    storyId: "id 111",
                     title:
                         "Hello world!\nHave a look at some great Ghanaian delicacies. I'm sorry if your mouth waters. \n\nTap!",
                     backgroundColor: Colors.orange,
@@ -56,10 +58,11 @@ class Home extends StatelessWidget {
                   //   ),
                   // ),
                   StoryItem.inlineImage(
+                    storyId: "id123",
                     url:
                         "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
                     controller: controller,
-                    caption: Text(
+                    caption: const Text(
                       "Omotuo & Nkatekwan; You will love this meal if taken as supper.",
                       style: TextStyle(
                         color: Colors.white,
@@ -69,10 +72,11 @@ class Home extends StatelessWidget {
                     ),
                   ),
                   StoryItem.inlineImage(
+                    storyId: "112",
                     url:
                         "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
                     controller: controller,
-                    caption: Text(
+                    caption: const Text(
                       "Hektas, sektas and skatad",
                       style: TextStyle(
                         color: Colors.white,
@@ -100,12 +104,12 @@ class Home extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => MoreStories()));
                 },
                 child: Container(
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                       color: Colors.black54,
                       borderRadius:
                           BorderRadius.vertical(bottom: Radius.circular(8))),
-                  padding: EdgeInsets.symmetric(vertical: 8),
-                  child: Row(
+                  padding: const EdgeInsets.symmetric(vertical: 8),
+                  child: const Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Icon(
@@ -149,48 +153,57 @@ class _MoreStoriesState extends State<MoreStories> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("More"),
+        title: const Text("More"),
       ),
       body: StoryView(
         storyItems: [
           StoryItem.text(
+            storyId: "123444",
             title: "I guess you'd love to see more of our food. That's great.",
             backgroundColor: Colors.blue,
           ),
           StoryItem.text(
+            storyId: "4545",
             title: "Nice!\n\nTap to continue.",
             backgroundColor: Colors.red,
-            textStyle: TextStyle(
+            textStyle: const TextStyle(
               fontFamily: 'Dancing',
               fontSize: 40,
             ),
           ),
           StoryItem.pageImage(
+            storyId: "34454",
             url:
                 "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
             caption: "Still sampling",
             controller: storyController,
           ),
           StoryItem.pageImage(
+              storyId: "344",
               url: "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
               caption: "Working with gifs",
               controller: storyController),
           StoryItem.pageImage(
+            storyId: "34422",
             url: "https://media.giphy.com/media/XcA8krYsrEAYXKf4UQ/giphy.gif",
             caption: "Hello, from the other side",
             controller: storyController,
           ),
           StoryItem.pageImage(
+            storyId: "3447",
             url: "https://media.giphy.com/media/XcA8krYsrEAYXKf4UQ/giphy.gif",
             caption: "Hello, from the other side2",
             controller: storyController,
           ),
         ],
         onStoryShow: (s) {
-          print("Showing a story");
+          print("Showing a story  story Id ${s.storyId}");
         },
         onComplete: () {
           print("Completed a cycle");
+        },
+        onStoryReplied: (value) {
+          print(' Story Reply $value');
         },
         progressPosition: ProgressPosition.top,
         repeat: false,
