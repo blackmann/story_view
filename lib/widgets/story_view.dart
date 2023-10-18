@@ -620,9 +620,10 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   }
 
   void _jumpTo() {
-    for(int i = 0; i<= widget.controller.index; i++){
+    for (int i = 0; i < widget.controller.index; i++) {
       this.widget.storyItems[i]?.shown = true;
     }
+    _beginPlay();
   }
 
   void _goForward() {
