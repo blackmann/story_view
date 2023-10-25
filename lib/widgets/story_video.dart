@@ -80,11 +80,11 @@ class StoryVideoState extends State<StoryVideo> {
   void initState() {
     super.initState();
     // widget.videoLoader.state = LoadState.loading;
-    widget.storyController!.pause();
+    widget.storyController?.pause();
     // setState(() {});
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if(widget.playerController == null) {
-        widget.storyController!.play();
+        widget.storyController?.play();
         return;
       }
     widget.videoLoader.loadVideo(() {
@@ -95,16 +95,16 @@ class StoryVideoState extends State<StoryVideo> {
         // playerController!.initialize().then((v) {
           setState(() {});
           widget.videoLoader.state = LoadState.success;
-          widget.storyController!.play();
+          widget.storyController?.play();
         // });
 
         if (widget.storyController != null) {
           _streamSubscription =
-              widget.storyController!.playbackNotifier.listen((playbackState) {
+              widget.storyController?.playbackNotifier.listen((playbackState) {
             if (playbackState == PlaybackState.pause) {
-              playerController!.pause();
+              playerController?.pause();
             } else {
-              playerController!.play();
+              playerController?.play();
             }
           });
         }
