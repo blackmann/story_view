@@ -4,6 +4,7 @@ import 'dart:ui' as ui;
 import 'package:flutter/material.dart';
 import 'package:flutter/painting.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
+import 'package:story_view/widgets/loading_widget.dart';
 
 import '../utils.dart';
 import '../controller/story_controller.dart';
@@ -195,16 +196,7 @@ class StoryImageState extends State<StoryImage> {
           ),
         ));
       default:
-        return Center(
-          child: Container(
-            width: 70,
-            height: 70,
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              strokeWidth: 3,
-            ),
-          ),
-        );
+        return LoadingWidget();
     }
   }
 
