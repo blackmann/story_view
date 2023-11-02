@@ -135,39 +135,53 @@ class StoryVideoState extends State<StoryVideo> {
   Widget getContentView() {
     if (widget.videoLoader.state == LoadState.success &&
         playerController.value.isInitialized) {
-      return widget.isRepost == true
-          ? Stack(
-              children: [
-                Padding(
-                  padding: const EdgeInsets.all(50.0),
-                  child: AspectRatio(
-                    aspectRatio: playerController.value.aspectRatio,
-                    child: CachedVideoPlayer(playerController),
-                  ),
+      return Container(
+        color: Colors.black,
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
+        child: widget.isRepost == true
+            ? Center(
+                child: Stack(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(50.0),
+                      child: Container(
+                        height: MediaQuery.of(context).size.height * 0.60,
+                        width: MediaQuery.of(context).size.width * 0.80,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(20),
+                        ),
+                        child: AspectRatio(
+                          aspectRatio: playerController.value.aspectRatio,
+                          child: CachedVideoPlayer(playerController),
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(58.0),
+                      child: Row(
+                        children: [
+                          CircleAvatar(
+                            radius: 15,
+                            backgroundImage: NetworkImage(widget.userProfile),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 8.0),
+                            child: Text(widget.userName),
+                          ),
+                        ],
+                      ),
+                    )
+                  ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(58.0),
-                  child: Row(
-                    children: [
-                      CircleAvatar(
-                        radius: 15,
-                        backgroundImage: NetworkImage(widget.userProfile),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 8.0),
-                        child: Text(widget.userName),
-                      ),
-                    ],
-                  ),
-                )
-              ],
-            )
-          : Center(
-              child: AspectRatio(
-                aspectRatio: playerController.value.aspectRatio,
-                child: CachedVideoPlayer(playerController),
+              )
+            : Center(
+                child: AspectRatio(
+                  aspectRatio: playerController.value.aspectRatio,
+                  child: CachedVideoPlayer(playerController),
+                ),
               ),
-            );
+      );
     }
 
     return widget.videoLoader.state == LoadState.loading ||
@@ -197,39 +211,32 @@ class StoryVideoState extends State<StoryVideo> {
   @override
   Widget build(BuildContext context) {
     return widget.isRepost == true
-        ? playerController.value.isInitialized == true
-            ? Stack(
-                children: [
-                  ImageFiltered(
-                    imageFilter: ImageFilter.blur(sigmaY: 15, sigmaX: 15),
-                    //SigmaX and Y are just for X and Y directions
-                    child: Container(
-                        width: double.infinity,
-                        height: double.infinity,
-                        child: Center(
-                          child: AspectRatio(
-                            aspectRatio: playerController.value.aspectRatio,
-                            child: CachedVideoPlayer(playerController),
-                          ),
-                        )),
-                  ),
-                  Center(
-                    child: getContentView(),
-                  ),
-                ],
-              )
-            : Container()
-        : Container(
-            color: Colors.black,
-            height: double.infinity,
-            width: double.infinity,
-            child: getContentView(),
-          );
+        ? Stack(
+            children: [
+              ImageFiltered(
+                imageFilter: ImageFilter.blur(sigmaY: 15, sigmaX: 15),
+                //SigmaX and Y are just for X and Y directions
+                child: Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: Center(
+                      child: AspectRatio(
+                        aspectRatio: playerController.value.aspectRatio,
+                        child: CachedVideoPlayer(playerController),
+                      ),
+                    )),
+              ),
+              Center(
+                child: getContentView(),
+              ),
+            ],
+          )
+        : getContentView();
   }
 
   @override
   void dispose() {
-    playerController?.dispose();
+    playerController.dispose();
     _streamSubscription?.cancel();
     super.dispose();
   }

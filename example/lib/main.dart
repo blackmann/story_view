@@ -180,7 +180,7 @@ class _MoreStoriesState extends State<MoreStories> {
             controller: storyController,
             isHLS: false,
             isRepost: true,
-            userName: "KASHMIRA",
+            userName: "",
             userProfile: ""
           ),
           StoryItem.pageImage(
