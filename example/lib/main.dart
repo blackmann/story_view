@@ -173,17 +173,20 @@ class _MoreStoriesState extends State<MoreStories> {
               fontSize: 40,
             ),
           ),
-          StoryItem.pageImage(
-            storyId: "34454",
-            url:
-                "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
-            caption: "Still sampling",
+          StoryItem.pageVideo(
+            "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            "6578",
+
             controller: storyController,
-            isRepost: false,
+            isHLS: false,
+            isRepost: true,
+            userName: "KASHMIRA",
+            userProfile: ""
           ),
           StoryItem.pageImage(
               storyId: "344",
-              url: "https://fastly.picsum.photos/id/59/2464/1632.jpg?hmac=uTfe6jCzLvCzANvJgtpo-a0fKhO8BvjpwLNYX3lqx_Q",
+              url:
+                  "https://fastly.picsum.photos/id/59/2464/1632.jpg?hmac=uTfe6jCzLvCzANvJgtpo-a0fKhO8BvjpwLNYX3lqx_Q",
               caption: "Working with gifs",
               isRepost: true,
               controller: storyController),

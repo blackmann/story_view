@@ -44,7 +44,7 @@ class VideoLoader {
 }
 
 class StoryVideo extends StatefulWidget {
-  final StoryController? storyController;
+  final StoryController storyController;
   final VideoLoader videoLoader;
   final bool isHLS;
   final bool isRepost;
@@ -52,16 +52,17 @@ class StoryVideo extends StatefulWidget {
   final String userProfile;
 
   StoryVideo(this.videoLoader,
-      {this.storyController,
+      {required this.storyController,
       this.isHLS = false,
       required this.isRepost,
       this.userName = "",
-      this.userProfile = "",
+      this.userProfile =
+          "https://fastly.picsum.photos/id/798/4592/3448.jpg?hmac=a-NblRRC-lhb5GShHTdTomW3vlf5HZKM_aRjWQaOmNg",
       Key? key})
       : super(key: key ?? UniqueKey());
 
   static StoryVideo url(String url, String storyId,
-      {StoryController? controller,
+      {required StoryController controller,
       required bool isHLS,
       required bool isRepost,
       String? userName,
@@ -75,7 +76,8 @@ class StoryVideo extends StatefulWidget {
       isHLS: isHLS,
       isRepost: isRepost,
       userName: userName ?? "",
-      userProfile: userProfile ?? "",
+      userProfile: userProfile ??
+          "https://fastly.picsum.photos/id/798/4592/3448.jpg?hmac=a-NblRRC-lhb5GShHTdTomW3vlf5HZKM_aRjWQaOmNg",
     );
   }
 
@@ -90,36 +92,37 @@ class StoryVideoState extends State<StoryVideo> {
 
   StreamSubscription? _streamSubscription;
 
-  CachedVideoPlayerController? playerController;
+  CachedVideoPlayerController playerController =
+      CachedVideoPlayerController.network("");
 
   @override
   void initState() {
     super.initState();
 
-    widget.storyController!.pause();
+    widget.storyController.pause();
 
     widget.videoLoader.loadVideo(() {
       if (widget.videoLoader.state == LoadState.success) {
         /// if video is HLS, need to load it from network, if is a downloaded file, need to load it from local cache
-        if (widget.isHLS) {
+        if (widget.isHLS == true) {
           this.playerController =
               CachedVideoPlayerController.network(widget.videoLoader.url);
         } else {
           this.playerController =
               CachedVideoPlayerController.file(widget.videoLoader.videoFile!);
         }
-        this.playerController!.initialize().then((v) {
+        this.playerController.initialize().then((v) {
           setState(() {});
-          widget.storyController!.play();
+          widget.storyController.play();
         });
 
         if (widget.storyController != null) {
           _streamSubscription =
-              widget.storyController!.playbackNotifier.listen((playbackState) {
+              widget.storyController.playbackNotifier.listen((playbackState) {
             if (playbackState == PlaybackState.pause) {
-              playerController!.pause();
+              playerController.pause();
             } else {
-              playerController!.play();
+              playerController.play();
             }
           });
         }
@@ -131,17 +134,15 @@ class StoryVideoState extends State<StoryVideo> {
 
   Widget getContentView() {
     if (widget.videoLoader.state == LoadState.success &&
-        playerController!.value.isInitialized) {
+        playerController.value.isInitialized) {
       return widget.isRepost == true
           ? Stack(
               children: [
                 Padding(
                   padding: const EdgeInsets.all(50.0),
-                  child: Center(
-                    child: AspectRatio(
-                      aspectRatio: playerController!.value.aspectRatio,
-                      child: CachedVideoPlayer(playerController!),
-                    ),
+                  child: AspectRatio(
+                    aspectRatio: playerController.value.aspectRatio,
+                    child: CachedVideoPlayer(playerController),
                   ),
                 ),
                 Padding(
@@ -163,14 +164,14 @@ class StoryVideoState extends State<StoryVideo> {
             )
           : Center(
               child: AspectRatio(
-                aspectRatio: playerController!.value.aspectRatio,
-                child: CachedVideoPlayer(playerController!),
+                aspectRatio: playerController.value.aspectRatio,
+                child: CachedVideoPlayer(playerController),
               ),
             );
     }
 
     return widget.videoLoader.state == LoadState.loading ||
-            !playerController!.value.isInitialized == true
+        !playerController.value.isInitialized == true
         ? Shimmer.fromColors(
             baseColor: Color(0xFF222124),
             highlightColor: Colors.grey.withOpacity(0.2),
@@ -196,26 +197,28 @@ class StoryVideoState extends State<StoryVideo> {
   @override
   Widget build(BuildContext context) {
     return widget.isRepost == true
-        ? Stack(
-            children: [
-              ImageFiltered(
-                imageFilter: ImageFilter.blur(sigmaY: 15, sigmaX: 15),
-                //SigmaX and Y are just for X and Y directions
-                child: Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    child: Center(
-                      child: AspectRatio(
-                        aspectRatio: playerController!.value.aspectRatio,
-                        child: CachedVideoPlayer(playerController!),
-                      ),
-                    )),
-              ),
-              Center(
-                child: getContentView(),
-              ),
-            ],
-          )
+        ? playerController.value.isInitialized == true
+            ? Stack(
+                children: [
+                  ImageFiltered(
+                    imageFilter: ImageFilter.blur(sigmaY: 15, sigmaX: 15),
+                    //SigmaX and Y are just for X and Y directions
+                    child: Container(
+                        width: double.infinity,
+                        height: double.infinity,
+                        child: Center(
+                          child: AspectRatio(
+                            aspectRatio: playerController.value.aspectRatio,
+                            child: CachedVideoPlayer(playerController),
+                          ),
+                        )),
+                  ),
+                  Center(
+                    child: getContentView(),
+                  ),
+                ],
+              )
+            : Container()
         : Container(
             color: Colors.black,
             height: double.infinity,
