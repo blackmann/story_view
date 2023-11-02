@@ -54,7 +54,7 @@ class StoryVideo extends StatefulWidget {
   StoryVideo(this.videoLoader,
       {this.storyController,
       this.isHLS = false,
-      this.isRepost = false,
+      required this.isRepost,
       this.userName = "",
       this.userProfile = "",
       Key? key})
@@ -63,10 +63,20 @@ class StoryVideo extends StatefulWidget {
   static StoryVideo url(String url, String storyId,
       {StoryController? controller,
       required bool isHLS,
+      required bool isRepost,
+      String? userName,
+      String? userProfile,
       Map<String, dynamic>? requestHeaders,
       Key? key}) {
-    return StoryVideo(VideoLoader(url, storyId, requestHeaders: requestHeaders),
-        storyController: controller, key: key, isHLS: isHLS);
+    return StoryVideo(
+      VideoLoader(url, storyId, requestHeaders: requestHeaders),
+      storyController: controller,
+      key: key,
+      isHLS: isHLS,
+      isRepost: isRepost,
+      userName: userName ?? "",
+      userProfile: userProfile ?? "",
+    );
   }
 
   @override

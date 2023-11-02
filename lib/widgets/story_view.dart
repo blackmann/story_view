@@ -250,6 +250,9 @@ class StoryItem {
     String? caption,
     bool shown = false,
     bool isHLS = false,
+    bool isRepost = false,
+    String userName = "",
+    String userProfile = "",
     Map<String, dynamic>? requestHeaders,
   }) {
     return StoryItem(
@@ -261,7 +264,10 @@ class StoryItem {
             StoryVideo.url(url, storyId,
                 controller: controller,
                 isHLS: isHLS,
-                requestHeaders: requestHeaders),
+                requestHeaders: requestHeaders,
+                isRepost: isRepost,
+                userProfile: userProfile,
+                userName: userName),
             SafeArea(
               child: Align(
                 alignment: Alignment.bottomCenter,
