@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:io';
+import 'dart:ui';
 
 import 'package:cached_video_player/cached_video_player.dart';
 import 'package:flutter/material.dart';
@@ -46,9 +47,17 @@ class StoryVideo extends StatefulWidget {
   final StoryController? storyController;
   final VideoLoader videoLoader;
   final bool isHLS;
+  final bool isRepost;
+  final String userName;
+  final String userProfile;
 
   StoryVideo(this.videoLoader,
-      {this.storyController, this.isHLS = false, Key? key})
+      {this.storyController,
+      this.isHLS = false,
+      this.isRepost = false,
+      this.userName = "",
+      this.userProfile = "",
+      Key? key})
       : super(key: key ?? UniqueKey());
 
   static StoryVideo url(String url, String storyId,
@@ -113,12 +122,42 @@ class StoryVideoState extends State<StoryVideo> {
   Widget getContentView() {
     if (widget.videoLoader.state == LoadState.success &&
         playerController!.value.isInitialized) {
-      return Center(
-        child: AspectRatio(
-          aspectRatio: playerController!.value.aspectRatio,
-          child: CachedVideoPlayer(playerController!),
-        ),
-      );
+      return widget.isRepost == true
+          ? Stack(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(50.0),
+                  child: Center(
+                    child: AspectRatio(
+                      aspectRatio: playerController!.value.aspectRatio,
+                      child: CachedVideoPlayer(playerController!),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(58.0),
+                  child: Row(
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: Colors.white,
+                        radius: 15,
+                        backgroundImage: NetworkImage(widget.userProfile),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(left: 8.0),
+                        child: Text(widget.userName),
+                      ),
+                    ],
+                  ),
+                )
+              ],
+            )
+          : Center(
+              child: AspectRatio(
+                aspectRatio: playerController!.value.aspectRatio,
+                child: CachedVideoPlayer(playerController!),
+              ),
+            );
     }
 
     return widget.videoLoader.state == LoadState.loading ||
@@ -147,12 +186,33 @@ class StoryVideoState extends State<StoryVideo> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.black,
-      height: double.infinity,
-      width: double.infinity,
-      child: getContentView(),
-    );
+    return widget.isRepost == true
+        ? Stack(
+            children: [
+              ImageFiltered(
+                imageFilter: ImageFilter.blur(sigmaY: 15, sigmaX: 15),
+                //SigmaX and Y are just for X and Y directions
+                child: Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    child: Center(
+                      child: AspectRatio(
+                        aspectRatio: playerController!.value.aspectRatio,
+                        child: CachedVideoPlayer(playerController!),
+                      ),
+                    )),
+              ),
+              Center(
+                child: getContentView(),
+              ),
+            ],
+          )
+        : Container(
+            color: Colors.black,
+            height: double.infinity,
+            width: double.infinity,
+            child: getContentView(),
+          );
   }
 
   @override

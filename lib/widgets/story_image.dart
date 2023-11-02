@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'dart:ui' as ui;
+import 'dart:ui';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -69,13 +70,18 @@ class ImageLoader {
 /// forward animated media.
 class StoryImage extends StatefulWidget {
   final ImageLoader imageLoader;
-
+  final bool isRepost;
+  final String userName;
+  final String userProfile;
   final BoxFit? fit;
 
   final StoryController? controller;
 
   StoryImage(
-    this.imageLoader, {
+    this.imageLoader,
+    this.isRepost,
+    this.userName,
+    this.userProfile, {
     Key? key,
     this.controller,
     this.fit,
@@ -84,7 +90,10 @@ class StoryImage extends StatefulWidget {
   /// Use this shorthand to fetch images/gifs from the provided [url]
   factory StoryImage.url(
     String url,
-    String storyId, {
+    String storyId,
+    bool isRepost,
+    String userName,
+    String userProfile, {
     StoryController? controller,
     Map<String, dynamic>? requestHeaders,
     BoxFit fit = BoxFit.fitWidth,
@@ -96,6 +105,9 @@ class StoryImage extends StatefulWidget {
           storyId,
           requestHeaders: requestHeaders,
         ),
+        isRepost,
+        userName,
+        userProfile,
         controller: controller,
         fit: fit,
         key: key);
@@ -199,10 +211,38 @@ class StoryImageState extends State<StoryImage> {
   Widget getContentView() {
     switch (widget.imageLoader.state) {
       case LoadState.success:
-        return RawImage(
-          image: this.currentFrame,
-          fit: widget.fit,
-        );
+        return widget.isRepost == true
+            ? Stack(
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.all(50.0),
+                    child: RawImage(
+                      image: this.currentFrame,
+                      fit: widget.fit,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(58.0),
+                    child: Row(
+                      children: [
+                        CircleAvatar(
+                          backgroundColor: Colors.white,
+                          radius: 15,
+                          backgroundImage: NetworkImage(widget.userProfile),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.only(left: 8.0),
+                          child: Text(widget.userName),
+                        ),
+                      ],
+                    ),
+                  )
+                ],
+              )
+            : RawImage(
+                image: this.currentFrame,
+                fit: widget.fit,
+              );
       case LoadState.failure:
         return Center(
             child: Text(
@@ -230,10 +270,32 @@ class StoryImageState extends State<StoryImage> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: double.infinity,
-      height: double.infinity,
-      child: getContentView(),
-    );
+    return widget.isRepost == true
+        ? Stack(
+            children: [
+              ImageFiltered(
+                imageFilter: ImageFilter.blur(sigmaY: 15, sigmaX: 15),
+                //SigmaX and Y are just for X and Y directions
+                child: Container(
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Center(
+                    child: RawImage(
+                      image: this.currentFrame,
+                      fit: widget.fit,
+                    ),
+                  ),
+                ),
+              ),
+              Center(
+                child: getContentView(),
+              ),
+            ],
+          )
+        : Container(
+            width: double.infinity,
+            height: double.infinity,
+            child: getContentView(),
+          );
   }
 }

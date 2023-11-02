@@ -62,6 +62,7 @@ class Home extends StatelessWidget {
                     url:
                         "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
                     controller: controller,
+                    isRepost: true,
                     caption: const Text(
                       "Omotuo & Nkatekwan; You will love this meal if taken as supper.",
                       style: TextStyle(
@@ -76,6 +77,7 @@ class Home extends StatelessWidget {
                     url:
                         "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
                     controller: controller,
+                    isRepost: true,
                     caption: const Text(
                       "Hektas, sektas and skatad",
                       style: TextStyle(
@@ -177,23 +179,27 @@ class _MoreStoriesState extends State<MoreStories> {
                 "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
             caption: "Still sampling",
             controller: storyController,
+            isRepost: false,
           ),
           StoryItem.pageImage(
               storyId: "344",
-              url: "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
+              url: "https://fastly.picsum.photos/id/59/2464/1632.jpg?hmac=uTfe6jCzLvCzANvJgtpo-a0fKhO8BvjpwLNYX3lqx_Q",
               caption: "Working with gifs",
+              isRepost: true,
               controller: storyController),
           StoryItem.pageImage(
             storyId: "34422",
-            url: "https://media.giphy.com/media/XcA8krYsrEAYXKf4UQ/giphy.gif",
+            url: "https://fastly.picsum.photos/id/59/2464/1632.jpg?hmac=uTfe6jCzLvCzANvJgtpo-a0fKhO8BvjpwLNYX3lqx_Q",
             caption: "Hello, from the other side",
             controller: storyController,
+            isRepost: true,
           ),
           StoryItem.pageImage(
             storyId: "3447",
-            url: "https://media.giphy.com/media/XcA8krYsrEAYXKf4UQ/giphy.gif",
+            url: "https://fastly.picsum.photos/id/59/2464/1632.jpg?hmac=uTfe6jCzLvCzANvJgtpo-a0fKhO8BvjpwLNYX3lqx_Q",
             caption: "Hello, from the other side2",
             controller: storyController,
+            isRepost: false,
           ),
         ],
         onStoryShow: (s) {
