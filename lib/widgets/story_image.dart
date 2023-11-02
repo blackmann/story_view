@@ -226,7 +226,6 @@ class StoryImageState extends State<StoryImage> {
                     child: Row(
                       children: [
                         CircleAvatar(
-                          backgroundColor: Colors.white,
                           radius: 15,
                           backgroundImage: NetworkImage(widget.userProfile),
                         ),

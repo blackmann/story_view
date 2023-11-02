@@ -139,7 +139,6 @@ class StoryVideoState extends State<StoryVideo> {
                   child: Row(
                     children: [
                       CircleAvatar(
-                        backgroundColor: Colors.white,
                         radius: 15,
                         backgroundImage: NetworkImage(widget.userProfile),
                       ),
