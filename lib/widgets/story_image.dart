@@ -231,9 +231,12 @@ class StoryImageState extends State<StoryImage> {
                                 color: Colors.grey.shade200.withOpacity(0.5),
                                 borderRadius: BorderRadius.circular(20),
                               ),
-                              child: RawImage(
-                                image: this.currentFrame,
-                                fit: widget.fit,
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(20),
+                                child: RawImage(
+                                  image: this.currentFrame,
+                                  fit: widget.fit,
+                                ),
                               ),
                             ),
                           ),
@@ -259,7 +262,7 @@ class StoryImageState extends State<StoryImage> {
                             Padding(
                               padding: const EdgeInsets.only(left: 8.0),
                               child: Text(
-                                "widget.userName",
+                                widget.userName,
                                 style: TextStyle(
                                     color: Colors.black,
                                     fontSize: 16,

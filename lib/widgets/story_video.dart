@@ -179,7 +179,7 @@ class StoryVideoState extends State<StoryVideo> {
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0),
                             child: Text(
-                              "widget.userName",
+                              widget.userName,
                               style: TextStyle(
                                   color: Colors.black,
                                   fontSize: 16,
