@@ -56,8 +56,7 @@ class StoryVideo extends StatefulWidget {
       this.isHLS = false,
       required this.isRepost,
       this.userName = "",
-      this.userProfile =
-          "https://fastly.picsum.photos/id/798/4592/3448.jpg?hmac=a-NblRRC-lhb5GShHTdTomW3vlf5HZKM_aRjWQaOmNg",
+      this.userProfile = "",
       Key? key})
       : super(key: key ?? UniqueKey());
 
@@ -76,8 +75,7 @@ class StoryVideo extends StatefulWidget {
       isHLS: isHLS,
       isRepost: isRepost,
       userName: userName ?? "",
-      userProfile: userProfile ??
-          "https://fastly.picsum.photos/id/798/4592/3448.jpg?hmac=a-NblRRC-lhb5GShHTdTomW3vlf5HZKM_aRjWQaOmNg",
+      userProfile: userProfile ?? "",
     );
   }
 
@@ -161,13 +159,31 @@ class StoryVideoState extends State<StoryVideo> {
                       padding: const EdgeInsets.all(58.0),
                       child: Row(
                         children: [
-                          CircleAvatar(
-                            radius: 15,
-                            backgroundImage: NetworkImage(widget.userProfile),
-                          ),
+                          widget.userProfile.isNotEmpty == true
+                              ? CircleAvatar(
+                                  radius: 15,
+                                  backgroundImage:
+                                      NetworkImage(widget.userProfile),
+                            backgroundColor: Colors.grey,
+
+                                )
+                              : CircleAvatar(
+                                  radius: 15,
+                                  backgroundImage:
+                                      AssetImage("assets/images/img.png"),
+                            backgroundColor: Colors.grey,
+
+                                ),
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0),
-                            child: Text(widget.userName),
+                            child: Text(
+                              widget.userName,
+                              style: TextStyle(
+                                  color: Colors.grey,
+                                  fontSize: 16,
+                                  fontFamily: "PoppinsRegular",
+                                  fontWeight: FontWeight.w500),
+                            ),
                           ),
                         ],
                       ),

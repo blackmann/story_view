@@ -225,13 +225,29 @@ class StoryImageState extends State<StoryImage> {
                     padding: const EdgeInsets.all(58.0),
                     child: Row(
                       children: [
-                        CircleAvatar(
-                          radius: 15,
-                          backgroundImage: NetworkImage(widget.userProfile),
-                        ),
+                        widget.userProfile.isNotEmpty == true
+                            ? CircleAvatar(
+                                radius: 15,
+                                backgroundImage:
+                                    NetworkImage(widget.userProfile),
+                                backgroundColor: Colors.grey,
+                              )
+                            : CircleAvatar(
+                                radius: 15,
+                                backgroundImage:
+                                    AssetImage("assets/images/img.png"),
+                                backgroundColor: Colors.grey,
+                              ),
                         Padding(
                           padding: const EdgeInsets.only(left: 8.0),
-                          child: Text(widget.userName),
+                          child: Text(
+                            widget.userName,
+                            style: TextStyle(
+                                color: Colors.grey,
+                                fontSize: 16,
+                                fontFamily: "PoppinsRegular",
+                                fontWeight: FontWeight.w500),
+                          ),
                         ),
                       ],
                     ),
