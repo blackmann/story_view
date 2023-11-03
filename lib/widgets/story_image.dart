@@ -211,53 +211,73 @@ class StoryImageState extends State<StoryImage> {
   Widget getContentView() {
     switch (widget.imageLoader.state) {
       case LoadState.success:
-        return widget.isRepost == true
-            ? Stack(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(50.0),
-                    child: RawImage(
-                      image: this.currentFrame,
-                      fit: widget.fit,
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(58.0),
-                    child: Row(
-                      children: [
-                        widget.userProfile.isNotEmpty == true
-                            ? CircleAvatar(
-                                radius: 15,
-                                backgroundImage:
-                                    NetworkImage(widget.userProfile),
-                                backgroundColor: Colors.grey,
-                              )
-                            : CircleAvatar(
-                                radius: 15,
-                                backgroundImage:
-                                    AssetImage("assets/images/img.png"),
-                                backgroundColor: Colors.grey,
+        return Container(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: widget.isRepost == true
+              ? Center(
+                  child: Stack(
+                    children: [
+                      ClipRect(
+                        child: new BackdropFilter(
+                          filter:
+                              new ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
+                          child: Padding(
+                            padding: const EdgeInsets.all(50.0),
+                            child: Container(
+                              height: MediaQuery.of(context).size.height * 0.60,
+                              width: MediaQuery.of(context).size.width * 0.80,
+                              decoration: new BoxDecoration(
+                                color: Colors.grey.shade200.withOpacity(0.5),
+                                borderRadius: BorderRadius.circular(20),
                               ),
-                        Padding(
-                          padding: const EdgeInsets.only(left: 8.0),
-                          child: Text(
-                            widget.userName,
-                            style: TextStyle(
-                                color: Colors.grey,
-                                fontSize: 16,
-                                fontFamily: "PoppinsRegular",
-                                fontWeight: FontWeight.w500),
+                              child: RawImage(
+                                image: this.currentFrame,
+                                fit: widget.fit,
+                              ),
+                            ),
                           ),
                         ),
-                      ],
-                    ),
-                  )
-                ],
-              )
-            : RawImage(
-                image: this.currentFrame,
-                fit: widget.fit,
-              );
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(58.0),
+                        child: Row(
+                          children: [
+                            widget.userProfile.isNotEmpty == true
+                                ? CircleAvatar(
+                                    radius: 15,
+                                    backgroundImage:
+                                        NetworkImage(widget.userProfile),
+                                    backgroundColor: Colors.grey,
+                                  )
+                                : CircleAvatar(
+                                    radius: 15,
+                                    backgroundImage:
+                                        AssetImage("assets/images/img.png"),
+                                    backgroundColor: Colors.grey,
+                                  ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 8.0),
+                              child: Text(
+                                "widget.userName",
+                                style: TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontFamily: "PoppinsRegular",
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              : RawImage(
+                  image: this.currentFrame,
+                  fit: widget.fit,
+                ),
+        );
       case LoadState.failure:
         return Center(
             child: Text(

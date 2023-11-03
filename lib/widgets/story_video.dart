@@ -144,16 +144,18 @@ class StoryVideoState extends State<StoryVideo> {
                     Padding(
                       padding: const EdgeInsets.all(50.0),
                       child: Container(
-                        height: MediaQuery.of(context).size.height * 0.60,
-                        width: MediaQuery.of(context).size.width * 0.80,
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: AspectRatio(
-                          aspectRatio: playerController.value.aspectRatio,
-                          child: CachedVideoPlayer(playerController),
-                        ),
-                      ),
+                          height: MediaQuery.of(context).size.height * 0.60,
+                          width: MediaQuery.of(context).size.width * 0.80,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(20),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20),
+                            child: AspectRatio(
+                              aspectRatio: playerController.value.aspectRatio,
+                              child: CachedVideoPlayer(playerController),
+                            ),
+                          )),
                     ),
                     Padding(
                       padding: const EdgeInsets.all(58.0),
@@ -177,9 +179,9 @@ class StoryVideoState extends State<StoryVideo> {
                           Padding(
                             padding: const EdgeInsets.only(left: 8.0),
                             child: Text(
-                              widget.userName,
+                              "widget.userName",
                               style: TextStyle(
-                                  color: Colors.grey,
+                                  color: Colors.black,
                                   fontSize: 16,
                                   fontFamily: "PoppinsRegular",
                                   fontWeight: FontWeight.w500),
