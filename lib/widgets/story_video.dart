@@ -47,36 +47,39 @@ class StoryVideo extends StatefulWidget {
   final StoryController storyController;
   final VideoLoader videoLoader;
   final bool isHLS;
-  final VoidCallback viewPost;
   final bool isRepost;
+  final VoidCallback viewPost;
   final String userName;
   final String userProfile;
 
   StoryVideo(this.videoLoader,
       {required this.storyController,
-      this.isHLS = false,
-      required this.isRepost,
-      this.userName = "",
-      this.userProfile = "",
-      Key? key, required this.viewPost})
+        this.isHLS = false,
+        required this.isRepost,
+        required this.viewPost,
+        this.userName = "",
+        this.userProfile = "",
+        Key? key})
       : super(key: key ?? UniqueKey());
 
   static StoryVideo url(String url, String storyId,
       {required StoryController controller,
-      required bool isHLS,
-      required bool isRepost,
-      String? userName,
-      String? userProfile,
-      Map<String, dynamic>? requestHeaders,
-      Key? key}) {
+        required bool isHLS,
+        required bool isRepost,
+        required VoidCallback viewPost,
+        String? userName,
+        String? userProfile,
+        Map<String, dynamic>? requestHeaders,
+        Key? key}) {
     return StoryVideo(
-      VideoLoader(url, storyId, requestHeaders: requestHeaders),
-      storyController: controller,
-      key: key,
-      isHLS: isHLS,
-      isRepost: isRepost,
-      userName: userName ?? "",
-      userProfile: userProfile ?? "", viewPost: () { },
+        VideoLoader(url, storyId, requestHeaders: requestHeaders),
+        storyController: controller,
+        key: key,
+        isHLS: isHLS,
+        isRepost: isRepost,
+        viewPost: () {},
+        userName: userName ?? "",
+        userProfile: userProfile ?? "",
     );
   }
 

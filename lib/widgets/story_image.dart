@@ -72,20 +72,20 @@ class ImageLoader {
 class StoryImage extends StatefulWidget {
   final ImageLoader imageLoader;
   final bool isRepost;
+  final VoidCallback viewPost;
   final String userName;
   final String userProfile;
   final BoxFit? fit;
-  final VoidCallback viewPost;
   final StoryController? controller;
 
   StoryImage(
     this.imageLoader,
     this.isRepost,
+    this.viewPost,
     this.userName,
     this.userProfile, {
     Key? key,
     this.controller,
-    required this.viewPost,
     this.fit,
   }) : super(key: key ?? UniqueKey());
 
@@ -94,9 +94,9 @@ class StoryImage extends StatefulWidget {
     String url,
     String storyId,
     bool isRepost,
+    VoidCallback viewPost,
     String userName,
-    String userProfile,
-    VoidCallback viewPost, {
+    String userProfile, {
     StoryController? controller,
     Map<String, dynamic>? requestHeaders,
     BoxFit fit = BoxFit.fitWidth,
@@ -109,12 +109,12 @@ class StoryImage extends StatefulWidget {
         requestHeaders: requestHeaders,
       ),
       isRepost,
+      () {},
       userName,
       userProfile,
       controller: controller,
       fit: fit,
       key: key,
-      viewPost: () {},
     );
   }
 
