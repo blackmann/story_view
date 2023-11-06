@@ -75,7 +75,7 @@ class StoryImage extends StatefulWidget {
   final String userName;
   final String userProfile;
   final BoxFit? fit;
-
+  final VoidCallback viewPost;
   final StoryController? controller;
 
   StoryImage(
@@ -85,6 +85,7 @@ class StoryImage extends StatefulWidget {
     this.userProfile, {
     Key? key,
     this.controller,
+    required this.viewPost,
     this.fit,
   }) : super(key: key ?? UniqueKey());
 
@@ -94,24 +95,27 @@ class StoryImage extends StatefulWidget {
     String storyId,
     bool isRepost,
     String userName,
-    String userProfile, {
+    String userProfile,
+    VoidCallback viewPost, {
     StoryController? controller,
     Map<String, dynamic>? requestHeaders,
     BoxFit fit = BoxFit.fitWidth,
     Key? key,
   }) {
     return StoryImage(
-        ImageLoader(
-          url,
-          storyId,
-          requestHeaders: requestHeaders,
-        ),
-        isRepost,
-        userName,
-        userProfile,
-        controller: controller,
-        fit: fit,
-        key: key);
+      ImageLoader(
+        url,
+        storyId,
+        requestHeaders: requestHeaders,
+      ),
+      isRepost,
+      userName,
+      userProfile,
+      controller: controller,
+      fit: fit,
+      key: key,
+      viewPost: () {},
+    );
   }
 
   @override
@@ -221,86 +225,90 @@ class StoryImageState extends State<StoryImage> {
           height: MediaQuery.of(context).size.height,
           width: MediaQuery.of(context).size.width,
           child: widget.isRepost == true
-              ? Center(
-                  child: Stack(
-                    children: [
-                      ClipRect(
-                        child: new BackdropFilter(
-                          filter:
-                              new ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
-                          child: Padding(
-                            padding: const EdgeInsets.all(50.0),
-                            child: Container(
-                              height: MediaQuery.of(context).size.height * 0.65,
-                              width: MediaQuery.of(context).size.width * 0.95,
-                              decoration: new BoxDecoration(
-                                color: Colors.grey.shade200.withOpacity(0.5),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(5),
-                                child: RawImage(
-                                  image: this.currentFrame,
-                                  fit: widget.fit,
+              ? Padding(
+            padding: const EdgeInsets.symmetric(vertical: 40.0),
+                child: Center(
+                    child: Stack(
+                      children: [
+                        ClipRect(
+                          child: new BackdropFilter(
+                            filter:
+                                new ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
+                            child: Padding(
+                              padding: const EdgeInsets.all(50.0),
+                              child: Container(
+                                height: MediaQuery.of(context).size.height * 0.65,
+                                width: MediaQuery.of(context).size.width * 0.95,
+                                decoration: new BoxDecoration(
+                                  color: Colors.grey.shade200.withOpacity(0.5),
+                                  borderRadius: BorderRadius.circular(5),
                                 ),
-                              ),
-                            ),
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(50.0),
-                        child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.black54,
-                                Colors.transparent,
-                              ],
-                            ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                widget.userProfile.isNotEmpty == true
-                                    ? CircleAvatar(
-                                        radius: 18,
-                                        backgroundImage:
-                                            NetworkImage(widget.userProfile),
-                                        backgroundColor: Colors.grey,
-                                      )
-                                    : CircleAvatar(
-                                        radius: 18,
-                                        backgroundImage:
-                                            AssetImage("assets/images/img.png"),
-                                        backgroundColor: Colors.grey,
-                                      ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 8.0),
-                                    child: Text(
-                                      widget.userName,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontFamily: "NexaBold",
-                                          fontWeight: FontWeight.w500),
-                                    ),
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: RawImage(
+                                    image: this.currentFrame,
+                                    fit: widget.fit,
                                   ),
                                 ),
-                              ],
+                              ),
                             ),
                           ),
                         ),
-                      )
-                    ],
+                        Padding(
+                          padding: const EdgeInsets.all(50.0),
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                begin: Alignment.topCenter,
+                                end: Alignment.bottomCenter,
+                                colors: [
+                                  Colors.black54,
+                                  Colors.transparent,
+                                ],
+                              ),
+                            ),
+                            child: Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Row(
+                                children: [
+                                  widget.userProfile.isNotEmpty == true
+                                      ? CircleAvatar(
+                                          radius: 18,
+                                          backgroundImage:
+                                              NetworkImage(widget.userProfile),
+                                          backgroundColor: Colors.grey,
+                                        )
+                                      : CircleAvatar(
+                                          radius: 18,
+                                          backgroundImage:
+                                              AssetImage("assets/images/img.png"),
+                                          backgroundColor: Colors.grey,
+                                        ),
+                                  Expanded(
+                                    child: Padding(
+                                      padding: const EdgeInsets.only(left: 8.0),
+                                      child: Text(
+                                        widget.userName,
+                                        overflow: TextOverflow.ellipsis,
+                                        maxLines: 2,
+                                        style: TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontFamily: "NexaBold",
+                                            fontWeight: FontWeight.w500),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        getViewPostButtonWidget(),
+                      ],
+                    ),
                   ),
-                )
+              )
               : RawImage(
                   image: this.currentFrame,
                   fit: widget.fit,
@@ -361,5 +369,44 @@ class StoryImageState extends State<StoryImage> {
             height: double.infinity,
             child: getContentView(),
           );
+  }
+
+  getViewPostButtonWidget() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 150.0),
+      child: Align(
+        alignment: FractionalOffset.bottomCenter,
+        child: InkWell(
+          onTap: () {
+            widget.viewPost();
+          },
+          child: Container(
+              height: 40,
+              width: MediaQuery.of(context).size.width * 1 / 3,
+              padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                  color: Colors.grey.withOpacity(0.50)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "View Post",
+                    style: TextStyle(
+                        color: Color(0XFFC9C9C9),
+                        fontFamily: "NexaBold",
+                        fontWeight: FontWeight.w300,
+                        fontSize: 14),
+                  ),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.white,
+                    size: 20,
+                  )
+                ],
+              )),
+        ),
+      ),
+    );
   }
 }

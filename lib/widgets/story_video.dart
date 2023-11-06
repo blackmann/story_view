@@ -47,6 +47,7 @@ class StoryVideo extends StatefulWidget {
   final StoryController storyController;
   final VideoLoader videoLoader;
   final bool isHLS;
+  final VoidCallback viewPost;
   final bool isRepost;
   final String userName;
   final String userProfile;
@@ -57,7 +58,7 @@ class StoryVideo extends StatefulWidget {
       required this.isRepost,
       this.userName = "",
       this.userProfile = "",
-      Key? key})
+      Key? key, required this.viewPost})
       : super(key: key ?? UniqueKey());
 
   static StoryVideo url(String url, String storyId,
@@ -75,7 +76,7 @@ class StoryVideo extends StatefulWidget {
       isHLS: isHLS,
       isRepost: isRepost,
       userName: userName ?? "",
-      userProfile: userProfile ?? "",
+      userProfile: userProfile ?? "", viewPost: () { },
     );
   }
 
@@ -141,20 +142,30 @@ class StoryVideoState extends State<StoryVideo> {
             ? Center(
                 child: Stack(
                   children: [
-                    Padding(
-                      padding: const EdgeInsets.all(50.0),
-                      child: Container(
-                          height: MediaQuery.of(context).size.height * 0.65,
-                          width: MediaQuery.of(context).size.width * 0.95,
-                          decoration: BoxDecoration(),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: AspectRatio(
-                              aspectRatio: playerController.value.aspectRatio,
-                              child: CachedVideoPlayer(playerController),
-                            ),
-                          )),
+                    ClipRect(
+                      child: new BackdropFilter(
+                        filter:
+                        new ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
+                        child: Padding(
+                          padding: const EdgeInsets.all(50.0),
+                          child: Container(
+                              height: MediaQuery.of(context).size.height * 0.65,
+                              width: MediaQuery.of(context).size.width * 0.95,
+                              decoration: new BoxDecoration(
+                                color: Colors.grey.shade200.withOpacity(0.5),
+                                borderRadius: BorderRadius.circular(5),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: AspectRatio(
+                                  aspectRatio: playerController.value.aspectRatio,
+                                  child: CachedVideoPlayer(playerController),
+                                ),
+                              )),
+                        ),
+                      ),
                     ),
+
                     Padding(
                       padding: const EdgeInsets.all(50.0),
                       child: Container(
@@ -174,7 +185,7 @@ class StoryVideoState extends State<StoryVideo> {
                             children: [
                               widget.userProfile.isNotEmpty == true
                                   ? CircleAvatar(
-                                      radius: 15,
+                                      radius: 18,
                                       backgroundImage:
                                           NetworkImage(widget.userProfile),
                                       backgroundColor: Colors.grey,
@@ -262,9 +273,49 @@ class StoryVideoState extends State<StoryVideo> {
               Center(
                 child: getContentView(),
               ),
+              getViewPostButtonWidget(),
             ],
           )
         : getContentView();
+  }
+
+  getViewPostButtonWidget() {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 130.0),
+      child: Align(
+        alignment: FractionalOffset.bottomCenter,
+        child: InkWell(
+          onTap: () {
+            widget.viewPost();
+          },
+          child: Container(
+              height: 40,
+              width: MediaQuery.of(context).size.width * 1 / 3,
+              padding: const EdgeInsets.all(10.0),
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.all(Radius.circular(50)),
+                  color: Colors.grey.withOpacity(0.50)),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    "View Post",
+                    style: TextStyle(
+                        color: Color(0XFFC9C9C9),
+                        fontFamily: "NexaBold",
+                        fontWeight: FontWeight.w300,
+                        fontSize: 14),
+                  ),
+                  const Icon(
+                    Icons.arrow_forward_ios,
+                    color: Colors.white,
+                    size: 20,
+                  )
+                ],
+              )),
+        ),
+      ),
+    );
   }
 
   @override
