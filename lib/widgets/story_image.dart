@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 import 'dart:ui' as ui;
 import 'dart:ui';
 
@@ -123,6 +124,11 @@ class StoryImageState extends State<StoryImage> {
   Timer? _timer;
   int? _resumeTimerDuration;
   StreamSubscription<PlaybackState>? _streamSubscription;
+  var secondRandomColor =
+      Color((math.Random().nextDouble() * 0x000000).toInt()).withOpacity(0.1);
+
+  var firstRandomColor =
+      Color((math.Random().nextDouble() * 0x0F0F0F).toInt()).withOpacity(0.2);
 
   @override
   void initState() {
@@ -225,14 +231,14 @@ class StoryImageState extends State<StoryImage> {
                           child: Padding(
                             padding: const EdgeInsets.all(50.0),
                             child: Container(
-                              height: MediaQuery.of(context).size.height * 0.60,
-                              width: MediaQuery.of(context).size.width * 0.80,
+                              height: MediaQuery.of(context).size.height * 0.65,
+                              width: MediaQuery.of(context).size.width * 0.95,
                               decoration: new BoxDecoration(
                                 color: Colors.grey.shade200.withOpacity(0.5),
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(5),
                               ),
                               child: ClipRRect(
-                                borderRadius: BorderRadius.circular(20),
+                                borderRadius: BorderRadius.circular(5),
                                 child: RawImage(
                                   image: this.currentFrame,
                                   fit: widget.fit,
@@ -243,34 +249,53 @@ class StoryImageState extends State<StoryImage> {
                         ),
                       ),
                       Padding(
-                        padding: const EdgeInsets.all(58.0),
-                        child: Row(
-                          children: [
-                            widget.userProfile.isNotEmpty == true
-                                ? CircleAvatar(
-                                    radius: 15,
-                                    backgroundImage:
-                                        NetworkImage(widget.userProfile),
-                                    backgroundColor: Colors.grey,
-                                  )
-                                : CircleAvatar(
-                                    radius: 15,
-                                    backgroundImage:
-                                        AssetImage("assets/images/img.png"),
-                                    backgroundColor: Colors.grey,
-                                  ),
-                            Padding(
-                              padding: const EdgeInsets.only(left: 8.0),
-                              child: Text(
-                                widget.userName,
-                                style: TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontFamily: "PoppinsRegular",
-                                    fontWeight: FontWeight.w500),
-                              ),
+                        padding: const EdgeInsets.all(50.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.black38,
+                                Colors.transparent,
+                              ],
                             ),
-                          ],
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                widget.userProfile.isNotEmpty == true
+                                    ? CircleAvatar(
+                                        radius: 18,
+                                        backgroundImage:
+                                            NetworkImage(widget.userProfile),
+                                        backgroundColor: Colors.grey,
+                                      )
+                                    : CircleAvatar(
+                                        radius: 18,
+                                        backgroundImage:
+                                            AssetImage("assets/images/img.png"),
+                                        backgroundColor: Colors.grey,
+                                      ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text(
+                                      widget.userName,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontFamily: "NexaBold",
+                                          fontWeight: FontWeight.w500),
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
                       )
                     ],
@@ -317,10 +342,11 @@ class StoryImageState extends State<StoryImage> {
                 child: Container(
                   width: double.infinity,
                   height: double.infinity,
-                  child: Center(
-                    child: RawImage(
-                      image: this.currentFrame,
-                      fit: widget.fit,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [firstRandomColor, secondRandomColor],
                     ),
                   ),
                 ),

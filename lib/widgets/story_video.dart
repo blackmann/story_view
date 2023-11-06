@@ -144,13 +144,11 @@ class StoryVideoState extends State<StoryVideo> {
                     Padding(
                       padding: const EdgeInsets.all(50.0),
                       child: Container(
-                          height: MediaQuery.of(context).size.height * 0.60,
-                          width: MediaQuery.of(context).size.width * 0.80,
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(20),
-                          ),
+                          height: MediaQuery.of(context).size.height * 0.65,
+                          width: MediaQuery.of(context).size.width * 0.95,
+                          decoration: BoxDecoration(),
                           child: ClipRRect(
-                            borderRadius: BorderRadius.circular(20),
+                            borderRadius: BorderRadius.circular(5),
                             child: AspectRatio(
                               aspectRatio: playerController.value.aspectRatio,
                               child: CachedVideoPlayer(playerController),
@@ -158,36 +156,53 @@ class StoryVideoState extends State<StoryVideo> {
                           )),
                     ),
                     Padding(
-                      padding: const EdgeInsets.all(58.0),
-                      child: Row(
-                        children: [
-                          widget.userProfile.isNotEmpty == true
-                              ? CircleAvatar(
-                                  radius: 15,
-                                  backgroundImage:
-                                      NetworkImage(widget.userProfile),
-                            backgroundColor: Colors.grey,
-
-                                )
-                              : CircleAvatar(
-                                  radius: 15,
-                                  backgroundImage:
-                                      AssetImage("assets/images/img.png"),
-                            backgroundColor: Colors.grey,
-
-                                ),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 8.0),
-                            child: Text(
-                              widget.userName,
-                              style: TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontFamily: "PoppinsRegular",
-                                  fontWeight: FontWeight.w500),
-                            ),
+                      padding: const EdgeInsets.all(50.0),
+                      child: Container(
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                            colors: [
+                              Colors.black38,
+                              Colors.transparent,
+                            ],
                           ),
-                        ],
+                        ),
+                        child: Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Row(
+                            children: [
+                              widget.userProfile.isNotEmpty == true
+                                  ? CircleAvatar(
+                                      radius: 15,
+                                      backgroundImage:
+                                          NetworkImage(widget.userProfile),
+                                      backgroundColor: Colors.grey,
+                                    )
+                                  : CircleAvatar(
+                                      radius: 18,
+                                      backgroundImage:
+                                          AssetImage("assets/images/img.png"),
+                                      backgroundColor: Colors.grey,
+                                    ),
+                              Expanded(
+                                child: Padding(
+                                  padding: const EdgeInsets.only(left: 8.0),
+                                  child: Text(
+                                    widget.userName,
+                                    overflow: TextOverflow.ellipsis,
+                                    maxLines: 2,
+                                    style: TextStyle(
+                                        color: Colors.white,
+                                        fontSize: 16,
+                                        fontFamily: "NexaBold",
+                                        fontWeight: FontWeight.w500),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
                       ),
                     )
                   ],
