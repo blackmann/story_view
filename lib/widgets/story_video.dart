@@ -163,7 +163,7 @@ class StoryVideoState extends State<StoryVideo> {
                             begin: Alignment.topCenter,
                             end: Alignment.bottomCenter,
                             colors: [
-                              Colors.black45,
+                              Colors.black54,
                               Colors.transparent,
                             ],
                           ),

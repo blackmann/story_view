@@ -256,7 +256,7 @@ class StoryImageState extends State<StoryImage> {
                               begin: Alignment.topCenter,
                               end: Alignment.bottomCenter,
                               colors: [
-                                Colors.black45,
+                                Colors.black54,
                                 Colors.transparent,
                               ],
                             ),
