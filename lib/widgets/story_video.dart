@@ -48,7 +48,6 @@ class StoryVideo extends StatefulWidget {
   final VideoLoader videoLoader;
   final bool isHLS;
   final bool isRepost;
-  final VoidCallback viewPost;
   final String userName;
   final String userProfile;
 
@@ -56,7 +55,6 @@ class StoryVideo extends StatefulWidget {
       {required this.storyController,
         this.isHLS = false,
         required this.isRepost,
-        required this.viewPost,
         this.userName = "",
         this.userProfile = "",
         Key? key})
@@ -66,7 +64,6 @@ class StoryVideo extends StatefulWidget {
       {required StoryController controller,
         required bool isHLS,
         required bool isRepost,
-        required VoidCallback viewPost,
         String? userName,
         String? userProfile,
         Map<String, dynamic>? requestHeaders,
@@ -77,7 +74,6 @@ class StoryVideo extends StatefulWidget {
         key: key,
         isHLS: isHLS,
         isRepost: isRepost,
-        viewPost: () {},
         userName: userName ?? "",
         userProfile: userProfile ?? "",
     );
@@ -276,49 +272,9 @@ class StoryVideoState extends State<StoryVideo> {
               Center(
                 child: getContentView(),
               ),
-              getViewPostButtonWidget(),
             ],
           )
         : getContentView();
-  }
-
-  getViewPostButtonWidget() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 130.0),
-      child: Align(
-        alignment: FractionalOffset.bottomCenter,
-        child: InkWell(
-          onTap: () {
-            widget.viewPost();
-          },
-          child: Container(
-              height: 40,
-              width: MediaQuery.of(context).size.width * 1 / 3,
-              padding: const EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(50)),
-                  color: Colors.grey.withOpacity(0.50)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "View Post",
-                    style: TextStyle(
-                        color: Color(0XFFC9C9C9),
-                        fontFamily: "NexaBold",
-                        fontWeight: FontWeight.w300,
-                        fontSize: 14),
-                  ),
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                    size: 20,
-                  )
-                ],
-              )),
-        ),
-      ),
-    );
   }
 
   @override

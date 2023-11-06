@@ -72,7 +72,6 @@ class ImageLoader {
 class StoryImage extends StatefulWidget {
   final ImageLoader imageLoader;
   final bool isRepost;
-  final VoidCallback viewPost;
   final String userName;
   final String userProfile;
   final BoxFit? fit;
@@ -81,7 +80,6 @@ class StoryImage extends StatefulWidget {
   StoryImage(
     this.imageLoader,
     this.isRepost,
-    this.viewPost,
     this.userName,
     this.userProfile, {
     Key? key,
@@ -94,7 +92,6 @@ class StoryImage extends StatefulWidget {
     String url,
     String storyId,
     bool isRepost,
-    VoidCallback viewPost,
     String userName,
     String userProfile, {
     StoryController? controller,
@@ -109,7 +106,6 @@ class StoryImage extends StatefulWidget {
         requestHeaders: requestHeaders,
       ),
       isRepost,
-      () {},
       userName,
       userProfile,
       controller: controller,
@@ -304,7 +300,6 @@ class StoryImageState extends State<StoryImage> {
                             ),
                           ),
                         ),
-                        getViewPostButtonWidget(),
                       ],
                     ),
                   ),
@@ -369,44 +364,5 @@ class StoryImageState extends State<StoryImage> {
             height: double.infinity,
             child: getContentView(),
           );
-  }
-
-  getViewPostButtonWidget() {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 150.0),
-      child: Align(
-        alignment: FractionalOffset.bottomCenter,
-        child: InkWell(
-          onTap: () {
-            widget.viewPost();
-          },
-          child: Container(
-              height: 40,
-              width: MediaQuery.of(context).size.width * 1 / 3,
-              padding: const EdgeInsets.all(10.0),
-              decoration: BoxDecoration(
-                  borderRadius: BorderRadius.all(Radius.circular(50)),
-                  color: Colors.grey.withOpacity(0.50)),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    "View Post",
-                    style: TextStyle(
-                        color: Color(0XFFC9C9C9),
-                        fontFamily: "NexaBold",
-                        fontWeight: FontWeight.w300,
-                        fontSize: 14),
-                  ),
-                  const Icon(
-                    Icons.arrow_forward_ios,
-                    color: Colors.white,
-                    size: 20,
-                  )
-                ],
-              )),
-        ),
-      ),
-    );
   }
 }

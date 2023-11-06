@@ -71,7 +71,6 @@ class Home extends StatelessWidget {
                         fontSize: 17,
                       ),
                     ),
-                    viewPost: () {},
                   ),
                   StoryItem.inlineImage(
                     storyId: "112",
@@ -87,7 +86,6 @@ class Home extends StatelessWidget {
                         fontSize: 17,
                       ),
                     ),
-                    viewPost: () {},
                   )
                 ],
                 onStoryShow: (s) {
@@ -176,22 +174,22 @@ class _MoreStoriesState extends State<MoreStories> {
             ),
           ),
           StoryItem.pageVideo(
-              "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-              "6578",
-              controller: storyController,
-              isHLS: false,
-              isRepost: true,
-              userName: "",
-              userProfile: "",
-              viewPost: () {}),
+            "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+            "6578",
+            controller: storyController,
+            isHLS: false,
+            isRepost: true,
+            userName: "",
+            userProfile: "",
+          ),
           StoryItem.pageImage(
-              storyId: "344",
-              url:
-                  "https://fastly.picsum.photos/id/59/2464/1632.jpg?hmac=uTfe6jCzLvCzANvJgtpo-a0fKhO8BvjpwLNYX3lqx_Q",
-              caption: "Working with gifs",
-              isRepost: true,
-              controller: storyController,
-              viewPost: () {}),
+            storyId: "344",
+            url:
+                "https://fastly.picsum.photos/id/59/2464/1632.jpg?hmac=uTfe6jCzLvCzANvJgtpo-a0fKhO8BvjpwLNYX3lqx_Q",
+            caption: "Working with gifs",
+            isRepost: true,
+            controller: storyController,
+          ),
           StoryItem.pageImage(
             storyId: "34422",
             url:
@@ -199,7 +197,6 @@ class _MoreStoriesState extends State<MoreStories> {
             caption: "Hello, from the other side",
             controller: storyController,
             isRepost: true,
-            viewPost: () {},
           ),
           StoryItem.pageImage(
             storyId: "3447",
@@ -208,7 +205,6 @@ class _MoreStoriesState extends State<MoreStories> {
             caption: "Hello, from the other side2",
             controller: storyController,
             isRepost: false,
-            viewPost: () {},
           ),
         ],
         onStoryShow: (s) {
