@@ -1,19 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:story_view/widgets/straight_lines_prosessing.dart';
 
 class LoadingWidget extends StatelessWidget {
-  const LoadingWidget({Key? key}) : super(key: key);
-
+  const LoadingWidget({Key? key, required this.progressing}) : super(key: key);
+  final bool progressing;
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: Container(
-        width: 40,
-        height: 40,
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-          strokeWidth: 2,
-        ),
-      ),
-    );
+    if(progressing) {
+      return StraightLineProgress(progressing: progressing);
+    }
+    else {
+      return const SizedBox.shrink();
+    }
   }
 }
