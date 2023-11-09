@@ -14,7 +14,7 @@ class _StraightLineProgressState extends State<StraightLineProgress> with Ticker
   late AnimationController controller;
   @override
   void initState() {
-    controller = AnimationController(duration: const Duration(milliseconds: 450), vsync: this)
+    controller = AnimationController(duration: const Duration(milliseconds: 500), vsync: this)
       ..repeat()
       ..addListener(listener);
     super.initState();
