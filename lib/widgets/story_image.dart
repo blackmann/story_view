@@ -222,18 +222,19 @@ class StoryImageState extends State<StoryImage> {
           width: MediaQuery.of(context).size.width,
           child: widget.isRepost == true
               ? Padding(
-            padding: const EdgeInsets.symmetric(vertical: 40.0),
-                child: Center(
+                  padding: const EdgeInsets.symmetric(vertical: 40.0),
+                  child: Center(
                     child: Stack(
                       children: [
                         ClipRect(
                           child: new BackdropFilter(
-                            filter:
-                                new ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
+                            filter: new ImageFilter.blur(
+                                sigmaX: 15.0, sigmaY: 15.0),
                             child: Padding(
                               padding: const EdgeInsets.all(50.0),
                               child: Container(
-                                height: MediaQuery.of(context).size.height * 0.65,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.65,
                                 width: MediaQuery.of(context).size.width * 0.95,
                                 decoration: new BoxDecoration(
                                   color: Colors.grey.shade200.withOpacity(0.5),
@@ -276,8 +277,8 @@ class StoryImageState extends State<StoryImage> {
                                         )
                                       : CircleAvatar(
                                           radius: 18,
-                                          backgroundImage:
-                                              AssetImage("assets/images/img.png"),
+                                          backgroundImage: AssetImage(
+                                              "../assets/images/img.png"),
                                           backgroundColor: Colors.grey,
                                         ),
                                   Expanded(
@@ -295,6 +296,9 @@ class StoryImageState extends State<StoryImage> {
                                       ),
                                     ),
                                   ),
+                                  ElevatedButton(
+                                      onPressed: () {},
+                                      child: Text("Go to Post"))
                                 ],
                               ),
                             ),
@@ -303,7 +307,7 @@ class StoryImageState extends State<StoryImage> {
                       ],
                     ),
                   ),
-              )
+                )
               : RawImage(
                   image: this.currentFrame,
                   fit: widget.fit,

@@ -208,7 +208,8 @@ class _MoreStoriesState extends State<MoreStories> {
           ),
         ],
         onStoryShow: (s) {
-          print("Showing a story  story Id ${s.storyId}");
+          print(
+              "Showing a story  story Id ${s.storyId} \n repost ${s.isRepost}");
         },
         onComplete: () {
           print("Completed a cycle");
