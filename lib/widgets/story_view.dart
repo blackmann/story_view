@@ -31,6 +31,7 @@ class StoryItem {
   /// is because the next item to be displayed is taken by the last unshown
   /// story item.
   bool shown;
+  bool isRepost;
 
   String? url;
   String? storyId;
@@ -38,12 +39,14 @@ class StoryItem {
   /// The page content
   final Widget view;
 
-  StoryItem(this.view,
-      {required this.duration,
-      this.shown = false,
-      this.url,
-      required this.storyId})
-      : assert(duration != null, "[duration] should not be null");
+  StoryItem(
+    this.view, {
+    required this.duration,
+    this.shown = false,
+    this.url,
+    required this.storyId,
+    this.isRepost = false,
+  }) : assert(duration != null, "[duration] should not be null");
 
   /// Short hand to create text-only page.
   ///
@@ -172,7 +175,8 @@ class StoryItem {
         ),
         shown: shown,
         duration: duration ?? Duration(seconds: 3),
-        storyId: storyId);
+        storyId: storyId,
+        isRepost: isRepost);
   }
 
   /// Shorthand for creating inline image. [controller] should be same instance as
@@ -256,57 +260,57 @@ class StoryItem {
     Map<String, dynamic>? requestHeaders,
   }) {
     return StoryItem(
-      Container(
-        key: key,
-        color: Colors.black,
-        child: Stack(
-          children: <Widget>[
-            StoryVideo.url(url, storyId,
-                controller: controller,
-                isHLS: isHLS,
-                requestHeaders: requestHeaders,
-                isRepost: isRepost,
-                userProfile: userProfile,
-                userName: userName),
-            SafeArea(
-              child: Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.only(bottom: 24),
-                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                  color: caption != null ? Colors.black54 : Colors.transparent,
-                  child: caption != null
-                      ? Text(
-                          caption,
-                          style: TextStyle(fontSize: 15, color: Colors.white),
-                          textAlign: TextAlign.center,
-                        )
-                      : SizedBox(),
+        Container(
+          key: key,
+          color: Colors.black,
+          child: Stack(
+            children: <Widget>[
+              StoryVideo.url(url, storyId,
+                  controller: controller,
+                  isHLS: isHLS,
+                  requestHeaders: requestHeaders,
+                  isRepost: isRepost,
+                  userProfile: userProfile,
+                  userName: userName),
+              SafeArea(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    width: double.infinity,
+                    margin: EdgeInsets.only(bottom: 24),
+                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                    color:
+                        caption != null ? Colors.black54 : Colors.transparent,
+                    child: caption != null
+                        ? Text(
+                            caption,
+                            style: TextStyle(fontSize: 15, color: Colors.white),
+                            textAlign: TextAlign.center,
+                          )
+                        : SizedBox(),
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
-      ),
-      shown: shown,
-      duration: duration ?? Duration(seconds: 10),
-      storyId: storyId,
-    );
+        shown: shown,
+        duration: duration ?? Duration(seconds: 10),
+        storyId: storyId,
+        isRepost: isRepost);
   }
 
   /// Shorthand for creating a story item from an image provider such as `AssetImage`
   /// or `NetworkImage`. However, the story continues to play while the image loads
   /// up.
-  factory StoryItem.pageProviderImage(
-    ImageProvider image, {
-    Key? key,
-    BoxFit imageFit = BoxFit.fitWidth,
-    String? caption,
-    bool shown = false,
-    Duration? duration,
-    required String storyId,
-  }) {
+  factory StoryItem.pageProviderImage(ImageProvider image,
+      {Key? key,
+      BoxFit imageFit = BoxFit.fitWidth,
+      String? caption,
+      bool shown = false,
+      Duration? duration,
+      required String storyId,
+      required bool isRepost}) {
     return StoryItem(
         Container(
           key: key,
@@ -353,7 +357,8 @@ class StoryItem {
         ),
         shown: shown,
         duration: duration ?? Duration(seconds: 3),
-        storyId: storyId);
+        storyId: storyId,
+        isRepost: isRepost);
   }
 
   /// Shorthand for creating an inline story item from an image provider such as `AssetImage`
@@ -368,41 +373,42 @@ class StoryItem {
     bool roundedBottom = false,
     Duration? duration,
     required String storyId,
+    required bool isRepost,
   }) {
     return StoryItem(
-      Container(
-        key: key,
-        decoration: BoxDecoration(
-            color: Colors.grey[100],
-            borderRadius: BorderRadius.vertical(
-              top: Radius.circular(roundedTop ? 8 : 0),
-              bottom: Radius.circular(roundedBottom ? 8 : 0),
+        Container(
+          key: key,
+          decoration: BoxDecoration(
+              color: Colors.grey[100],
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(roundedTop ? 8 : 0),
+                bottom: Radius.circular(roundedBottom ? 8 : 0),
+              ),
+              image: DecorationImage(
+                image: image,
+                fit: BoxFit.cover,
+              )),
+          child: Container(
+            margin: EdgeInsets.only(
+              bottom: 16,
             ),
-            image: DecorationImage(
-              image: image,
-              fit: BoxFit.cover,
-            )),
-        child: Container(
-          margin: EdgeInsets.only(
-            bottom: 16,
-          ),
-          padding: EdgeInsets.symmetric(
-            horizontal: 24,
-            vertical: 8,
-          ),
-          child: Align(
-            alignment: Alignment.bottomLeft,
-            child: Container(
-              child: caption == null ? SizedBox() : caption,
-              width: double.infinity,
+            padding: EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: 8,
+            ),
+            child: Align(
+              alignment: Alignment.bottomLeft,
+              child: Container(
+                child: caption == null ? SizedBox() : caption,
+                width: double.infinity,
+              ),
             ),
           ),
         ),
-      ),
-      shown: shown,
-      duration: duration ?? Duration(seconds: 3),
-      storyId: storyId,
-    );
+        shown: shown,
+        duration: duration ?? Duration(seconds: 3),
+        storyId: storyId,
+        isRepost: isRepost);
   }
 }
 
