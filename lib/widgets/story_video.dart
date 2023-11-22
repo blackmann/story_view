@@ -190,7 +190,7 @@ class StoryVideoState extends State<StoryVideo> {
                                       backgroundColor: Colors.grey,
                                     )
                                   : CircleAvatar(
-                                      radius: 18,
+                                      radius: 16,
                                       backgroundImage:
                                           AssetImage("assets/images/img.png"),
                                       backgroundColor: Colors.grey,

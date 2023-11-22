@@ -276,9 +276,9 @@ class StoryImageState extends State<StoryImage> {
                                           backgroundColor: Colors.grey,
                                         )
                                       : CircleAvatar(
-                                          radius: 18,
+                                          radius: 16,
                                           backgroundImage: AssetImage(
-                                              "../assets/images/img.png"),
+                                              "assets/images/img.png"),
                                           backgroundColor: Colors.grey,
                                         ),
                                   Expanded(
@@ -296,9 +296,6 @@ class StoryImageState extends State<StoryImage> {
                                       ),
                                     ),
                                   ),
-                                  ElevatedButton(
-                                      onPressed: () {},
-                                      child: Text("Go to Post"))
                                 ],
                               ),
                             ),
