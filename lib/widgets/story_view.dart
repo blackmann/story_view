@@ -136,10 +136,10 @@ class StoryItem {
               StoryImage.url(
                 url,
                 storyId,
-                isRepost,
                 userName ?? "",
                 userProfile ?? "",
                 controller: controller,
+                isRepost: isRepost,
                 fit: imageFit,
                 requestHeaders: requestHeaders,
               ),
@@ -209,10 +209,10 @@ class StoryItem {
                 StoryImage.url(
                   url,
                   storyId,
-                  isRepost,
                   userName ?? "",
                   userProfile ?? "",
                   controller: controller,
+                  isRepost: isRepost,
                   fit: imageFit,
                   requestHeaders: requestHeaders,
                 ),

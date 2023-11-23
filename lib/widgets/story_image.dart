@@ -79,11 +79,11 @@ class StoryImage extends StatefulWidget {
 
   StoryImage(
     this.imageLoader,
-    this.isRepost,
     this.userName,
     this.userProfile, {
     Key? key,
     this.controller,
+    required this.isRepost,
     this.fit,
   }) : super(key: key ?? UniqueKey());
 
@@ -91,9 +91,9 @@ class StoryImage extends StatefulWidget {
   factory StoryImage.url(
     String url,
     String storyId,
-    bool isRepost,
     String userName,
     String userProfile, {
+    required bool isRepost,
     StoryController? controller,
     Map<String, dynamic>? requestHeaders,
     BoxFit fit = BoxFit.fitWidth,
@@ -105,10 +105,10 @@ class StoryImage extends StatefulWidget {
         storyId,
         requestHeaders: requestHeaders,
       ),
-      isRepost,
       userName,
       userProfile,
       controller: controller,
+      isRepost: isRepost,
       fit: fit,
       key: key,
     );
