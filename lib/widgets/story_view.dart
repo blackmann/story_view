@@ -239,6 +239,7 @@ class StoryItem {
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
       storyId: storyId,
+      isRepost: isRepost,
     );
   }
 

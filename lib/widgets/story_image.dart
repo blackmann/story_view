@@ -93,8 +93,8 @@ class StoryImage extends StatefulWidget {
     String storyId,
     String userName,
     String userProfile, {
-    required bool isRepost,
     StoryController? controller,
+    required bool isRepost,
     Map<String, dynamic>? requestHeaders,
     BoxFit fit = BoxFit.fitWidth,
     Key? key,
