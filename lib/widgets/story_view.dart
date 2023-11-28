@@ -118,6 +118,7 @@ class StoryItem {
     required StoryController controller,
     required String storyId,
     required bool isRepost,
+    required VoidCallback viewPost,
     String? userName,
     String? userProfile,
     Key? key,
@@ -140,6 +141,7 @@ class StoryItem {
                 userProfile ?? "",
                 controller: controller,
                 isRepost: isRepost,
+                viewPost: viewPost,
                 fit: imageFit,
                 requestHeaders: requestHeaders,
               ),
@@ -185,6 +187,7 @@ class StoryItem {
     required String url,
     required String storyId,
     required bool isRepost,
+    required VoidCallback viewPost,
     String? userName,
     String? userProfile,
     Text? caption,
@@ -213,6 +216,7 @@ class StoryItem {
                   userProfile ?? "",
                   controller: controller,
                   isRepost: isRepost,
+                  viewPost: viewPost,
                   fit: imageFit,
                   requestHeaders: requestHeaders,
                 ),
@@ -256,6 +260,7 @@ class StoryItem {
     bool shown = false,
     bool isHLS = false,
     bool isRepost = false,
+    required VoidCallback viewPost,
     String userName = "",
     String userProfile = "",
     Map<String, dynamic>? requestHeaders,
@@ -271,6 +276,7 @@ class StoryItem {
                   isHLS: isHLS,
                   requestHeaders: requestHeaders,
                   isRepost: isRepost,
+                  viewPost: viewPost,
                   userProfile: userProfile,
                   userName: userName),
               SafeArea(
@@ -724,58 +730,61 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
             ),
           ),
           Align(
-              alignment: Alignment.centerRight,
-              heightFactor: 1,
-              child: GestureDetector(
-                onTapDown: (details) {
-                  widget.controller.pause();
-                },
-                onTapCancel: () {
-                  widget.controller.play();
-                },
-                onTapUp: (details) {
-                  // if debounce timed out (not active) then continue anim
-                  if (_nextDebouncer?.isActive == false) {
+            alignment: Alignment.centerRight,
+            heightFactor: 1,
+            child: SizedBox(
+                child: GestureDetector(
+                  onTapDown: (details) {
+                    widget.controller.pause();
+                  },
+                  onTapCancel: () {
                     widget.controller.play();
-                  } else {
-                    widget.controller.next();
-                  }
-                },
-                onVerticalDragStart: widget.onVerticalSwipeComplete == null
-                    ? null
-                    : (details) {
-                        widget.controller.pause();
-                      },
-                onVerticalDragCancel: widget.onVerticalSwipeComplete == null
-                    ? null
-                    : () {
-                        widget.controller.play();
-                      },
-                onVerticalDragUpdate: widget.onVerticalSwipeComplete == null
-                    ? null
-                    : (details) {
-                        if (verticalDragInfo == null) {
-                          verticalDragInfo = VerticalDragInfo();
-                        }
+                  },
+                  onTapUp: (details) {
+                    // if debounce timed out (not active) then continue anim
+                    if (_nextDebouncer?.isActive == false) {
+                      widget.controller.play();
+                    } else {
+                      widget.controller.next();
+                    }
+                  },
+                  onVerticalDragStart: widget.onVerticalSwipeComplete == null
+                      ? null
+                      : (details) {
+                          widget.controller.pause();
+                        },
+                  onVerticalDragCancel: widget.onVerticalSwipeComplete == null
+                      ? null
+                      : () {
+                          widget.controller.play();
+                        },
+                  onVerticalDragUpdate: widget.onVerticalSwipeComplete == null
+                      ? null
+                      : (details) {
+                          if (verticalDragInfo == null) {
+                            verticalDragInfo = VerticalDragInfo();
+                          }
 
-                        verticalDragInfo!.update(details.primaryDelta!);
+                          verticalDragInfo!.update(details.primaryDelta!);
 
-                        // TODO: provide callback interface for animation purposes
-                      },
-                onVerticalDragEnd: widget.onVerticalSwipeComplete == null
-                    ? null
-                    : (details) {
-                        widget.controller.play();
-                        // finish up drag cycle
-                        if (!verticalDragInfo!.cancel &&
-                            widget.onVerticalSwipeComplete != null) {
-                          widget.onVerticalSwipeComplete!(
-                              verticalDragInfo!.direction);
-                        }
+                          // TODO: provide callback interface for animation purposes
+                        },
+                  onVerticalDragEnd: widget.onVerticalSwipeComplete == null
+                      ? null
+                      : (details) {
+                          widget.controller.play();
+                          // finish up drag cycle
+                          if (!verticalDragInfo!.cancel &&
+                              widget.onVerticalSwipeComplete != null) {
+                            widget.onVerticalSwipeComplete!(
+                                verticalDragInfo!.direction);
+                          }
 
-                        verticalDragInfo = null;
-                      },
-              )),
+                          verticalDragInfo = null;
+                        },
+                ),
+                width: 100),
+          ),
           Align(
             alignment: Alignment.centerLeft,
             heightFactor: 1,
@@ -783,7 +792,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 child: GestureDetector(onTap: () {
                   widget.controller.previous();
                 }),
-                width: 70),
+                width: 100),
           ),
         ],
       ),

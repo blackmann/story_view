@@ -48,34 +48,38 @@ class StoryVideo extends StatefulWidget {
   final VideoLoader videoLoader;
   final bool isHLS;
   final bool isRepost;
+  final VoidCallback viewPost;
   final String userName;
   final String userProfile;
 
   StoryVideo(this.videoLoader,
       {required this.storyController,
-        this.isHLS = false,
-        required this.isRepost,
-        this.userName = "",
-        this.userProfile = "",
-        Key? key})
+      this.isHLS = false,
+      required this.isRepost,
+      required this.viewPost,
+      this.userName = "",
+      this.userProfile = "",
+      Key? key})
       : super(key: key ?? UniqueKey());
 
   static StoryVideo url(String url, String storyId,
       {required StoryController controller,
-        required bool isHLS,
-        required bool isRepost,
-        String? userName,
-        String? userProfile,
-        Map<String, dynamic>? requestHeaders,
-        Key? key}) {
+      required bool isHLS,
+      required bool isRepost,
+      required VoidCallback viewPost,
+      String? userName,
+      String? userProfile,
+      Map<String, dynamic>? requestHeaders,
+      Key? key}) {
     return StoryVideo(
-        VideoLoader(url, storyId, requestHeaders: requestHeaders),
-        storyController: controller,
-        key: key,
-        isHLS: isHLS,
-        isRepost: isRepost,
-        userName: userName ?? "",
-        userProfile: userProfile ?? "",
+      VideoLoader(url, storyId, requestHeaders: requestHeaders),
+      storyController: controller,
+      key: key,
+      isHLS: isHLS,
+      isRepost: isRepost,
+      viewPost: viewPost,
+      userName: userName ?? "",
+      userProfile: userProfile ?? "",
     );
   }
 
@@ -138,86 +142,91 @@ class StoryVideoState extends State<StoryVideo> {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: widget.isRepost == true
-            ? Center(
-                child: Stack(
-                  children: [
-                    ClipRect(
-                      child: new BackdropFilter(
-                        filter:
-                        new ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
-                        child: Padding(
-                          padding: const EdgeInsets.all(50.0),
-                          child: Container(
-                              height: MediaQuery.of(context).size.height * 0.65,
-                              width: MediaQuery.of(context).size.width * 0.95,
-                              decoration: new BoxDecoration(
-                                color: Colors.grey.shade200.withOpacity(0.5),
-                                borderRadius: BorderRadius.circular(5),
-                              ),
-                              child: ClipRRect(
-                                borderRadius: BorderRadius.circular(5),
-                                child: AspectRatio(
-                                  aspectRatio: playerController.value.aspectRatio,
-                                  child: CachedVideoPlayer(playerController),
+            ? InkWell(
+                onTap: () {
+                  widget.viewPost();
+                },
+                child: Center(
+                  child: Stack(
+                    children: [
+                      ClipRect(
+                        child: new BackdropFilter(
+                          filter:
+                          new ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
+                          child: Padding(
+                            padding: const EdgeInsets.all(50.0),
+                            child: Container(
+                                height: MediaQuery.of(context).size.height * 0.65,
+                                width: MediaQuery.of(context).size.width * 0.95,
+                                decoration: new BoxDecoration(
+                                  color: Colors.grey.shade200.withOpacity(0.5),
+                                  borderRadius: BorderRadius.circular(5),
                                 ),
-                              )),
-                        ),
-                      ),
-                    ),
-
-                    Padding(
-                      padding: const EdgeInsets.all(50.0),
-                      child: Container(
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            colors: [
-                              Colors.black54,
-                              Colors.transparent,
-                            ],
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(5),
+                                  child: AspectRatio(
+                                    aspectRatio: playerController.value.aspectRatio,
+                                    child: CachedVideoPlayer(playerController),
+                                  ),
+                                )),
                           ),
                         ),
-                        child: Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Row(
-                            children: [
-                              widget.userProfile.isNotEmpty == true
-                                  ? CircleAvatar(
-                                      radius: 18,
-                                      backgroundImage:
-                                          NetworkImage(widget.userProfile),
-                                      backgroundColor: Colors.grey,
-                                    )
-                                  : CircleAvatar(
-                                      radius: 16,
-                                      backgroundImage:
-                                          AssetImage("assets/images/img.png"),
-                                      backgroundColor: Colors.grey,
+                      ),
+
+                      Padding(
+                        padding: const EdgeInsets.all(50.0),
+                        child: Container(
+                          decoration: BoxDecoration(
+                            gradient: LinearGradient(
+                              begin: Alignment.topCenter,
+                              end: Alignment.bottomCenter,
+                              colors: [
+                                Colors.black54,
+                                Colors.transparent,
+                              ],
+                            ),
+                          ),
+                          child: Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: Row(
+                              children: [
+                                widget.userProfile.isNotEmpty == true
+                                    ? CircleAvatar(
+                                        radius: 18,
+                                        backgroundImage:
+                                            NetworkImage(widget.userProfile),
+                                        backgroundColor: Colors.grey,
+                                      )
+                                    : CircleAvatar(
+                                        radius: 16,
+                                        backgroundImage:
+                                            AssetImage("assets/images/img.png"),
+                                        backgroundColor: Colors.grey,
+                                      ),
+                                Expanded(
+                                  child: Padding(
+                                    padding: const EdgeInsets.only(left: 8.0),
+                                    child: Text(
+                                      widget.userName,
+                                      overflow: TextOverflow.ellipsis,
+                                      maxLines: 2,
+                                      style: TextStyle(
+                                          color: Colors.white,
+                                          fontSize: 16,
+                                          fontFamily: "NexaBold",
+                                          fontWeight: FontWeight.w500),
                                     ),
-                              Expanded(
-                                child: Padding(
-                                  padding: const EdgeInsets.only(left: 8.0),
-                                  child: Text(
-                                    widget.userName,
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 2,
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontFamily: "NexaBold",
-                                        fontWeight: FontWeight.w500),
                                   ),
                                 ),
-                              ),
-                            ],
+                              ],
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                  ],
+                      )
+                    ],
+                  ),
                 ),
-              )
+            )
             : Center(
                 child: AspectRatio(
                   aspectRatio: playerController.value.aspectRatio,

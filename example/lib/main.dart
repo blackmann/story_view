@@ -61,32 +61,36 @@ class Home extends StatelessWidget {
                     storyId: "id123",
                     url:
                         "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
-                    controller: controller,
-                    isRepost: true,
-                    caption: const Text(
-                      "Omotuo & Nkatekwan; You will love this meal if taken as supper.",
-                      style: TextStyle(
-                        color: Colors.white,
-                        backgroundColor: Colors.black54,
-                        fontSize: 17,
+                      controller: controller,
+                      isRepost: true,
+                      caption: const Text(
+                        "Omotuo & Nkatekwan; You will love this meal if taken as supper.",
+                        style: TextStyle(
+                          color: Colors.white,
+                          backgroundColor: Colors.black54,
+                          fontSize: 17,
+                        ),
                       ),
-                    ),
-                  ),
+                      viewPost: () {
+                        print("StoryItem.INLINE: TRUE}");
+                      }),
                   StoryItem.inlineImage(
                     storyId: "112",
                     url:
                         "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
-                    controller: controller,
-                    isRepost: true,
-                    caption: const Text(
-                      "Hektas, sektas and skatad",
-                      style: TextStyle(
-                        color: Colors.white,
-                        backgroundColor: Colors.black54,
-                        fontSize: 17,
+                      controller: controller,
+                      isRepost: true,
+                      caption: const Text(
+                        "Hektas, sektas and skatad",
+                        style: TextStyle(
+                          color: Colors.white,
+                          backgroundColor: Colors.black54,
+                          fontSize: 17,
+                        ),
                       ),
-                    ),
-                  )
+                      viewPost: () {
+                        print("StoryItem.INLINE: TRUE}");
+                      })
                 ],
                 onStoryShow: (s) {
                   print("Showing a story");
@@ -174,38 +178,45 @@ class _MoreStoriesState extends State<MoreStories> {
             ),
           ),
           StoryItem.pageVideo(
-            "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
-            "6578",
-            controller: storyController,
-            isHLS: false,
-            isRepost: true,
-            userName: "",
-            userProfile: "",
-          ),
+              "http://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4",
+              "6578",
+              controller: storyController,
+              isHLS: false,
+              isRepost: true,
+              userName: "",
+              userProfile: "", viewPost: () {
+            print("StoryItem.INLINE: TRUE}");
+          }),
           StoryItem.pageImage(
-            storyId: "344",
-            url:
-                "https://fastly.picsum.photos/id/59/2464/1632.jpg?hmac=uTfe6jCzLvCzANvJgtpo-a0fKhO8BvjpwLNYX3lqx_Q",
-            caption: "Working with gifs",
-            isRepost: true,
-            controller: storyController,
-          ),
+              storyId: "344",
+              url:
+                  "https://fastly.picsum.photos/id/59/2464/1632.jpg?hmac=uTfe6jCzLvCzANvJgtpo-a0fKhO8BvjpwLNYX3lqx_Q",
+              caption: "Working with gifs",
+              isRepost: true,
+              controller: storyController,
+              viewPost: () {
+                print("StoryItem.INLINE: TRUE}");
+              }),
           StoryItem.pageImage(
-            storyId: "34422",
-            url:
-                "https://fastly.picsum.photos/id/59/2464/1632.jpg?hmac=uTfe6jCzLvCzANvJgtpo-a0fKhO8BvjpwLNYX3lqx_Q",
-            caption: "Hello, from the other side",
-            controller: storyController,
-            isRepost: true,
-          ),
+              storyId: "34422",
+              url:
+                  "https://fastly.picsum.photos/id/59/2464/1632.jpg?hmac=uTfe6jCzLvCzANvJgtpo-a0fKhO8BvjpwLNYX3lqx_Q",
+              caption: "Hello, from the other side",
+              controller: storyController,
+              isRepost: true,
+              viewPost: () {
+                print("StoryItem.INLINE: TRUE}");
+              }),
           StoryItem.pageImage(
-            storyId: "3447",
-            url:
-                "https://fastly.picsum.photos/id/59/2464/1632.jpg?hmac=uTfe6jCzLvCzANvJgtpo-a0fKhO8BvjpwLNYX3lqx_Q",
-            caption: "Hello, from the other side2",
-            controller: storyController,
-            isRepost: false,
-          ),
+              storyId: "3447",
+              url:
+                  "https://fastly.picsum.photos/id/59/2464/1632.jpg?hmac=uTfe6jCzLvCzANvJgtpo-a0fKhO8BvjpwLNYX3lqx_Q",
+              caption: "Hello, from the other side2",
+              controller: storyController,
+              isRepost: false,
+              viewPost: () {
+                print("StoryItem.INLINE: FALSE}");
+              }),
         ],
         onStoryShow: (s) {
           print(
