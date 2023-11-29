@@ -46,8 +46,7 @@ class ImageLoader {
 
         this.state = LoadState.success;
 
-        PaintingBinding.instance!.instantiateImageCodec(imageBytes).then(
-            (codec) {
+        ui.instantiateImageCodec(imageBytes).then((codec) {
           this.frames = codec;
           onComplete();
         }, onError: (error) {
