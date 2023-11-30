@@ -127,7 +127,7 @@ class StoryVideoState extends State<StoryVideo> {
           )
         : Center(
             child: Text(
-            "",
+            "Media failed to load.",
             style: TextStyle(
               color: Colors.white,
             ),
