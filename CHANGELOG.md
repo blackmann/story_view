@@ -1,4 +1,10 @@
-## [0.14.0] - 17 October 2021
+## [0.16.0] - 30 November 2023
+- Replace `PaintingBinding` with `ui`
+
+## [0.15.0] - 15 July 2023
+- API to change indicator colors.
+
+## [0.14.0] - 17 October 2022
 - Ability to hide progress indicators
 
 ## [0.13.2] - 22 November 2021
