@@ -48,6 +48,7 @@ class StoryVideo extends StatefulWidget {
   final VideoLoader videoLoader;
   final bool isHLS;
   final bool isRepost;
+  final bool isLike;
   final VoidCallback viewPost;
   final String userName;
   final String userProfile;
@@ -56,6 +57,7 @@ class StoryVideo extends StatefulWidget {
       {required this.storyController,
       this.isHLS = false,
       required this.isRepost,
+      required this.isLike,
       required this.viewPost,
       this.userName = "",
       this.userProfile = "",
@@ -66,6 +68,7 @@ class StoryVideo extends StatefulWidget {
       {required StoryController controller,
       required bool isHLS,
       required bool isRepost,
+      required bool isLike,
       required VoidCallback viewPost,
       String? userName,
       String? userProfile,
@@ -77,6 +80,7 @@ class StoryVideo extends StatefulWidget {
       key: key,
       isHLS: isHLS,
       isRepost: isRepost,
+      isLike: isLike,
       viewPost: viewPost,
       userName: userName ?? "",
       userProfile: userProfile ?? "",
@@ -152,11 +156,12 @@ class StoryVideoState extends State<StoryVideo> {
                       ClipRect(
                         child: new BackdropFilter(
                           filter:
-                          new ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
+                              new ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
                           child: Padding(
                             padding: const EdgeInsets.all(50.0),
                             child: Container(
-                                height: MediaQuery.of(context).size.height * 0.65,
+                                height:
+                                    MediaQuery.of(context).size.height * 0.65,
                                 width: MediaQuery.of(context).size.width * 0.95,
                                 decoration: new BoxDecoration(
                                   color: Colors.grey.shade200.withOpacity(0.5),
@@ -165,14 +170,14 @@ class StoryVideoState extends State<StoryVideo> {
                                 child: ClipRRect(
                                   borderRadius: BorderRadius.circular(5),
                                   child: AspectRatio(
-                                    aspectRatio: playerController.value.aspectRatio,
+                                    aspectRatio:
+                                        playerController.value.aspectRatio,
                                     child: CachedVideoPlayer(playerController),
                                   ),
                                 )),
                           ),
                         ),
                       ),
-
                       Padding(
                         padding: const EdgeInsets.all(50.0),
                         child: Container(
@@ -226,7 +231,7 @@ class StoryVideoState extends State<StoryVideo> {
                     ],
                   ),
                 ),
-            )
+              )
             : Center(
                 child: AspectRatio(
                   aspectRatio: playerController.value.aspectRatio,
@@ -237,7 +242,7 @@ class StoryVideoState extends State<StoryVideo> {
     }
 
     return widget.videoLoader.state == LoadState.loading ||
-        !playerController.value.isInitialized == true
+            !playerController.value.isInitialized == true
         ? Shimmer.fromColors(
             baseColor: Color(0xFF222124),
             highlightColor: Colors.grey.withOpacity(0.2),

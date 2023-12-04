@@ -63,6 +63,7 @@ class Home extends StatelessWidget {
                         "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
                       controller: controller,
                       isRepost: true,
+                      isLike: false,
                       caption: const Text(
                         "Omotuo & Nkatekwan; You will love this meal if taken as supper.",
                         style: TextStyle(
@@ -80,6 +81,7 @@ class Home extends StatelessWidget {
                         "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
                       controller: controller,
                       isRepost: true,
+                      isLike: false,
                       caption: const Text(
                         "Hektas, sektas and skatad",
                         style: TextStyle(
@@ -183,6 +185,7 @@ class _MoreStoriesState extends State<MoreStories> {
               controller: storyController,
               isHLS: false,
               isRepost: true,
+              isLike: false,
               userName: "",
               userProfile: "", viewPost: () {
             print("StoryItem.INLINE: TRUE}");
@@ -193,6 +196,7 @@ class _MoreStoriesState extends State<MoreStories> {
                   "https://fastly.picsum.photos/id/59/2464/1632.jpg?hmac=uTfe6jCzLvCzANvJgtpo-a0fKhO8BvjpwLNYX3lqx_Q",
               caption: "Working with gifs",
               isRepost: true,
+              isLike: false,
               controller: storyController,
               viewPost: () {
                 print("StoryItem.INLINE: TRUE}");
@@ -204,6 +208,7 @@ class _MoreStoriesState extends State<MoreStories> {
               caption: "Hello, from the other side",
               controller: storyController,
               isRepost: true,
+              isLike: false,
               viewPost: () {
                 print("StoryItem.INLINE: TRUE}");
               }),
@@ -214,6 +219,7 @@ class _MoreStoriesState extends State<MoreStories> {
               caption: "Hello, from the other side2",
               controller: storyController,
               isRepost: false,
+              isLike: false,
               viewPost: () {
                 print("StoryItem.INLINE: FALSE}");
               }),

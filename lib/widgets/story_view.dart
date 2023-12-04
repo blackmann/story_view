@@ -32,6 +32,7 @@ class StoryItem {
   /// story item.
   bool shown;
   bool isRepost;
+  bool isLike;
 
   String? url;
   String? storyId;
@@ -46,6 +47,7 @@ class StoryItem {
     this.url,
     required this.storyId,
     this.isRepost = false,
+    this.isLike = false,
   }) : assert(duration != null, "[duration] should not be null");
 
   /// Short hand to create text-only page.
@@ -118,6 +120,7 @@ class StoryItem {
     required StoryController controller,
     required String storyId,
     required bool isRepost,
+    required bool isLike,
     required VoidCallback viewPost,
     String? userName,
     String? userProfile,
@@ -141,6 +144,7 @@ class StoryItem {
                 userProfile ?? "",
                 controller: controller,
                 isRepost: isRepost,
+                isLike: isLike,
                 viewPost: viewPost,
                 fit: imageFit,
                 requestHeaders: requestHeaders,
@@ -178,7 +182,8 @@ class StoryItem {
         shown: shown,
         duration: duration ?? Duration(seconds: 3),
         storyId: storyId,
-        isRepost: isRepost);
+        isRepost: isRepost,
+        isLike: isLike);
   }
 
   /// Shorthand for creating inline image. [controller] should be same instance as
@@ -187,6 +192,7 @@ class StoryItem {
     required String url,
     required String storyId,
     required bool isRepost,
+    required bool isLike,
     required VoidCallback viewPost,
     String? userName,
     String? userProfile,
@@ -216,6 +222,7 @@ class StoryItem {
                   userProfile ?? "",
                   controller: controller,
                   isRepost: isRepost,
+                  isLike: isLike,
                   viewPost: viewPost,
                   fit: imageFit,
                   requestHeaders: requestHeaders,
@@ -244,6 +251,7 @@ class StoryItem {
       duration: duration ?? Duration(seconds: 3),
       storyId: storyId,
       isRepost: isRepost,
+      isLike: isLike,
     );
   }
 
@@ -260,6 +268,7 @@ class StoryItem {
     bool shown = false,
     bool isHLS = false,
     bool isRepost = false,
+    bool isLike = false,
     required VoidCallback viewPost,
     String userName = "",
     String userProfile = "",
@@ -276,6 +285,7 @@ class StoryItem {
                   isHLS: isHLS,
                   requestHeaders: requestHeaders,
                   isRepost: isRepost,
+                  isLike: isLike,
                   viewPost: viewPost,
                   userProfile: userProfile,
                   userName: userName),
@@ -304,7 +314,8 @@ class StoryItem {
         shown: shown,
         duration: duration ?? Duration(seconds: 10),
         storyId: storyId,
-        isRepost: isRepost);
+        isRepost: isRepost,
+        isLike: isLike);
   }
 
   /// Shorthand for creating a story item from an image provider such as `AssetImage`
@@ -317,7 +328,8 @@ class StoryItem {
       bool shown = false,
       Duration? duration,
       required String storyId,
-      required bool isRepost}) {
+      required bool isRepost,
+      required bool isLike}) {
     return StoryItem(
         Container(
           key: key,
@@ -365,7 +377,8 @@ class StoryItem {
         shown: shown,
         duration: duration ?? Duration(seconds: 3),
         storyId: storyId,
-        isRepost: isRepost);
+        isRepost: isRepost,
+        isLike: isLike);
   }
 
   /// Shorthand for creating an inline story item from an image provider such as `AssetImage`
@@ -381,6 +394,7 @@ class StoryItem {
     Duration? duration,
     required String storyId,
     required bool isRepost,
+    required bool isLike,
   }) {
     return StoryItem(
         Container(
@@ -415,7 +429,8 @@ class StoryItem {
         shown: shown,
         duration: duration ?? Duration(seconds: 3),
         storyId: storyId,
-        isRepost: isRepost);
+        isRepost: isRepost,
+        isLike: isLike);
   }
 }
 
