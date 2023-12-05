@@ -146,92 +146,87 @@ class StoryVideoState extends State<StoryVideo> {
         height: MediaQuery.of(context).size.height,
         width: MediaQuery.of(context).size.width,
         child: widget.isRepost == true
-            ? InkWell(
-                onTap: () {
-                  widget.viewPost();
-                },
-                child: Center(
-                  child: Stack(
-                    children: [
-                      ClipRect(
-                        child: new BackdropFilter(
-                          filter:
-                              new ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
-                          child: Padding(
-                            padding: const EdgeInsets.all(50.0),
-                            child: Container(
-                                height:
-                                    MediaQuery.of(context).size.height * 0.65,
-                                width: MediaQuery.of(context).size.width * 0.95,
-                                decoration: new BoxDecoration(
-                                  color: Colors.grey.shade200.withOpacity(0.5),
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(5),
-                                  child: AspectRatio(
-                                    aspectRatio:
-                                        playerController.value.aspectRatio,
-                                    child: CachedVideoPlayer(playerController),
-                                  ),
-                                )),
-                          ),
-                        ),
-                      ),
-                      Padding(
+            ? Center(
+              child: Stack(
+                children: [
+                  ClipRect(
+                    child: new BackdropFilter(
+                      filter:
+                          new ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
+                      child: Padding(
                         padding: const EdgeInsets.all(50.0),
                         child: Container(
-                          decoration: BoxDecoration(
-                            gradient: LinearGradient(
-                              begin: Alignment.topCenter,
-                              end: Alignment.bottomCenter,
-                              colors: [
-                                Colors.black54,
-                                Colors.transparent,
-                              ],
+                            height:
+                                MediaQuery.of(context).size.height * 0.65,
+                            width: MediaQuery.of(context).size.width * 0.95,
+                            decoration: new BoxDecoration(
+                              color: Colors.grey.shade200.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(5),
                             ),
-                          ),
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: Row(
-                              children: [
-                                widget.userProfile.isNotEmpty == true
-                                    ? CircleAvatar(
-                                        radius: 18,
-                                        backgroundImage:
-                                            NetworkImage(widget.userProfile),
-                                        backgroundColor: Colors.grey,
-                                      )
-                                    : CircleAvatar(
-                                        radius: 16,
-                                        backgroundImage:
-                                            AssetImage("assets/images/img.png"),
-                                        backgroundColor: Colors.grey,
-                                      ),
-                                Expanded(
-                                  child: Padding(
-                                    padding: const EdgeInsets.only(left: 8.0),
-                                    child: Text(
-                                      widget.userName,
-                                      overflow: TextOverflow.ellipsis,
-                                      maxLines: 2,
-                                      style: TextStyle(
-                                          color: Colors.white,
-                                          fontSize: 16,
-                                          fontFamily: "NexaBold",
-                                          fontWeight: FontWeight.w500),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                      )
-                    ],
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: AspectRatio(
+                                aspectRatio:
+                                    playerController.value.aspectRatio,
+                                child: CachedVideoPlayer(playerController),
+                              ),
+                            )),
+                      ),
+                    ),
                   ),
-                ),
-              )
+                  Padding(
+                    padding: const EdgeInsets.all(50.0),
+                    child: Container(
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            Colors.black54,
+                            Colors.transparent,
+                          ],
+                        ),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Row(
+                          children: [
+                            widget.userProfile.isNotEmpty == true
+                                ? CircleAvatar(
+                                    radius: 18,
+                                    backgroundImage:
+                                        NetworkImage(widget.userProfile),
+                                    backgroundColor: Colors.grey,
+                                  )
+                                : CircleAvatar(
+                                    radius: 16,
+                                    backgroundImage:
+                                        AssetImage("assets/images/img.png"),
+                                    backgroundColor: Colors.grey,
+                                  ),
+                            Expanded(
+                              child: Padding(
+                                padding: const EdgeInsets.only(left: 8.0),
+                                child: Text(
+                                  widget.userName,
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                  style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                      fontFamily: "NexaBold",
+                                      fontWeight: FontWeight.w500),
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            )
             : Center(
                 child: AspectRatio(
                   aspectRatio: playerController.value.aspectRatio,
@@ -285,6 +280,45 @@ class StoryVideoState extends State<StoryVideo> {
               ),
               Center(
                 child: getContentView(),
+              ),
+              Align(
+                alignment: FractionalOffset.bottomCenter,
+                child: Padding(
+                  padding: const EdgeInsets.symmetric(vertical: 120.0),
+                  child: InkWell(
+                    onTap: (){
+                      widget.viewPost();
+                    },
+                    child: Container(
+                      height: 50,
+                      width: 120,
+                      decoration: new BoxDecoration(
+                        color: Colors.grey.withOpacity(0.5),
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              "View Post",
+                              style: TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontFamily: "NexaBold",
+                                  fontWeight: FontWeight.w500),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios_outlined,
+                              color: Colors.white,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
               ),
             ],
           )
