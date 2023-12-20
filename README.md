@@ -2,17 +2,17 @@
 
 Story view for apps with stories.
 
+![story_view](assets/story_view.png)
+
 <p float="left">
-  
-  <img src="https://i.ibb.co/Q8Wtw62/Screenshot-1584263003.png" width=400 />
-  <img src="https://i.ibb.co/bz0R9bd/Screenshot-1584263008.png" width=400 />
-  <img src="https://i.ibb.co/NrLSbZv/Screenshot-1584263018.png" width=400 />
+  <img src="https://i.ibb.co/Q8Wtw62/Screenshot-1584263003.png" width=200 />
+  <img src="https://i.ibb.co/bz0R9bd/Screenshot-1584263008.png" width=200 />
+  <img src="https://i.ibb.co/NrLSbZv/Screenshot-1584263018.png" width=200 />
 </p>
 
-👨‍🚀 Demo project here: [storyexample](https://github.com/blackmann/storyexample.git)
-
 🍟 Watch video demo here: [story_view demo](https://youtu.be/yHAVCsWEKQE)
-[![Youtube](https://img.youtube.com/vi/yHAVCsWEKQE/maxresdefault.jpg)](https://youtu.be/yHAVCsWEKQE)
+
+👨‍🚀 Demo project here: [storyexample](https://github.com/blackmann/storyexample.git)
 
 This a Flutter widget to display stories just like Whatsapp and Instagram. Can also be used
 inline/inside ListView or Column just like Google News app. Comes with gestures
@@ -27,6 +27,8 @@ to pause, forward and go to previous page.
 ⚜️ Caption for each story item
 
 🎈 Animated progress indicator for each story item
+
+📱 Fullscreen or inline
 
 And useful callback to perform meta functionalities including vertical swipe gestures.
 
@@ -99,3 +101,7 @@ Widget build(context) {
 ```
 
 🍭 Now, tell your users some stories.
+
+## Docs
+
+Find docs from here: [pub.dev/story_view](https://pub.dev/documentation/story_view/latest/)
