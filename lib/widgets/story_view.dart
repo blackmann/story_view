@@ -21,6 +21,7 @@ class StoryItem {
   /// Specifies how long the page should be displayed. It should be a reasonable
   /// amount of time greater than 0 milliseconds.
   final Duration duration;
+  final int index;
 
   /// Has this page been shown already? This is used to indicate that the page
   /// has been displayed. If some pages are supposed to be skipped in a story,
@@ -35,7 +36,8 @@ class StoryItem {
   /// The page content
   final Widget view;
   StoryItem(
-    this.view, {
+    this.view,
+    this.index, {
     required this.duration,
     this.shown = false,
   });
@@ -51,6 +53,7 @@ class StoryItem {
   static StoryItem text({
     required String title,
     required Color backgroundColor,
+    required int index,
     Key? key,
     TextStyle? textStyle,
     bool shown = false,
@@ -97,6 +100,7 @@ class StoryItem {
         ),
         //color: backgroundColor,
       ),
+      index,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
@@ -107,6 +111,7 @@ class StoryItem {
   factory StoryItem.pageImage({
     required String url,
     required StoryController controller,
+    required int index,
     Key? key,
     BoxFit imageFit = BoxFit.fitWidth,
     String? caption,
@@ -155,6 +160,7 @@ class StoryItem {
           ],
         ),
       ),
+      index,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
@@ -166,6 +172,7 @@ class StoryItem {
     required String url,
     Text? caption,
     required StoryController controller,
+    required int index,
     Key? key,
     BoxFit imageFit = BoxFit.cover,
     Map<String, dynamic>? requestHeaders,
@@ -209,6 +216,7 @@ class StoryItem {
           bottom: Radius.circular(roundedBottom ? 8 : 0),
         ),
       ),
+      index,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
@@ -219,6 +227,7 @@ class StoryItem {
   factory StoryItem.pageVideo(
     String url, {
     required StoryController controller,
+    required int index,
     Key? key,
     Duration? duration,
     BoxFit imageFit = BoxFit.fitWidth,
@@ -259,6 +268,7 @@ class StoryItem {
             ],
           ),
         ),
+        index,
         shown: shown,
         duration: duration ?? Duration(seconds: 10));
   }
@@ -273,6 +283,7 @@ class StoryItem {
     String? caption,
     bool shown = false,
     Duration? duration,
+    required int index,
   }) {
     return StoryItem(
         Container(
@@ -318,6 +329,7 @@ class StoryItem {
             ],
           ),
         ),
+        index,
         shown: shown,
         duration: duration ?? Duration(seconds: 3));
   }
@@ -330,6 +342,7 @@ class StoryItem {
     Key? key,
     Text? caption,
     bool shown = false,
+    required int index,
     bool roundedTop = true,
     bool roundedBottom = false,
     Duration? duration,
@@ -364,6 +377,7 @@ class StoryItem {
           ),
         ),
       ),
+      index,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
@@ -429,6 +443,10 @@ class StoryView extends StatefulWidget {
 }
 
 class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
+  int index = 0;
+
+  /// current index
+
   AnimationController? _animationController;
   Animation<double>? _currentAnimation;
   Timer? _nextDebouncer;
@@ -826,11 +844,11 @@ class StoryProgressIndicator extends StatelessWidget {
         this.indicatorHeight,
       ),
       foregroundPainter: IndicatorOval(
-        this.indicatorForegroundColor?? Colors.white.withOpacity(0.8),
+        this.indicatorForegroundColor ?? Colors.white.withOpacity(0.8),
         this.value,
       ),
       painter: IndicatorOval(
-        this.indicatorColor?? Colors.white.withOpacity(0.4),
+        this.indicatorColor ?? Colors.white.withOpacity(0.4),
         1.0,
       ),
     );

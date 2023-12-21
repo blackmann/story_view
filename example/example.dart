@@ -41,6 +41,7 @@ class Home extends StatelessWidget {
                     title:
                         "Hello world!\nHave a look at some great Ghanaian delicacies. I'm sorry if your mouth waters. \n\nTap!",
                     backgroundColor: Colors.orange,
+                    index: 0,
                     roundedTop: true,
                   ),
                   // StoryItem.inlineImage(
@@ -59,6 +60,7 @@ class Home extends StatelessWidget {
                     url:
                         "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
                     controller: controller,
+                    index: 0,
                     caption: Text(
                       "Omotuo & Nkatekwan; You will love this meal if taken as supper.",
                       style: TextStyle(
@@ -69,6 +71,7 @@ class Home extends StatelessWidget {
                     ),
                   ),
                   StoryItem.inlineImage(
+                    index: 0,
                     url:
                         "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
                     controller: controller,
@@ -154,11 +157,13 @@ class _MoreStoriesState extends State<MoreStories> {
       body: StoryView(
         storyItems: [
           StoryItem.text(
-            title: "I guess you'd love to see more of our food. That's great.",
-            backgroundColor: Colors.blue,
-          ),
+              title:
+                  "I guess you'd love to see more of our food. That's great.",
+              backgroundColor: Colors.blue,
+              index: 0),
           StoryItem.text(
             title: "Nice!\n\nTap to continue.",
+            index: 0,
             backgroundColor: Colors.red,
             textStyle: TextStyle(
               fontFamily: 'Dancing',
@@ -166,6 +171,7 @@ class _MoreStoriesState extends State<MoreStories> {
             ),
           ),
           StoryItem.pageImage(
+            index: 0,
             url:
                 "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
             caption: "Still sampling",
@@ -173,22 +179,23 @@ class _MoreStoriesState extends State<MoreStories> {
           ),
           StoryItem.pageImage(
               url: "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
+              index: 0,
               caption: "Working with gifs",
               controller: storyController),
           StoryItem.pageImage(
             url: "https://media.giphy.com/media/XcA8krYsrEAYXKf4UQ/giphy.gif",
+            index: 0,
             caption: "Hello, from the other side",
             controller: storyController,
           ),
           StoryItem.pageImage(
             url: "https://media.giphy.com/media/XcA8krYsrEAYXKf4UQ/giphy.gif",
+            index: 0,
             caption: "Hello, from the other side2",
             controller: storyController,
           ),
         ],
-        onStoryShow: (s) {
-          print("Showing a story");
-        },
+        onStoryShow: (s) {},
         onComplete: () {
           print("Completed a cycle");
         },
