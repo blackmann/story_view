@@ -70,12 +70,14 @@ class StoryImage extends StatefulWidget {
   final BoxFit? fit;
 
   final StoryController? controller;
+  final Widget? loader;
 
   StoryImage(
     this.imageLoader, {
     Key? key,
     this.controller,
     this.fit,
+    this.loader,
   }) : super(key: key ?? UniqueKey());
 
   /// Use this shorthand to fetch images/gifs from the provided [url]
@@ -84,6 +86,7 @@ class StoryImage extends StatefulWidget {
     StoryController? controller,
     Map<String, dynamic>? requestHeaders,
     BoxFit fit = BoxFit.fitWidth,
+    Widget? loader,
     Key? key,
   }) {
     return StoryImage(
@@ -91,6 +94,7 @@ class StoryImage extends StatefulWidget {
           url,
           requestHeaders: requestHeaders,
         ),
+        loader: loader,
         controller: controller,
         fit: fit,
         key: key);
@@ -193,16 +197,18 @@ class StoryImageState extends State<StoryImage> {
           ),
         ));
       default:
-        return Center(
-          child: Container(
-            width: 70,
-            height: 70,
-            child: CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-              strokeWidth: 3,
-            ),
-          ),
-        );
+        return widget.loader == null
+            ? Center(
+                child: Container(
+                  width: 70,
+                  height: 70,
+                  child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                    strokeWidth: 3,
+                  ),
+                ),
+              )
+            : widget.loader!;
     }
   }
 

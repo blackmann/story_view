@@ -113,6 +113,7 @@ class StoryItem {
     bool shown = false,
     Map<String, dynamic>? requestHeaders,
     Duration? duration,
+    final Widget? loader,
   }) {
     return StoryItem(
       Container(
@@ -124,6 +125,7 @@ class StoryItem {
               url,
               controller: controller,
               fit: imageFit,
+              loader: loader,
               requestHeaders: requestHeaders,
             ),
             SafeArea(
@@ -224,6 +226,8 @@ class StoryItem {
     BoxFit imageFit = BoxFit.fitWidth,
     String? caption,
     bool shown = false,
+    mute,
+    Widget? loader,
     Map<String, dynamic>? requestHeaders,
   }) {
     return StoryItem(
@@ -234,6 +238,8 @@ class StoryItem {
             children: <Widget>[
               StoryVideo.url(
                 url,
+                loader: loader,
+                mute: mute,
                 controller: controller,
                 requestHeaders: requestHeaders,
               ),
