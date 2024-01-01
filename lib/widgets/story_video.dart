@@ -279,7 +279,10 @@ class StoryVideoState extends State<StoryVideo> {
                     )),
               ),
               Center(
-                child: getContentView(),
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 20.0),
+                  child: getContentView(),
+                ),
               ),
               Align(
                 alignment: FractionalOffset.bottomCenter,
