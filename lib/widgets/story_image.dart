@@ -368,7 +368,7 @@ class StoryImageState extends State<StoryImage> {
               ),
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
+                  padding: const EdgeInsets.only(top: 50.0),
                   child: getContentView(),
                 ),
               ),

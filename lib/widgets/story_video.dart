@@ -154,7 +154,7 @@ class StoryVideoState extends State<StoryVideo> {
                       filter:
                           new ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
                       child: Padding(
-                        padding: const EdgeInsets.all(50.0),
+                        padding: const EdgeInsets.symmetric(vertical: 80.0, horizontal: 50.0),
                         child: Container(
                             height:
                                 MediaQuery.of(context).size.height * 0.65,
@@ -175,7 +175,7 @@ class StoryVideoState extends State<StoryVideo> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.all(50.0),
+                    padding: const EdgeInsets.symmetric(vertical: 80.0, horizontal: 50.0),
                     child: Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -280,7 +280,7 @@ class StoryVideoState extends State<StoryVideo> {
               ),
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 20.0),
+                  padding: EdgeInsets.only(top: 50),
                   child: getContentView(),
                 ),
               ),
@@ -325,7 +325,11 @@ class StoryVideoState extends State<StoryVideo> {
               ),
             ],
           )
-        : getContentView();
+        : Container(
+            width: double.infinity,
+            height: double.infinity,
+            child: getContentView(),
+          );
   }
 
   @override
