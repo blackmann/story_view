@@ -150,28 +150,24 @@ class StoryVideoState extends State<StoryVideo> {
               child: Stack(
                 children: [
                   ClipRect(
-                    child: new BackdropFilter(
-                      filter:
-                          new ImageFilter.blur(sigmaX: 15.0, sigmaY: 15.0),
-                      child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 80.0, horizontal: 50.0),
-                        child: Container(
-                            height:
-                                MediaQuery.of(context).size.height * 0.65,
-                            width: MediaQuery.of(context).size.width * 0.95,
-                            decoration: new BoxDecoration(
-                              color: Colors.grey.shade200.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(5),
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 80.0, horizontal: 50.0),
+                      child: Container(
+                          height:
+                              MediaQuery.of(context).size.height * 0.65,
+                          width: MediaQuery.of(context).size.width * 0.95,
+                          decoration: new BoxDecoration(
+                            color: Colors.grey.shade200.withOpacity(0.5),
+                            borderRadius: BorderRadius.circular(5),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(5),
+                            child: AspectRatio(
+                              aspectRatio:
+                                  playerController.value.aspectRatio,
+                              child: CachedVideoPlayer(playerController),
                             ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: AspectRatio(
-                                aspectRatio:
-                                    playerController.value.aspectRatio,
-                                child: CachedVideoPlayer(playerController),
-                              ),
-                            )),
-                      ),
+                          )),
                     ),
                   ),
                   Padding(
