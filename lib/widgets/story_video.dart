@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:io';
-
+import 'dart:ui';
+import 'dart:ui' as ui;
+import 'dart:math' as math;
 import 'package:cached_video_player/cached_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -100,6 +102,12 @@ class StoryVideoState extends State<StoryVideo> {
   CachedVideoPlayerController playerController =
       CachedVideoPlayerController.network("");
 
+  var secondRandomColor =
+  Color((math.Random().nextDouble() * 0x000000).toInt()).withOpacity(0.1);
+
+  var firstRandomColor =
+  Color((math.Random().nextDouble() * 0x0F0F0F).toInt()).withOpacity(0.2);
+
   @override
   void initState() {
     super.initState();
@@ -149,24 +157,28 @@ class StoryVideoState extends State<StoryVideo> {
               child: Stack(
                 children: [
                   ClipRect(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(vertical: 80.0, horizontal: 50.0),
-                      child: Container(
-                          height:
-                              MediaQuery.of(context).size.height * 0.65,
-                          width: MediaQuery.of(context).size.width * 0.95,
-                          decoration: new BoxDecoration(
-                            color: Colors.grey.shade200.withOpacity(0.5),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(5),
-                            child: AspectRatio(
-                              aspectRatio:
-                                  playerController.value.aspectRatio,
-                              child: CachedVideoPlayer(playerController),
+                    child: new BackdropFilter(
+                      filter: new ImageFilter.blur(
+                          sigmaX: 15.0, sigmaY: 15.0),
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 80.0, horizontal: 50.0),
+                        child: Container(
+                            height:
+                                MediaQuery.of(context).size.height * 0.65,
+                            width: MediaQuery.of(context).size.width * 0.95,
+                            decoration: new BoxDecoration(
+                              color: Colors.grey.shade200.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(5),
                             ),
-                          )),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(5),
+                              child: AspectRatio(
+                                aspectRatio:
+                                    playerController.value.aspectRatio,
+                                child: CachedVideoPlayer(playerController),
+                              ),
+                            )),
+                      ),
                     ),
                   ),
                   Padding(
@@ -260,16 +272,20 @@ class StoryVideoState extends State<StoryVideo> {
     return widget.isRepost == true
         ? Stack(
             children: [
-              Container(
-                  color: Colors.black,
-                  width: double.infinity,
-                  height: double.infinity,
-                  child: Center(
-                    child: AspectRatio(
-                      aspectRatio: playerController.value.aspectRatio,
-                      child: CachedVideoPlayer(playerController),
+              ImageFiltered(
+                imageFilter: ImageFilter.blur(sigmaY: 15, sigmaX: 15),
+                child: Container(
+                    width: double.infinity,
+                    height: double.infinity,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [firstRandomColor, secondRandomColor],
+                      ),
                     ),
-                  )),
+                   ),
+              ),
               Center(
                 child: Padding(
                   padding: EdgeInsets.only(top: 50),
