@@ -1,6 +1,5 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:ui';
 
 import 'package:cached_video_player/cached_video_player.dart';
 import 'package:flutter/material.dart';
@@ -261,19 +260,16 @@ class StoryVideoState extends State<StoryVideo> {
     return widget.isRepost == true
         ? Stack(
             children: [
-              ImageFiltered(
-                imageFilter: ImageFilter.blur(sigmaY: 15, sigmaX: 15),
-                //SigmaX and Y are just for X and Y directions
-                child: Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    child: Center(
-                      child: AspectRatio(
-                        aspectRatio: playerController.value.aspectRatio,
-                        child: CachedVideoPlayer(playerController),
-                      ),
-                    )),
-              ),
+              Container(
+                  color: Colors.black,
+                  width: double.infinity,
+                  height: double.infinity,
+                  child: Center(
+                    child: AspectRatio(
+                      aspectRatio: playerController.value.aspectRatio,
+                      child: CachedVideoPlayer(playerController),
+                    ),
+                  )),
               Center(
                 child: Padding(
                   padding: EdgeInsets.only(top: 50),
