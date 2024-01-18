@@ -263,7 +263,7 @@ class StoryItem {
     required StoryController controller,
     Key? key,
     Duration? duration,
-    BoxFit imageFit = BoxFit.fitWidth,
+    BoxFit videoFit = BoxFit.fitWidth,
     String? caption,
     bool shown = false,
     bool isHLS = false,
@@ -287,6 +287,7 @@ class StoryItem {
                   isRepost: isRepost,
                   isLike: isLike,
                   viewPost: viewPost,
+                  fit: videoFit,
                   userProfile: userProfile,
                   userName: userName),
               SafeArea(

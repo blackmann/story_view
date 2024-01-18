@@ -1,8 +1,8 @@
 import 'dart:async';
 import 'dart:io';
-import 'dart:ui';
-import 'dart:ui' as ui;
 import 'dart:math' as math;
+import 'dart:ui';
+
 import 'package:cached_video_player/cached_video_player.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
@@ -53,6 +53,7 @@ class StoryVideo extends StatefulWidget {
   final VoidCallback viewPost;
   final String userName;
   final String userProfile;
+  final BoxFit fit;
 
   StoryVideo(this.videoLoader,
       {required this.storyController,
@@ -60,6 +61,7 @@ class StoryVideo extends StatefulWidget {
       required this.isRepost,
       required this.isLike,
       required this.viewPost,
+      required this.fit,
       this.userName = "",
       this.userProfile = "",
       Key? key})
@@ -74,6 +76,7 @@ class StoryVideo extends StatefulWidget {
       String? userName,
       String? userProfile,
       Map<String, dynamic>? requestHeaders,
+      BoxFit fit = BoxFit.fitWidth,
       Key? key}) {
     return StoryVideo(
       VideoLoader(url, storyId, requestHeaders: requestHeaders),
@@ -83,6 +86,7 @@ class StoryVideo extends StatefulWidget {
       isRepost: isRepost,
       isLike: isLike,
       viewPost: viewPost,
+      fit: fit,
       userName: userName ?? "",
       userProfile: userProfile ?? "",
     );
@@ -161,24 +165,32 @@ class StoryVideoState extends State<StoryVideo> {
                       filter: new ImageFilter.blur(
                           sigmaX: 15.0, sigmaY: 15.0),
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 80.0, horizontal: 50.0),
-                        child: Container(
-                            height:
-                                MediaQuery.of(context).size.height * 0.65,
-                            width: MediaQuery.of(context).size.width * 0.95,
-                            decoration: new BoxDecoration(
-                              color: Colors.grey.shade200.withOpacity(0.5),
-                              borderRadius: BorderRadius.circular(5),
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(5),
-                              child: AspectRatio(
-                                aspectRatio:
-                                    playerController.value.aspectRatio,
-                                child: CachedVideoPlayer(playerController),
+                        padding: const EdgeInsets.symmetric(
+                              vertical: 80.0, horizontal: 50.0),
+                          child: Container(
+                              height: MediaQuery.of(context).size.height * 0.65,
+                              width: MediaQuery.of(context).size.width * 0.95,
+                              decoration: new BoxDecoration(
+                                color: Colors.grey.shade200.withOpacity(0.5),
+                                borderRadius: BorderRadius.circular(5),
                               ),
-                            )),
-                      ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(5),
+                                child: FittedBox(
+                                  fit: widget.fit,
+                                  child: SizedBox(
+                                    width: playerController.value.aspectRatio,
+                                    height: 1,
+                                    child: CachedVideoPlayer(playerController),
+                                  ),
+                                ),
+                                // child: AspectRatio(
+                                //   aspectRatio:
+                                //       playerController.value.aspectRatio,
+                                //   child: CachedVideoPlayer(playerController),
+                                // ),
+                              )),
+                        ),
                     ),
                   ),
                   Padding(
@@ -235,10 +247,21 @@ class StoryVideoState extends State<StoryVideo> {
               ),
             )
             : Center(
-                child: AspectRatio(
-                  aspectRatio: playerController.value.aspectRatio,
-                  child: CachedVideoPlayer(playerController),
+                child: FittedBox(
+                  fit: widget.fit,
+                  child: SizedBox(
+                    width: playerController.value.aspectRatio,
+                    height: 1,
+                    child: CachedVideoPlayer(playerController),
+                  ),
                 ),
+                // child: FittedBox(
+                //   fit: widget.fit,
+                //   child: AspectRatio(
+                //     aspectRatio: playerController.value.aspectRatio,
+                //     child: CachedVideoPlayer(playerController),
+                //   ),
+                // ),
               ),
       );
     }
