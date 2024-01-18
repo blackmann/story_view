@@ -180,7 +180,7 @@ class StoryVideoState extends State<StoryVideo> {
                                   fit: widget.fit,
                                   child: SizedBox(
                                     width: playerController.value.aspectRatio,
-                                    height: 1.2,
+                                    height: 1,
                                     child: CachedVideoPlayer(playerController),
                                   ),
                                 ),
@@ -251,7 +251,7 @@ class StoryVideoState extends State<StoryVideo> {
                   fit: widget.fit,
                   child: SizedBox(
                     width: playerController.value.aspectRatio,
-                    height: 1.2,
+                    height: 1,
                     child: CachedVideoPlayer(playerController),
                   ),
                 ),
