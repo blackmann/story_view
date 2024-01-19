@@ -358,11 +358,12 @@ class StoryImageState extends State<StoryImage> {
                   width: double.infinity,
                   height: double.infinity,
                   decoration: BoxDecoration(
-                    gradient: LinearGradient(
-                      begin: Alignment.topRight,
-                      end: Alignment.bottomLeft,
-                      colors: [firstRandomColor, secondRandomColor],
-                    ),
+                    color: Colors.black
+                    // gradient: LinearGradient(
+                    //   begin: Alignment.topRight,
+                    //   end: Alignment.bottomLeft,
+                    //   colors: [firstRandomColor, secondRandomColor],
+                    // ),
                   ),
                 ),
               ),
