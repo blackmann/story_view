@@ -301,12 +301,11 @@ class StoryVideoState extends State<StoryVideo> {
                     width: double.infinity,
                     height: double.infinity,
                     decoration: BoxDecoration(
-                      color: Colors.black
-                      // gradient: LinearGradient(
-                      //   begin: Alignment.topRight,
-                      //   end: Alignment.bottomLeft,
-                      //   colors: [firstRandomColor, secondRandomColor],
-                      // ),
+                      gradient: LinearGradient(
+                        begin: Alignment.topRight,
+                        end: Alignment.bottomLeft,
+                        colors: [firstRandomColor, secondRandomColor],
+                      ),
                     ),
                    ),
               ),
