@@ -103,14 +103,17 @@ class StoryVideoState extends State<StoryVideo> {
 
   StreamSubscription? _streamSubscription;
 
+  //bool
+  bool isVideoLoaded = false;
+
   CachedVideoPlayerController playerController =
       CachedVideoPlayerController.network("");
 
   var secondRandomColor =
-  Color((math.Random().nextDouble() * 0x000000).toInt()).withOpacity(0.1);
+      Color((math.Random().nextDouble() * 0x000000).toInt()).withOpacity(0.1);
 
   var firstRandomColor =
-  Color((math.Random().nextDouble() * 0x0F0F0F).toInt()).withOpacity(0.2);
+      Color((math.Random().nextDouble() * 0x0F0F0F).toInt()).withOpacity(0.2);
 
   @override
   void initState() {
@@ -298,16 +301,16 @@ class StoryVideoState extends State<StoryVideo> {
               ImageFiltered(
                 imageFilter: ImageFilter.blur(sigmaY: 15, sigmaX: 15),
                 child: Container(
-                    width: double.infinity,
-                    height: double.infinity,
-                    decoration: BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.topRight,
-                        end: Alignment.bottomLeft,
-                        colors: [firstRandomColor, secondRandomColor],
-                      ),
+                  width: double.infinity,
+                  height: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      begin: Alignment.topRight,
+                      end: Alignment.bottomLeft,
+                      colors: [firstRandomColor, secondRandomColor],
                     ),
-                   ),
+                  ),
+                ),
               ),
               Center(
                 child: Padding(
@@ -315,29 +318,34 @@ class StoryVideoState extends State<StoryVideo> {
                   child: getContentView(),
                 ),
               ),
-              Align(
-                alignment: FractionalOffset.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 120.0),
-                  child: InkWell(
-                    onTap: (){
-                      widget.viewPost();
-                    },
-                    child: Container(
-                      height: 50,
-                      width: 120,
-                      decoration: new BoxDecoration(
-                        color: Colors.grey.withOpacity(0.5),
-                        borderRadius: BorderRadius.circular(5),
-                      ),
+              widget.videoLoader.state == LoadState.loading ||
+                      !playerController.value.isInitialized == true
+                  ? Container()
+                  : Align(
+                      alignment: FractionalOffset.bottomCenter,
                       child: Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              "View Post",
-                              style: TextStyle(
+                        padding: const EdgeInsets.symmetric(vertical: 120.0),
+                        child: InkWell(
+                          onTap: () {
+                            widget.viewPost();
+                          },
+                          child: Container(
+                            height: 50,
+                            width: 120,
+                            decoration: new BoxDecoration(
+                              color: Colors.grey.withOpacity(0.5),
+                              borderRadius: BorderRadius.circular(5),
+                            ),
+                            child: Padding(
+                              padding:
+                                  const EdgeInsets.symmetric(horizontal: 8.0),
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    "View Post",
+                                    style: TextStyle(
                                   color: Colors.white,
                                   fontSize: 16,
                                   fontFamily: "NexaBold",
@@ -353,7 +361,7 @@ class StoryVideoState extends State<StoryVideo> {
                     ),
                   ),
                 ),
-              ),
+              )
             ],
           )
         : Container(
