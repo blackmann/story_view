@@ -372,17 +372,19 @@ class StoryImageState extends State<StoryImage> {
                   child: getContentView(),
                 ),
               ),
-              Align(
-                alignment: FractionalOffset.bottomCenter,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 120.0),
-                  child: InkWell(
-                    onTap: (){
-                      widget.viewPost();
-                    },
-                    child: Container(
-                      height: 50,
-                      width: 120,
+              widget.imageLoader.state == LoadState.loading
+                  ? Container()
+                  : Align(
+                      alignment: FractionalOffset.bottomCenter,
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(vertical: 120.0),
+                        child: InkWell(
+                          onTap: () {
+                            widget.viewPost();
+                          },
+                          child: Container(
+                            height: 50,
+                            width: 120,
                       decoration: new BoxDecoration(
                         color: Colors.grey.withOpacity(0.5),
                         borderRadius: BorderRadius.circular(5),
