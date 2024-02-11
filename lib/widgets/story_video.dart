@@ -43,18 +43,29 @@ class VideoLoader {
 class StoryVideo extends StatefulWidget {
   final StoryController? storyController;
   final VideoLoader videoLoader;
+  final Widget? loadingWidget;
+  final Widget? errorWidget;
 
-  StoryVideo(this.videoLoader, {this.storyController, Key? key})
-      : super(key: key ?? UniqueKey());
+  StoryVideo(this.videoLoader, {
+    Key? key,
+    this.storyController,
+    this.loadingWidget,
+    this.errorWidget,
+  }) : super(key: key ?? UniqueKey());
 
-  static StoryVideo url(String url,
-      {StoryController? controller,
-      Map<String, dynamic>? requestHeaders,
-      Key? key}) {
+  static StoryVideo url(String url, {
+    StoryController? controller,
+    Map<String, dynamic>? requestHeaders,
+    Key? key,
+    Widget? loadingWidget,
+    Widget? errorWidget,
+  }) {
     return StoryVideo(
       VideoLoader(url, requestHeaders: requestHeaders),
       storyController: controller,
       key: key,
+      loadingWidget: loadingWidget,
+      errorWidget: errorWidget,
     );
   }
 
@@ -116,7 +127,7 @@ class StoryVideoState extends State<StoryVideo> {
 
     return widget.videoLoader.state == LoadState.loading
         ? Center(
-            child: Container(
+            child: widget.loadingWidget?? Container(
               width: 70,
               height: 70,
               child: CircularProgressIndicator(
@@ -126,7 +137,7 @@ class StoryVideoState extends State<StoryVideo> {
             ),
           )
         : Center(
-            child: Text(
+            child: widget.errorWidget?? Text(
             "Media failed to load.",
             style: TextStyle(
               color: Colors.white,
