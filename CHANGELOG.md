@@ -1,4 +1,4 @@
-## [0.16.1] - 18 Feb 2024
+## [0.16.3] - 18 Feb 2024
 - Test `publish.yml` worflow
 
 ## [0.16.0] - 30 November 2023
