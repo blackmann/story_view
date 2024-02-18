@@ -1,3 +1,13 @@
+## [0.16.5] - 18 Feb 2024
+- Bump dependencies to latest
+- Added medium to Indicator Height
+- Exposed loading and error widget API on both story image and story video
+- Exposed outerPaddings API
+- onStoryShow callback now returns both storyItem and it's index
+
+## [0.16.3] - 18 Feb 2024
+- Test `publish.yml` worflow
+
 ## [0.16.0] - 30 November 2023
 - Replace `PaintingBinding` with `ui`
 
