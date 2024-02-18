@@ -14,7 +14,7 @@ enum ProgressPosition { top, bottom, none }
 
 /// This is used to specify the height of the progress indicator. Inline stories
 /// should use [small]
-enum IndicatorHeight { small, large }
+enum IndicatorHeight { small, medium, large }
 
 /// This is a representation of a story item (or page).
 class StoryItem {
@@ -56,6 +56,7 @@ class StoryItem {
     bool shown = false,
     bool roundedTop = false,
     bool roundedBottom = false,
+    EdgeInsetsGeometry? textOuterPadding,
     Duration? duration,
   }) {
     double contrast = ContrastHelper.contrast([
@@ -78,7 +79,7 @@ class StoryItem {
             bottom: Radius.circular(roundedBottom ? 8 : 0),
           ),
         ),
-        padding: EdgeInsets.symmetric(
+        padding: textOuterPadding?? EdgeInsets.symmetric(
           horizontal: 24,
           vertical: 16,
         ),
@@ -109,9 +110,12 @@ class StoryItem {
     required StoryController controller,
     Key? key,
     BoxFit imageFit = BoxFit.fitWidth,
-    String? caption,
+    Text? caption,
     bool shown = false,
     Map<String, dynamic>? requestHeaders,
+    Widget? loadingWidget,
+    Widget? errorWidget,
+    EdgeInsetsGeometry? captionOuterPadding,
     Duration? duration,
   }) {
     return StoryItem(
@@ -125,6 +129,8 @@ class StoryItem {
               controller: controller,
               fit: imageFit,
               requestHeaders: requestHeaders,
+              loadingWidget: loadingWidget,
+              errorWidget: errorWidget,
             ),
             SafeArea(
               child: Align(
@@ -134,21 +140,12 @@ class StoryItem {
                   margin: EdgeInsets.only(
                     bottom: 24,
                   ),
-                  padding: EdgeInsets.symmetric(
+                  padding: captionOuterPadding?? EdgeInsets.symmetric(
                     horizontal: 24,
                     vertical: 8,
                   ),
                   color: caption != null ? Colors.black54 : Colors.transparent,
-                  child: caption != null
-                      ? Text(
-                          caption,
-                          style: TextStyle(
-                            fontSize: 15,
-                            color: Colors.white,
-                          ),
-                          textAlign: TextAlign.center,
-                        )
-                      : SizedBox(),
+                  child: caption?? const SizedBox.shrink(),
                 ),
               ),
             )
@@ -172,6 +169,9 @@ class StoryItem {
     bool shown = false,
     bool roundedTop = true,
     bool roundedBottom = false,
+    Widget? loadingWidget,
+    Widget? errorWidget,
+    EdgeInsetsGeometry? captionOuterPadding,
     Duration? duration,
   }) {
     return StoryItem(
@@ -188,14 +188,16 @@ class StoryItem {
                   controller: controller,
                   fit: imageFit,
                   requestHeaders: requestHeaders,
+                  loadingWidget: loadingWidget,
+                  errorWidget: errorWidget,
                 ),
                 Container(
                   margin: EdgeInsets.only(bottom: 16),
-                  padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                  padding: captionOuterPadding?? EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                   child: Align(
                     alignment: Alignment.bottomLeft,
                     child: Container(
-                      child: caption == null ? SizedBox() : caption,
+                      child: caption?? const SizedBox.shrink(),
                       width: double.infinity,
                     ),
                   ),
@@ -222,9 +224,11 @@ class StoryItem {
     Key? key,
     Duration? duration,
     BoxFit imageFit = BoxFit.fitWidth,
-    String? caption,
+    Widget? caption,
     bool shown = false,
     Map<String, dynamic>? requestHeaders,
+    Widget? loadingWidget,
+    Widget? errorWidget,
   }) {
     return StoryItem(
         Container(
@@ -236,6 +240,8 @@ class StoryItem {
                 url,
                 controller: controller,
                 requestHeaders: requestHeaders,
+                loadingWidget: loadingWidget,
+                errorWidget: errorWidget,
               ),
               SafeArea(
                 child: Align(
@@ -246,13 +252,7 @@ class StoryItem {
                     padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                     color:
                         caption != null ? Colors.black54 : Colors.transparent,
-                    child: caption != null
-                        ? Text(
-                            caption,
-                            style: TextStyle(fontSize: 15, color: Colors.white),
-                            textAlign: TextAlign.center,
-                          )
-                        : SizedBox(),
+                    child: caption?? const SizedBox.shrink(),
                   ),
                 ),
               )
@@ -387,8 +387,8 @@ class StoryView extends StatefulWidget {
   /// provide this callback so as to enable scroll events on the list view.
   final Function(Direction?)? onVerticalSwipeComplete;
 
-  /// Callback for when a story is currently being shown.
-  final ValueChanged<StoryItem>? onStoryShow;
+  /// Callback for when a story and it index is currently being shown.
+  final void Function(StoryItem storyItem, int index)? onStoryShow;
 
   /// Where the progress indicator should be placed.
   final ProgressPosition progressPosition;
@@ -401,13 +401,19 @@ class StoryView extends StatefulWidget {
   /// a [ListView] or [Column]) then set this to `true`.
   final bool inline;
 
-  // Controls the playback of the stories
+  /// Controls the playback of the stories
   final StoryController controller;
 
-  // Indicator Color
+  /// Indicator Color
   final Color? indicatorColor;
-  // Indicator Foreground Color
+  /// Indicator Foreground Color
   final Color? indicatorForegroundColor;
+
+  /// Determine the height of the indicator
+  final IndicatorHeight indicatorHeight;
+
+  /// Use this if you want to give outer padding to the indicator
+  final EdgeInsetsGeometry indicatorOuterPadding;
 
   StoryView({
     required this.storyItems,
@@ -420,6 +426,8 @@ class StoryView extends StatefulWidget {
     this.onVerticalSwipeComplete,
     this.indicatorColor,
     this.indicatorForegroundColor,
+    this.indicatorHeight = IndicatorHeight.large,
+    this.indicatorOuterPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8,),
   });
 
   @override
@@ -517,8 +525,10 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       return !it!.shown;
     })!;
 
+    final storyItemIndex = widget.storyItems.indexOf(storyItem);
+
     if (widget.onStoryShow != null) {
-      widget.onStoryShow!(storyItem);
+      widget.onStoryShow!(storyItem, storyItemIndex);
     }
 
     _animationController =
@@ -634,19 +644,14 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 bottom: widget.inline ? false : true,
                 // we use SafeArea here for notched and bezeles phones
                 child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 16,
-                    vertical: 8,
-                  ),
+                  padding: widget.indicatorOuterPadding,
                   child: PageBar(
                     widget.storyItems
                         .map((it) => PageData(it!.duration, it.shown))
                         .toList(),
                     this._currentAnimation,
                     key: UniqueKey(),
-                    indicatorHeight: widget.inline
-                        ? IndicatorHeight.small
-                        : IndicatorHeight.large,
+                    indicatorHeight: widget.indicatorHeight,
                     indicatorColor: widget.indicatorColor,
                     indicatorForegroundColor: widget.indicatorForegroundColor,
                   ),
@@ -763,7 +768,7 @@ class PageBarState extends State<PageBar> {
     super.initState();
 
     int count = widget.pages.length;
-    spacing = (count > 15) ? 1 : ((count > 10) ? 2 : 4);
+    spacing = (count > 15) ? 2 : ((count > 10) ? 3 : 4);
 
     widget.animation!.addListener(() {
       setState(() {});
@@ -792,7 +797,7 @@ class PageBarState extends State<PageBar> {
             child: StoryProgressIndicator(
               isPlaying(it) ? widget.animation!.value : (it.shown ? 1 : 0),
               indicatorHeight:
-                  widget.indicatorHeight == IndicatorHeight.large ? 5 : 3,
+                  widget.indicatorHeight == IndicatorHeight.large ? 5 : widget.indicatorHeight == IndicatorHeight.medium ? 3 : 2,
               indicatorColor: widget.indicatorColor,
               indicatorForegroundColor: widget.indicatorForegroundColor,
             ),

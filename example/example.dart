@@ -82,7 +82,7 @@ class Home extends StatelessWidget {
                     ),
                   )
                 ],
-                onStoryShow: (s) {
+                onStoryShow: (storyItem, index) {
                   print("Showing a story");
                 },
                 onComplete: () {
@@ -168,25 +168,53 @@ class _MoreStoriesState extends State<MoreStories> {
           StoryItem.pageImage(
             url:
                 "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
-            caption: "Still sampling",
+            caption: Text(
+              "Still sampling",
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.center,
+            ),
             controller: storyController,
           ),
           StoryItem.pageImage(
               url: "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
-              caption: "Working with gifs",
+              caption: Text(
+                "Working with gifs",
+                style: TextStyle(
+                  fontSize: 15,
+                  color: Colors.white,
+                ),
+                textAlign: TextAlign.center,
+              ),
               controller: storyController),
           StoryItem.pageImage(
             url: "https://media.giphy.com/media/XcA8krYsrEAYXKf4UQ/giphy.gif",
-            caption: "Hello, from the other side",
+            caption: Text(
+              "Hello, from the other side",
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.center,
+            ),
             controller: storyController,
           ),
           StoryItem.pageImage(
             url: "https://media.giphy.com/media/XcA8krYsrEAYXKf4UQ/giphy.gif",
-            caption: "Hello, from the other side2",
+            caption: Text(
+              "Hello, from the other side2",
+              style: TextStyle(
+                fontSize: 15,
+                color: Colors.white,
+              ),
+              textAlign: TextAlign.center,
+            ),
             controller: storyController,
           ),
         ],
-        onStoryShow: (s) {
+        onStoryShow: (storyItem, index) {
           print("Showing a story");
         },
         onComplete: () {
