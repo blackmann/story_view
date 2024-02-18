@@ -1,0 +1,43 @@
+name: Publish to pub.dev
+
+on:
+  push:
+    tags:
+      - 'v[0-9]+.[0-9]+.[0-9]+*'
+  workflow_call:
+    inputs:
+      environment:
+        description: if specified, the workflow is required to be run in this environment (with additional approvals)
+        required: false
+        type: string
+      working-directory:
+        description: directory with-in the repository where the package is located (if not in the repository root)
+        required: false
+        type: string
+
+jobs:
+  publish:
+    name: 'Publish to pub.dev'
+    environment: ${{ inputs.environment }}
+    permissions:
+      id-token: write # This is required for requesting the JWT
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout repository
+      - uses: actions/checkout@v4
+      # Setup Dart SDK with JWT token
+      - uses: dart-lang/setup-dart@b64355ae6ca0b5d484f0106a033dd1388965d06d
+      - name: Setup Flutter
+        id: flutter
+        uses: DanTup/gh-actions/setup-flutter@master
+      # Minimal package setup and dry run checks.
+      - name: Install dependencies
+        run: dart pub get
+        working-directory: ${{ inputs.working-directory }}
+      - name: Publish - dry run
+        run: dart pub publish --dry-run
+        working-directory: ${{ inputs.working-directory }}
+      # Publishing...
+      - name: Publish to pub.dev
+        run: dart pub publish -f
+        working-directory: ${{ inputs.working-directory }}
