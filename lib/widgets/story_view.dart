@@ -3,7 +3,6 @@ import 'dart:math';
 
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:flutter/material.dart';
-
 import '../controller/story_controller.dart';
 import '../utils.dart';
 import 'story_image.dart';
@@ -34,10 +33,12 @@ class StoryItem {
 
   /// The page content
   final Widget view;
+  final Widget? caption;
   StoryItem(
     this.view, {
     required this.duration,
     this.shown = false,
+        this.caption,
   });
 
   /// Short hand to create text-only page.
@@ -49,16 +50,18 @@ class StoryItem {
   /// Works for inline and full-page stories. See [StoryView.inline] for more on
   /// what inline/full-page means.
   static StoryItem text({
-    required String title,
+    String? title,
     required Color backgroundColor,
     Key? key,
     TextStyle? textStyle,
     bool shown = false,
+    Widget? child,
     bool roundedTop = false,
     bool roundedBottom = false,
     EdgeInsetsGeometry? textOuterPadding,
     Duration? duration,
   }) {
+    assert(title != null && child != null);
     double contrast = ContrastHelper.contrast([
       backgroundColor.red,
       backgroundColor.green,
@@ -83,20 +86,20 @@ class StoryItem {
           horizontal: 24,
           vertical: 16,
         ),
-        child: Center(
-          child: Text(
-            title,
-            style: textStyle?.copyWith(
-                  color: contrast > 1.8 ? Colors.white : Colors.black,
-                ) ??
-                TextStyle(
-                  color: contrast > 1.8 ? Colors.white : Colors.black,
-                  fontSize: 18,
-                ),
-            textAlign: TextAlign.center,
-          ),
-        ),
         //color: backgroundColor,
+      ),
+      caption: child ?? Center(
+        child: Text(
+          title ?? '',
+          style: textStyle?.copyWith(
+            color: contrast > 1.8 ? Colors.white : Colors.black,
+          ) ??
+              TextStyle(
+                color: contrast > 1.8 ? Colors.white : Colors.black,
+                fontSize: 18,
+              ),
+          textAlign: TextAlign.center,
+        ),
       ),
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
@@ -110,7 +113,7 @@ class StoryItem {
     required StoryController controller,
     Key? key,
     BoxFit imageFit = BoxFit.fitWidth,
-    Text? caption,
+    Widget? caption,
     bool shown = false,
     Map<String, dynamic>? requestHeaders,
     Widget? loadingWidget,
@@ -135,22 +138,23 @@ class StoryItem {
             SafeArea(
               child: Align(
                 alignment: Alignment.bottomCenter,
-                child: Container(
-                  width: double.infinity,
-                  margin: EdgeInsets.only(
-                    bottom: 24,
-                  ),
-                  padding: captionOuterPadding?? EdgeInsets.symmetric(
-                    horizontal: 24,
-                    vertical: 8,
-                  ),
-                  color: caption != null ? Colors.black54 : Colors.transparent,
-                  child: caption?? const SizedBox.shrink(),
-                ),
+                child: SizedBox(),
               ),
             )
           ],
         ),
+      ),
+      caption: Container(
+        width: double.infinity,
+        margin: EdgeInsets.only(
+          bottom: 24,
+        ),
+        padding: captionOuterPadding?? EdgeInsets.symmetric(
+          horizontal: 24,
+          vertical: 8,
+        ),
+        color: caption != null ? Colors.black54 : Colors.transparent,
+        child: caption?? const SizedBox.shrink(),
       ),
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
@@ -191,17 +195,6 @@ class StoryItem {
                   loadingWidget: loadingWidget,
                   errorWidget: errorWidget,
                 ),
-                Container(
-                  margin: EdgeInsets.only(bottom: 16),
-                  padding: captionOuterPadding?? EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                  child: Align(
-                    alignment: Alignment.bottomLeft,
-                    child: Container(
-                      child: caption?? const SizedBox.shrink(),
-                      width: double.infinity,
-                    ),
-                  ),
-                ),
               ],
             ),
           ),
@@ -209,6 +202,17 @@ class StoryItem {
         borderRadius: BorderRadius.vertical(
           top: Radius.circular(roundedTop ? 8 : 0),
           bottom: Radius.circular(roundedBottom ? 8 : 0),
+        ),
+      ),
+      caption: Container(
+        margin: EdgeInsets.only(bottom: 16),
+        padding: captionOuterPadding?? EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+        child: Align(
+          alignment: Alignment.bottomLeft,
+          child: Container(
+            child: caption?? const SizedBox.shrink(),
+            width: double.infinity,
+          ),
         ),
       ),
       shown: shown,
@@ -243,20 +247,18 @@ class StoryItem {
                 loadingWidget: loadingWidget,
                 errorWidget: errorWidget,
               ),
-              SafeArea(
-                child: Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    width: double.infinity,
-                    margin: EdgeInsets.only(bottom: 24),
-                    padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
-                    color:
-                        caption != null ? Colors.black54 : Colors.transparent,
-                    child: caption?? const SizedBox.shrink(),
-                  ),
-                ),
-              )
             ],
+          ),
+        ),
+        caption: Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            width: double.infinity,
+            margin: EdgeInsets.only(bottom: 24),
+            padding: EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+            color:
+            caption != null ? Colors.black54 : Colors.transparent,
+            child: caption?? const SizedBox.shrink(),
           ),
         ),
         shown: shown,
@@ -318,6 +320,16 @@ class StoryItem {
             ],
           ),
         ),
+        caption: caption != null
+            ? Text(
+          caption,
+          style: TextStyle(
+            fontSize: 15,
+            color: Colors.white,
+          ),
+          textAlign: TextAlign.center,
+        )
+            : SizedBox(),
         shown: shown,
         duration: duration ?? Duration(seconds: 3));
   }
@@ -364,6 +376,7 @@ class StoryItem {
           ),
         ),
       ),
+      caption: caption,
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
@@ -453,6 +466,11 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     var item = widget.storyItems.firstWhereOrNull((it) => !it!.shown);
     item ??= widget.storyItems.last;
     return item?.view ?? Container();
+  }
+  Widget get _currentCaption {
+    var item = widget.storyItems.firstWhereOrNull((it) => !it!.shown);
+    item ??= widget.storyItems.last;
+    return item?.caption ?? Container();
   }
 
   @override
@@ -662,7 +680,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
           Align(
               alignment: Alignment.centerRight,
               heightFactor: 1,
-              child: GestureDetector(
+              child:  GestureDetector(
                 onTapDown: (details) {
                   widget.controller.pause();
                 },
@@ -680,38 +698,38 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 onVerticalDragStart: widget.onVerticalSwipeComplete == null
                     ? null
                     : (details) {
-                        widget.controller.pause();
-                      },
+                  widget.controller.pause();
+                },
                 onVerticalDragCancel: widget.onVerticalSwipeComplete == null
                     ? null
                     : () {
-                        widget.controller.play();
-                      },
+                  widget.controller.play();
+                },
                 onVerticalDragUpdate: widget.onVerticalSwipeComplete == null
                     ? null
                     : (details) {
-                        if (verticalDragInfo == null) {
-                          verticalDragInfo = VerticalDragInfo();
-                        }
+                  if (verticalDragInfo == null) {
+                    verticalDragInfo = VerticalDragInfo();
+                  }
 
-                        verticalDragInfo!.update(details.primaryDelta!);
+                  verticalDragInfo!.update(details.primaryDelta!);
 
-                        // TODO: provide callback interface for animation purposes
-                      },
+                  // TODO: provide callback interface for animation purposes
+                },
                 onVerticalDragEnd: widget.onVerticalSwipeComplete == null
                     ? null
                     : (details) {
-                        widget.controller.play();
-                        // finish up drag cycle
-                        if (!verticalDragInfo!.cancel &&
-                            widget.onVerticalSwipeComplete != null) {
-                          widget.onVerticalSwipeComplete!(
-                              verticalDragInfo!.direction);
-                        }
+                  widget.controller.play();
+                  // finish up drag cycle
+                  if (!verticalDragInfo!.cancel &&
+                      widget.onVerticalSwipeComplete != null) {
+                    widget.onVerticalSwipeComplete!(
+                        verticalDragInfo!.direction);
+                  }
 
-                        verticalDragInfo = null;
-                      },
-              )),
+                  verticalDragInfo = null;
+                },
+              ),),
           Align(
             alignment: Alignment.centerLeft,
             heightFactor: 1,
@@ -721,6 +739,13 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 }),
                 width: 70),
           ),
+          Positioned(
+              bottom: 10,
+              left: 0,
+              right: 0,
+              child: _currentCaption
+          ),
+
         ],
       ),
     );
