@@ -409,6 +409,12 @@ class StoryView extends StatefulWidget {
   /// Indicator Foreground Color
   final Color? indicatorForegroundColor;
 
+  /// Indicator Background Color
+  final Color? indicatorBackgroundColor;
+
+  /// Background color
+  final Color? backgroundColor;
+
   /// Determine the height of the indicator
   final IndicatorHeight indicatorHeight;
 
@@ -426,6 +432,8 @@ class StoryView extends StatefulWidget {
     this.onVerticalSwipeComplete,
     this.indicatorColor,
     this.indicatorForegroundColor,
+    this.indicatorBackgroundColor,
+    this.backgroundColor,
     this.indicatorHeight = IndicatorHeight.large,
     this.indicatorOuterPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8,),
   });
@@ -630,7 +638,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      color: widget.backgroundColor ?? Colors.white,
       child: Stack(
         children: <Widget>[
           _currentView,
@@ -645,6 +653,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 // we use SafeArea here for notched and bezeles phones
                 child: Container(
                   padding: widget.indicatorOuterPadding,
+                  color: widget.indicatorBackgroundColor,
                   child: PageBar(
                     widget.storyItems
                         .map((it) => PageData(it!.duration, it.shown))
