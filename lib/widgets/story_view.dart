@@ -627,6 +627,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     _nextDebouncer = Timer(Duration(milliseconds: 500), () {});
   }
 
+  bool get _isRightToLeft => Directionality.of(context) == TextDirection.ltr;
+
   @override
   Widget build(BuildContext context) {
     return Container(
