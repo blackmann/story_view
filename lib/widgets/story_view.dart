@@ -850,15 +850,20 @@ class IndicatorOval extends CustomPainter {
   final Color color;
   final double widthFactor;
 
-  IndicatorOval(this.color, this.widthFactor);
+  IndicatorOval(this.color, this.widthFactor, this.direction);
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = this.color;
+    final double left = direction == TextDirection.ltr ? 0 : size.width;
+    final double width = direction == TextDirection.ltr
+        ? size.width * this.widthFactor
+        : size.width * -this.widthFactor;
     canvas.drawRRect(
         RRect.fromRectAndRadius(
-            Rect.fromLTWH(0, 0, size.width * this.widthFactor, size.height),
-            Radius.circular(3)),
+          Rect.fromLTWH(left, 0, width, size.height),
+          Radius.circular(3),
+        ),
         paint);
   }
 
