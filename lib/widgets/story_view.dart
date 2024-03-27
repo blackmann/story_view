@@ -849,6 +849,7 @@ class StoryProgressIndicator extends StatelessWidget {
 class IndicatorOval extends CustomPainter {
   final Color color;
   final double widthFactor;
+  final TextDirection direction;
 
   IndicatorOval(this.color, this.widthFactor, this.direction);
 
