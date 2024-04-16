@@ -138,7 +138,7 @@ class StoryItem {
             Positioned(
                 right: 0,
                 left: 0,
-                bottom:50,
+                bottom:0,
                 child: caption ?? SizedBox()
             ),
           ],
@@ -198,7 +198,7 @@ class StoryItem {
                 Positioned(
                     right: 0,
                     left: 0,
-                    bottom:50,
+                    bottom:0,
                     child: caption ?? SizedBox()
                 ),
               ],
@@ -258,7 +258,7 @@ class StoryItem {
               Positioned(
                   right: 0,
                   left: 0,
-                  bottom:50,
+                  bottom:0,
                   child: caption ?? SizedBox()
               ),
             ],
@@ -308,7 +308,7 @@ class StoryItem {
               Positioned(
                   right: 0,
                   left: 0,
-                  bottom:50,
+                  bottom:0,
                   child: caption ?? SizedBox()
               ),
             ],
