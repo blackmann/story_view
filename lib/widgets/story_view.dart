@@ -734,7 +734,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 ),),
            Align(
                 alignment: Alignment.centerLeft,
-                heightFactor: 0.7,
+                heightFactor: 0.9,
                 child: SizedBox(
                     child: GestureDetector(onTap: () {
                       widget.controller.previous();
