@@ -229,6 +229,7 @@ class StoryItem {
     Map<String, dynamic>? requestHeaders,
     Widget? loadingWidget,
     Widget? errorWidget,
+        double? volume,
   }) {
     return StoryItem(
         Container(
@@ -242,6 +243,7 @@ class StoryItem {
                 requestHeaders: requestHeaders,
                 loadingWidget: loadingWidget,
                 errorWidget: errorWidget,
+                volume: volume
               ),
               SafeArea(
                 child: Align(

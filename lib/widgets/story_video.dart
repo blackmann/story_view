@@ -45,12 +45,14 @@ class StoryVideo extends StatefulWidget {
   final VideoLoader videoLoader;
   final Widget? loadingWidget;
   final Widget? errorWidget;
+  final double? volume;
 
   StoryVideo(this.videoLoader, {
     Key? key,
     this.storyController,
     this.loadingWidget,
     this.errorWidget,
+    this.volume,
   }) : super(key: key ?? UniqueKey());
 
   static StoryVideo url(String url, {
@@ -59,6 +61,7 @@ class StoryVideo extends StatefulWidget {
     Key? key,
     Widget? loadingWidget,
     Widget? errorWidget,
+    double? volume
   }) {
     return StoryVideo(
       VideoLoader(url, requestHeaders: requestHeaders),
@@ -66,6 +69,7 @@ class StoryVideo extends StatefulWidget {
       key: key,
       loadingWidget: loadingWidget,
       errorWidget: errorWidget,
+      volume : volume
     );
   }
 
@@ -104,6 +108,7 @@ class StoryVideoState extends State<StoryVideo> {
             if (playbackState == PlaybackState.pause) {
               playerController!.pause();
             } else {
+              playerController!.setVolume(widget.volume ?? 0.7);
               playerController!.play();
             }
           });
