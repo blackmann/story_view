@@ -108,7 +108,7 @@ class StoryVideoState extends State<StoryVideo> {
             if (playbackState == PlaybackState.pause) {
               playerController!.pause();
             } else {
-              playerController!.setVolume(widget.volume ?? 0.6);
+              playerController!.setVolume(widget.volume ?? 0.7);
               playerController!.play();
             }
           });
