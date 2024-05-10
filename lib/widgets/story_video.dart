@@ -101,6 +101,10 @@ class StoryVideoState extends State<StoryVideo> {
         if (widget.storyController != null) {
           _streamSubscription =
               widget.storyController!.playbackNotifier.listen((playbackState) {
+            if (playbackState == PlaybackState.previous) {
+              playerController!.seekTo(Duration(seconds: 0));
+            }
+            
             if (playbackState == PlaybackState.pause) {
               playerController!.pause();
             } else {
