@@ -186,9 +186,9 @@ class _MoreStoriesState extends State<MoreStories> {
               isHLS: false,
               isRepost: true,
               isLike: false,
-              userName: "",
-              userProfile: "", viewPost: () {
-            print("StoryItem.INLINE: TRUE}");
+              userName: "cool man",
+              userProfile: "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg", viewPost: () {
+            print("StoryItem.INLINE: TRUE");
           }),
           StoryItem.pageImage(
               storyId: "344",
@@ -199,7 +199,7 @@ class _MoreStoriesState extends State<MoreStories> {
               isLike: false,
               controller: storyController,
               viewPost: () {
-                print("StoryItem.INLINE: TRUE}");
+                print("StoryItem.INLINE: TRUE");
               }),
           StoryItem.pageImage(
               storyId: "34422",
