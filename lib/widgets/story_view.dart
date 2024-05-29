@@ -387,6 +387,9 @@ class StoryView extends StatefulWidget {
   /// Enable/Disable `pause()` function `onTap` on story
   final bool enablePause;
 
+  /// Callback for when tap gesture is detected with `tapDetails`
+  final void Function(TapUpDetails tapDetails)? onTap;
+
   /// Callback for when a vertical swipe gesture is detected. If you do not
   /// want to listen to such event, do not provide it. For instance,
   /// for inline stories inside ListViews, it is preferrable to not to
@@ -428,6 +431,7 @@ class StoryView extends StatefulWidget {
     this.onComplete,
     this.slideForwardOnTap = true,
     this.enablePause = true,
+    this.onTap,
     this.onStoryShow,
     this.progressPosition = ProgressPosition.top,
     this.repeat = false,
