@@ -381,6 +381,7 @@ class StoryView extends StatefulWidget {
   /// each time the full story completes when [repeat] is set to `true`.
   final VoidCallback? onComplete;
 
+  /// For enabling/disabling `next()` function `onTap` on story
   final bool slideForwardOnTap;
 
   /// Callback for when a vertical swipe gesture is detected. If you do not
