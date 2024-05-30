@@ -284,18 +284,7 @@ class StoryItem {
         Container(
           key: key,
           color: color != null ? color : null,
-          gradient: gradient != null
-              ? gradient
-              : (color != null
-                  ? null
-                  : LinearGradient(
-                      colors: [
-                        Colors.black,
-                        Colors.white
-                      ], // Default gradient colors
-                      begin: Alignment.topLeft,
-                      end: Alignment.bottomRight,
-                    )),
+          gradient: gradient != null ? gradient : null,
           child: Stack(
             children: <Widget>[
               Center(
