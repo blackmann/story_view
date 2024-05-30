@@ -34,6 +34,7 @@ class StoryItem {
 
   /// The page content
   final Widget view;
+
   StoryItem(
     this.view, {
     required this.duration,
@@ -180,9 +181,9 @@ class StoryItem {
       ClipRRect(
         key: key,
         child: Container(
-          color: Colors.grey[100],
+          color: Colors.red,
           child: Container(
-            color: Colors.black,
+            color: Colors.red,
             child: Stack(
               children: <Widget>[
                 StoryImage.url(
@@ -277,11 +278,24 @@ class StoryItem {
     bool shown = false,
     Duration? duration,
     Color? color,
+    LinearGradient? gradient,
   }) {
     return StoryItem(
         Container(
           key: key,
-          color: color != null ? color : Colors.black,
+          color: color != null ? color : null,
+          gradient: gradient != null
+              ? gradient
+              : (color != null
+                  ? null
+                  : LinearGradient(
+                      colors: [
+                        Colors.black,
+                        Colors.white
+                      ], // Default gradient colors
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                    )),
           child: Stack(
             children: <Widget>[
               Center(
