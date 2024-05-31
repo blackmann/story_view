@@ -283,8 +283,10 @@ class StoryItem {
     return StoryItem(
         Container(
           key: key,
-          color: color != null ? color : null,
-          gradient: gradient != null ? gradient : null,
+          decoration: BoxDecoration(
+            color: color,
+            gradient: gradient,
+          ),
           child: Stack(
             children: <Widget>[
               Center(
