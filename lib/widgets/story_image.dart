@@ -29,7 +29,8 @@ class ImageLoader {
     }
 
     final fileStream = DefaultCacheManager().getFileStream(this.url,
-        headers: this.requestHeaders as Map<String, String>?);
+        headers: requestHeaders
+            ?.map((key, value) => MapEntry(key, value.toString())));
 
     fileStream.listen(
       (fileResponse) {
