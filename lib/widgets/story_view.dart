@@ -181,7 +181,7 @@ class StoryItem {
     return StoryItem(
           Container(
             decoration:BoxDecoration(
-              color: Colors.transparent,
+              color: Colors.green,
               borderRadius: BorderRadius.vertical(
               top: Radius.circular(roundedTop ? roundedTopRadius : 0),
               bottom: Radius.circular(roundedBottom ? roundedBottomRadius : 0),
