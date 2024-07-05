@@ -180,17 +180,21 @@ class StoryItem {
   }) {
     return StoryItem(
           Container(
-          color: Colors.transparent,
-            borderRadius: BorderRadius.vertical(
-            top: Radius.circular(roundedTop ? roundedTopRadius : 0),
-            bottom: Radius.circular(roundedBottom ? roundedBottomRadius : 0),
-          ),
+            decoration:BoxDecoration(
+              color: Colors.transparent,
+              borderRadius: BorderRadius.vertical(
+              top: Radius.circular(roundedTop ? roundedTopRadius : 0),
+              bottom: Radius.circular(roundedBottom ? roundedBottomRadius : 0),
+             ),
+            ),
           child: Container(
-            color: Colors.black,
-            borderRadius: BorderRadius.vertical(
-            top: Radius.circular(roundedTop ? roundedTopRadius : 0),
-            bottom: Radius.circular(roundedBottom ? roundedBottomRadius : 0),
-          ),
+              decoration:BoxDecoration(
+              color: Colors.black,
+              borderRadius: BorderRadius.vertical(
+              top: Radius.circular(roundedTop ? roundedTopRadius : 0),
+              bottom: Radius.circular(roundedBottom ? roundedBottomRadius : 0),
+             ),
+            ),
             child: Stack(
               children: <Widget>[
                 StoryImage.url(
