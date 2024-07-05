@@ -180,7 +180,7 @@ class StoryItem {
   }) {
     return StoryItem(
           Container(
-          color: Colors.grey[100],
+          color: Colors.transparent,
             borderRadius: BorderRadius.vertical(
             top: Radius.circular(roundedTop ? roundedTopRadius : 0),
             bottom: Radius.circular(roundedBottom ? roundedBottomRadius : 0),
