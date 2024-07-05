@@ -179,12 +179,18 @@ class StoryItem {
     Duration? duration,
   }) {
     return StoryItem(
-      ClipRRect(
-        key: key,
-        child: Container(
+          Container(
           color: Colors.grey[100],
+            borderRadius: BorderRadius.vertical(
+            top: Radius.circular(roundedTop ? roundedTopRadius : 0),
+            bottom: Radius.circular(roundedBottom ? roundedBottomRadius : 0),
+          ),
           child: Container(
             color: Colors.black,
+            borderRadius: BorderRadius.vertical(
+            top: Radius.circular(roundedTop ? roundedTopRadius : 0),
+            bottom: Radius.circular(roundedBottom ? roundedBottomRadius : 0),
+          ),
             child: Stack(
               children: <Widget>[
                 StoryImage.url(
@@ -210,11 +216,6 @@ class StoryItem {
             ),
           ),
         ),
-        borderRadius: BorderRadius.vertical(
-          top: Radius.circular(roundedTop ? roundedTopRadius : 0),
-          bottom: Radius.circular(roundedBottom ? roundedBottomRadius : 0),
-        ),
-      ),
       shown: shown,
       duration: duration ?? Duration(seconds: 3),
     );
