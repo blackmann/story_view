@@ -118,6 +118,7 @@ class StoryItem {
     Widget? errorWidget,
     EdgeInsetsGeometry? captionOuterPadding,
     Duration? duration,
+    VoidCallback? onError,
   }) {
     return StoryItem(
       Container(
@@ -127,6 +128,7 @@ class StoryItem {
           children: <Widget>[
             StoryImage.url(
               url,
+              onError: onError,
               controller: controller,
               fit: imageFit,
               requestHeaders: requestHeaders,
