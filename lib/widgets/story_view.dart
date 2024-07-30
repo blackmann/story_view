@@ -58,6 +58,7 @@ class StoryItem {
     bool roundedBottom = false,
     EdgeInsetsGeometry? textOuterPadding,
     Duration? duration,
+    Widget? customWidget,
   }) {
     double contrast = ContrastHelper.contrast([
       backgroundColor.red,
@@ -83,18 +84,23 @@ class StoryItem {
           horizontal: 24,
           vertical: 16,
         ),
-        child: Center(
-          child: Text(
-            title,
-            style: textStyle?.copyWith(
-                  color: contrast > 1.8 ? Colors.white : Colors.black,
-                ) ??
-                TextStyle(
-                  color: contrast > 1.8 ? Colors.white : Colors.black,
-                  fontSize: 18,
-                ),
-            textAlign: TextAlign.center,
-          ),
+        child: Stack(
+          children: [
+            Center(
+              child: Text(
+                title,
+                style: textStyle?.copyWith(
+                      color: contrast > 1.8 ? Colors.white : Colors.black,
+                    ) ??
+                    TextStyle(
+                      color: contrast > 1.8 ? Colors.white : Colors.black,
+                      fontSize: 18,
+                    ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+            if (customWidget != null) customWidget,
+          ]
         ),
         //color: backgroundColor,
       ),
@@ -117,6 +123,7 @@ class StoryItem {
     Widget? errorWidget,
     EdgeInsetsGeometry? captionOuterPadding,
     Duration? duration,
+    Widget? customWidget,
   }) {
     return StoryItem(
       Container(
@@ -132,6 +139,7 @@ class StoryItem {
               loadingWidget: loadingWidget,
               errorWidget: errorWidget,
             ),
+            if (customWidget != null) customWidget,
             SafeArea(
               child: Align(
                 alignment: Alignment.bottomCenter,
@@ -229,6 +237,7 @@ class StoryItem {
     Map<String, dynamic>? requestHeaders,
     Widget? loadingWidget,
     Widget? errorWidget,
+    Widget? customWidget,
   }) {
     return StoryItem(
         Container(
@@ -243,6 +252,7 @@ class StoryItem {
                 loadingWidget: loadingWidget,
                 errorWidget: errorWidget,
               ),
+              if (customWidget != null) customWidget,
               SafeArea(
                 child: Align(
                   alignment: Alignment.bottomCenter,
