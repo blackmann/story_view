@@ -415,6 +415,8 @@ class StoryView extends StatefulWidget {
   /// Use this if you want to give outer padding to the indicator
   final EdgeInsetsGeometry indicatorOuterPadding;
 
+  final BoxDecoration? viewDecoration;
+
   StoryView({
     required this.storyItems,
     required this.controller,
@@ -428,6 +430,7 @@ class StoryView extends StatefulWidget {
     this.indicatorForegroundColor,
     this.indicatorHeight = IndicatorHeight.large,
     this.indicatorOuterPadding = const EdgeInsets.symmetric(horizontal: 16, vertical: 8,),
+    this.viewDecoration,
   });
 
   @override
@@ -630,7 +633,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.white,
+      decoration: widget.viewDecoration ?? BoxDecoration(color: Colors.white),
       child: Stack(
         children: <Widget>[
           _currentView,
