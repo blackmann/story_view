@@ -85,7 +85,7 @@ Widget build(context) {
   ]; // your list of stories
 
   return StoryView(
-    storyItems,
+    storyItems: storyItems,
     controller: controller, // pass controller here too
     repeat: true, // should the stories be slid forever
     onStoryShow: (s) {notifyServer(s)},
