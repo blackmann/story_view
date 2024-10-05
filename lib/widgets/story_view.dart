@@ -652,8 +652,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 // we use SafeArea here for notched and bezeles phones
                 child: Container(
                   padding: widget.indicatorOuterPadding,
-                  child: Transform.flip(
-                    flipX: true,
+                  child: Transform(
+                    transform: Matrix4.identity(),
                     child: PageBar(
                       widget.storyItems
                           .map((it) => PageData(it!.duration, it.shown))
