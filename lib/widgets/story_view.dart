@@ -652,18 +652,15 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                 // we use SafeArea here for notched and bezeles phones
                 child: Container(
                   padding: widget.indicatorOuterPadding,
-                  child: Transform(
-                    transform: Matrix4.identity(),
-                    child: PageBar(
-                      widget.storyItems
-                          .map((it) => PageData(it!.duration, it.shown))
-                          .toList(),
-                      this._currentAnimation,
-                      key: UniqueKey(),
-                      indicatorHeight: widget.indicatorHeight,
-                      indicatorColor: widget.indicatorColor,
-                      indicatorForegroundColor: widget.indicatorForegroundColor,
-                    ),
+                  child: PageBar(
+                    widget.storyItems
+                        .map((it) => PageData(it!.duration, it.shown))
+                        .toList(),
+                    this._currentAnimation,
+                    key: UniqueKey(),
+                    indicatorHeight: widget.indicatorHeight,
+                    indicatorColor: widget.indicatorColor,
+                    indicatorForegroundColor: widget.indicatorForegroundColor,
                   ),
                 ),
               ),
@@ -684,7 +681,9 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   if (_nextDebouncer?.isActive == false) {
                     widget.controller.play();
                   } else {
-                    widget.controller.next();
+                    Directionality.of(context) == TextDirection.ltr
+                        ? widget.controller.next()
+                        : widget.controller.previous();
                   }
                 },
                 onVerticalDragStart: widget.onVerticalSwipeComplete == null
@@ -727,7 +726,9 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
             heightFactor: 1,
             child: SizedBox(
                 child: GestureDetector(onTap: () {
-                  widget.controller.previous();
+                  Directionality.of(context) == TextDirection.ltr
+                      ? widget.controller.previous()
+                      : widget.controller.next();
                 }),
                 width: 70),
           ),
@@ -839,17 +840,23 @@ class StoryProgressIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return CustomPaint(
-      size: Size.fromHeight(
-        this.indicatorHeight,
-      ),
-      foregroundPainter: IndicatorOval(
-        this.indicatorForegroundColor ?? Colors.white.withOpacity(0.8),
-        this.value,
-      ),
-      painter: IndicatorOval(
-        this.indicatorColor ?? Colors.white.withOpacity(0.4),
-        1.0,
+    return Transform(
+      transform: Matrix4.identity()
+        ..scale(Directionality.of(context) == TextDirection.rtl ? -1.0 : 1.0,
+            1.0, 1.0), // Flip horizontally by setting x scale to -1
+      alignment: Alignment.center,
+      child: CustomPaint(
+        size: Size.fromHeight(
+          this.indicatorHeight,
+        ),
+        foregroundPainter: IndicatorOval(
+          this.indicatorForegroundColor ?? Colors.white.withOpacity(0.8),
+          this.value,
+        ),
+        painter: IndicatorOval(
+          this.indicatorColor ?? Colors.white.withOpacity(0.4),
+          1.0,
+        ),
       ),
     );
   }
