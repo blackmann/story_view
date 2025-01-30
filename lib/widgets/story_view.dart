@@ -89,6 +89,7 @@ class StoryItem {
               vertical: 16,
             ),
         //color: backgroundColor,
+        child: child ?? SizedBox(),
       ),
       caption: child ??
           Center(
