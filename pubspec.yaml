@@ -9,9 +9,9 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-  flutter_cache_manager: ^3.3.1
-  rxdart: ^0.27.7
-  video_player: ^2.9.2
+  flutter_cache_manager: ^3.4.1
+  rxdart: ^0.28.0
+  video_player: ^2.9.3
   collection: ^1.18.0
 
 dev_dependencies:
