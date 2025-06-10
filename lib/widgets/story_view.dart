@@ -60,13 +60,13 @@ class StoryItem {
     Duration? duration,
   }) {
     double contrast = ContrastHelper.contrast([
-      backgroundColor.red,
-      backgroundColor.green,
-      backgroundColor.blue,
+      backgroundColor.r,
+      backgroundColor.g,
+      backgroundColor.b,
     ], [
-      255,
-      255,
-      255
+      255.0,
+      255.0,
+      255.0
     ] /** white text */);
 
     return StoryItem(
@@ -311,7 +311,7 @@ class StoryItem {
                             ),
                             textAlign: TextAlign.center,
                           )
-                        : SizedBox(),
+                        : SizedBox.shrink(),
                   ),
                 ),
               )
@@ -831,11 +831,11 @@ class StoryProgressIndicator extends StatelessWidget {
         this.indicatorHeight,
       ),
       foregroundPainter: IndicatorOval(
-        this.indicatorForegroundColor?? Colors.white.withOpacity(0.8),
+        this.indicatorForegroundColor?? Colors.white.withValues(alpha: 0.8),
         this.value,
       ),
       painter: IndicatorOval(
-        this.indicatorColor?? Colors.white.withOpacity(0.4),
+        this.indicatorColor?? Colors.white.withValues(alpha: 0.4),
         1.0,
       ),
     );
@@ -866,7 +866,7 @@ class IndicatorOval extends CustomPainter {
 
 /// Concept source: https://stackoverflow.com/a/9733420
 class ContrastHelper {
-  static double luminance(int? r, int? g, int? b) {
+  static double luminance(double? r, double? g, double? b) {
     final a = [r, g, b].map((it) {
       double value = it!.toDouble() / 255.0;
       return value <= 0.03928
