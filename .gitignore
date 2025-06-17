@@ -72,6 +72,4 @@ build/
 # mine
 main.dart
 .flutter-plugins-dependencies
-/example/.dart_tool/
-/example/build/
-/example/.idea/
+/sample/

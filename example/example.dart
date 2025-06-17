@@ -1,52 +1,45 @@
 import 'package:flutter/material.dart';
 import 'package:story_view/story_view.dart';
 
-void main() {
-  runApp(const MyApp());
-}
+void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
-
+  // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Flutter Demo',
-      debugShowCheckedModeBanner: false,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      home: Home()
-    );
+        title: 'Flutter Demo',
+        debugShowCheckedModeBanner: false,
+        theme: ThemeData(
+          primarySwatch: Colors.green,
+        ),
+        home: Home());
   }
 }
 
 class Home extends StatelessWidget {
   final StoryController controller = StoryController();
 
-  Home({super.key});
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Delicious Ghanaian Meals"),
+        title: Text("Delicious Ghanaian Meals"),
       ),
       body: Container(
-        margin: const EdgeInsets.all(
+        margin: EdgeInsets.all(
           8,
         ),
         child: ListView(
           children: <Widget>[
-            SizedBox(
+            Container(
               height: 300,
               child: StoryView(
                 controller: controller,
                 storyItems: [
                   StoryItem.text(
                     title:
-                    "Hello world!\nHave a look at some great Ghanaian delicacies. I'm sorry if your mouth waters. \n\nTap!",
+                        "Hello world!\nHave a look at some great Ghanaian delicacies. I'm sorry if your mouth waters. \n\nTap!",
                     backgroundColor: Colors.orange,
                     roundedTop: true,
                   ),
@@ -64,9 +57,9 @@ class Home extends StatelessWidget {
                   // ),
                   StoryItem.inlineImage(
                     url:
-                    "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
+                        "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
                     controller: controller,
-                    caption: const Text(
+                    caption: Text(
                       "Omotuo & Nkatekwan; You will love this meal if taken as supper.",
                       style: TextStyle(
                         color: Colors.white,
@@ -77,9 +70,9 @@ class Home extends StatelessWidget {
                   ),
                   StoryItem.inlineImage(
                     url:
-                    "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
+                        "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
                     controller: controller,
-                    caption: const Text(
+                    caption: Text(
                       "Hektas, sektas and skatad",
                       style: TextStyle(
                         color: Colors.white,
@@ -107,12 +100,12 @@ class Home extends StatelessWidget {
                       MaterialPageRoute(builder: (context) => MoreStories()));
                 },
                 child: Container(
-                  decoration: const BoxDecoration(
+                  decoration: BoxDecoration(
                       color: Colors.black54,
                       borderRadius:
-                      BorderRadius.vertical(bottom: Radius.circular(8))),
-                  padding: const EdgeInsets.symmetric(vertical: 8),
-                  child: const Row(
+                          BorderRadius.vertical(bottom: Radius.circular(8))),
+                  padding: EdgeInsets.symmetric(vertical: 8),
+                  child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: <Widget>[
                       Icon(
@@ -139,8 +132,6 @@ class Home extends StatelessWidget {
 }
 
 class MoreStories extends StatefulWidget {
-  const MoreStories({super.key});
-
   @override
   _MoreStoriesState createState() => _MoreStoriesState();
 }
@@ -158,7 +149,7 @@ class _MoreStoriesState extends State<MoreStories> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("More"),
+        title: Text("More"),
       ),
       body: StoryView(
         storyItems: [
@@ -169,15 +160,15 @@ class _MoreStoriesState extends State<MoreStories> {
           StoryItem.text(
             title: "Nice!\n\nTap to continue.",
             backgroundColor: Colors.red,
-            textStyle: const TextStyle(
+            textStyle: TextStyle(
               fontFamily: 'Dancing',
               fontSize: 40,
             ),
           ),
           StoryItem.pageImage(
             url:
-            "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
-            caption: const Text(
+                "https://image.ibb.co/cU4WGx/Omotuo-Groundnut-Soup-braperucci-com-1.jpg",
+            caption: Text(
               "Still sampling",
               style: TextStyle(
                 fontSize: 15,
@@ -189,7 +180,7 @@ class _MoreStoriesState extends State<MoreStories> {
           ),
           StoryItem.pageImage(
               url: "https://media.giphy.com/media/5GoVLqeAOo6PK/giphy.gif",
-              caption: const Text(
+              caption: Text(
                 "Working with gifs",
                 style: TextStyle(
                   fontSize: 15,
@@ -200,7 +191,7 @@ class _MoreStoriesState extends State<MoreStories> {
               controller: storyController),
           StoryItem.pageImage(
             url: "https://media.giphy.com/media/XcA8krYsrEAYXKf4UQ/giphy.gif",
-            caption: const Text(
+            caption: Text(
               "Hello, from the other side",
               style: TextStyle(
                 fontSize: 15,
@@ -212,7 +203,7 @@ class _MoreStoriesState extends State<MoreStories> {
           ),
           StoryItem.pageImage(
             url: "https://media.giphy.com/media/XcA8krYsrEAYXKf4UQ/giphy.gif",
-            caption: const Text(
+            caption: Text(
               "Hello, from the other side2",
               style: TextStyle(
                 fontSize: 15,
