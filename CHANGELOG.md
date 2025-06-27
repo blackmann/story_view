@@ -1,3 +1,6 @@
+## [0.16.6] - 27 Jun 2025
+- Use stateless widgets by @geekpius
+
 ## [0.16.5] - 18 Feb 2024
 - Bump dependencies to latest
 - Added medium to Indicator Height
