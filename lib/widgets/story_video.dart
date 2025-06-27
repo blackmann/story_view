@@ -114,8 +114,51 @@ class StoryVideoState extends State<StoryVideo> {
     });
   }
 
-  Widget getContentView() {
-    if (widget.videoLoader.state == LoadState.success &&
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: Colors.black,
+      height: double.infinity,
+      width: double.infinity,
+      child: VideoContentView(
+        videoLoadState: widget.videoLoader.state,
+        playerController: playerController,
+        loadingWidget: widget.loadingWidget,
+        errorWidget: widget.errorWidget,
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    playerController?.dispose();
+    _streamSubscription?.cancel();
+    super.dispose();
+  }
+}
+
+/**
+ * @name VideoContentView
+ * @description Stateless widget that shows a video player or loading/error widgets based on video loading state.
+ */
+class VideoContentView extends StatelessWidget {
+  final LoadState videoLoadState;
+  final VideoPlayerController? playerController;
+  final Widget? loadingWidget;
+  final Widget? errorWidget;
+
+  const VideoContentView({
+    Key? key,
+    required this.videoLoadState,
+    required this.playerController,
+    this.loadingWidget,
+    this.errorWidget,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    if (videoLoadState == LoadState.success &&
+        playerController != null &&
         playerController!.value.isInitialized) {
       return Center(
         child: AspectRatio(
@@ -125,9 +168,10 @@ class StoryVideoState extends State<StoryVideo> {
       );
     }
 
-    return widget.videoLoader.state == LoadState.loading
-        ? Center(
-            child: widget.loadingWidget?? Container(
+    if (videoLoadState == LoadState.loading) {
+      return Center(
+        child: loadingWidget ??
+            const SizedBox(
               width: 70,
               height: 70,
               child: CircularProgressIndicator(
@@ -135,30 +179,15 @@ class StoryVideoState extends State<StoryVideo> {
                 strokeWidth: 3,
               ),
             ),
-          )
-        : Center(
-            child: widget.errorWidget?? Text(
+      );
+    }
+
+    return Center(
+      child: errorWidget ??
+          const Text(
             "Media failed to load.",
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.black,
-      height: double.infinity,
-      width: double.infinity,
-      child: getContentView(),
+            style: TextStyle(color: Colors.white),
+          ),
     );
-  }
-
-  @override
-  void dispose() {
-    playerController?.dispose();
-    _streamSubscription?.cancel();
-    super.dispose();
   }
 }
